@@ -20,20 +20,19 @@
     "react": "^0.13.2",
     "rx": "2.5.2",
     "vdom-to-html": "^2.0.0",
-    "virtual-dom": "2.0.1",
     "virtual-hyperscript": "^4.6.0"
   },
   "devDependencies": {
-    "babel": "5.1.x",
+    "babel": "5.2.x",
     "babelify": "6.0.x",
-    "browserify": "9.0.8",
-    "cheerio": "^0.19.0",
-    "jscs": "1.12.x",
+    "browserify": "10.1.0",
+    "cheerio": "0.19.0",
+    "jscs": "1.13.x",
     "jshint": "2.7.x",
     "markdox": "0.1.8",
     "mocha": "2.2.4",
-    "testem": "0.8.2",
-    "uglify-js": "2.4.20"
+    "testem": "0.8.3",
+    "uglify-js": "2.4.21"
   },
   "engines": {
     "node": ">=0.10.0"

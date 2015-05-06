@@ -22,8 +22,6 @@ var Cycle = {
    * (or the element itself) to contain the rendering of the VTrees.
    * @param {Function} computer a function that takes `interactions` as input
    * and outputs an Observable of virtual DOM elements.
-   * @return {Object} an object containing properties `rootElem$`, `interactions`,
-   * `dispose()` that can be used for debugging or testing.
    * @function applyToDOM
    */
   applyToDOM: RenderingDOM.applyToDOM,
@@ -60,9 +58,9 @@ var Cycle = {
    * @param {Function} definitionFn the implementation for the custom element.
    * This function takes two arguments: `interactions`, and `properties`, and
    * should output an object of Observables.
-   * @function registerCustomElement
+   * @function createReactClass
    */
-  registerCustomElement: CustomElements.registerCustomElement,
+   createReactClass: CustomElements.createReactClass,
 
   /**
    * A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
