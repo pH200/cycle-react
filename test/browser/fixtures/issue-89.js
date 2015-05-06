@@ -1,5 +1,5 @@
 'use strict';
-let Cycle = require('../../../src/render-react');
+let Cycle = require('../../../src/cycle');
 let {Rx, h} = Cycle;
 
 function myelement(interactions, props$) {

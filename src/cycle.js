@@ -1,9 +1,10 @@
 'use strict';
-let VirtualDOM = require('virtual-dom');
-let Rx = require('rx');
-let CustomElements = require('./custom-elements');
-let RenderingDOM = require('./render-dom');
-let RenderingHTML = require('./render-html');
+var applyToDOM = require('./render-dom');
+var renderAsHTML = require('./render-html');
+var createReactClass = require('./create-react-class');
+var React = require('react');
+var Rx = require('rx');
+var h = require('./h');
 
 var Cycle = {
   /**
@@ -24,7 +25,7 @@ var Cycle = {
    * and outputs an Observable of virtual DOM elements.
    * @function applyToDOM
    */
-  applyToDOM: RenderingDOM.applyToDOM,
+  applyToDOM: applyToDOM,
 
   /**
    * Converts a given Observable of virtual DOM elements (`vtree$`) into an
@@ -37,7 +38,7 @@ var Cycle = {
    * renderization of the virtual DOM element.
    * @function renderAsHTML
    */
-  renderAsHTML: RenderingHTML.renderAsHTML,
+  renderAsHTML: renderAsHTML,
 
   /**
    * Informs Cycle to recognize the given `tagName` as a custom element
@@ -60,7 +61,13 @@ var Cycle = {
    * should output an object of Observables.
    * @function createReactClass
    */
-   createReactClass: CustomElements.createReactClass,
+  createReactClass: createReactClass,
+
+  /**
+   * A shortcut to the root object of React.
+   * @name React
+   */
+  React: React,
 
   /**
    * A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
@@ -74,7 +81,7 @@ var Cycle = {
    * This is a helper for creating VTrees in Views.
    * @name h
    */
-  h: VirtualDOM.h
+  h: h
 };
 
 module.exports = Cycle;

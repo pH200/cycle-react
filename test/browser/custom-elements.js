@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach */
 let assert = require('assert');
-let Cycle = require('../../src/render-react');
+let Cycle = require('../../src/cycle');
 let {Rx, h} = Cycle;
 
 function createRenderTarget() {

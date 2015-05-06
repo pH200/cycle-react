@@ -2,7 +2,7 @@
 /* global describe, it, beforeEach */
 let assert = require('assert');
 let cheerio = require('cheerio');
-let Cycle = require('../../src/render-react');
+let Cycle = require('../../src/cycle');
 let {Rx, h} = Cycle;
 
 describe('renderAsHTML()', function () {

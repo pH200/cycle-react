@@ -2,23 +2,7 @@
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var Rx = require('rx');
-var h = require('./h');
-
-function makeEmptyInteractions() {
-  return {
-    get: function get() {
-      return Rx.Observable.empty();
-    }
-  };
-}
-
-function makeEmptyPropsObservable() {
-  var empty = Rx.Observable.empty();
-  empty.get = function getProp() {
-    return Rx.Observable.empty();
-  };
-  return empty;
-}
+var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 
 function makeInteractions(rootElem$) {
   return {
@@ -54,7 +38,7 @@ function makeInteractions(rootElem$) {
             }
           }
           return Rx.Observable.empty();
-      });
+        });
     }
   };
 }
@@ -124,31 +108,6 @@ function createGetPropFn(propsSubject$) {
       return prop$.distinctUntilChanged(Rx.helpers.identity, comparer);
     }
     return prop$.distinctUntilChanged();
-  };
-}
-
-function digestDefinitionFnOutput(output) {
-  var vtree$;
-  var onMount;
-  var customEvents = {};
-  if (output && output.hasOwnProperty('vtree$') &&
-    typeof output.vtree$.subscribe === 'function')
-  {
-    vtree$ = output.vtree$;
-    onMount = output.onMount;
-    customEvents = output;
-  } else if (output && typeof output.subscribe === 'function') {
-    vtree$ = output;
-  } else {
-    throw new Error(
-      'definitionFn given to render or createReactClass must return an ' +
-      'Observable of virtual DOM elements, or an object containing such ' +
-      'Observable named as `vtree$`');
-  }
-  return {
-    vtree$: vtree$,
-    onMount: onMount,
-    customEvents: customEvents
   };
 }
 
@@ -246,77 +205,4 @@ function createReactClass(
   });
 }
 
-function isElement(obj) {
-  return (
-    typeof HTMLElement === 'object' ?
-    obj instanceof HTMLElement || obj instanceof DocumentFragment : //DOM2
-    obj && typeof obj === 'object' && obj !== null &&
-    (obj.nodeType === 1 || obj.nodeType === 11) &&
-    typeof obj.nodeName === 'string'
-  );
-}
-
-function render(container, definitionFn) {
-  // Find and prepare the container
-  var domContainer = (typeof container === 'string') ?
-    document.querySelector(container) :
-    container;
-  // Check pre-conditions
-  if (typeof container === 'string' && domContainer === null) {
-    throw new Error('Cannot render into unknown element \'' + container + '\'');
-  } else if (!isElement(domContainer)) {
-    throw new Error('Given container is not a DOM element neither a selector string.');
-  }
-
-  if (!(definitionFn && typeof definitionFn === 'function')) {
-    throw new Error('Invalid definitionFn');
-  }
-  if (definitionFn.prototype.render) {
-    return React.render(React.createElement(definitionFn), domContainer);
-  }
-
-  var RxReactRoot = createReactClass('RxReactRoot', definitionFn);
-  React.render(React.createElement(RxReactRoot), domContainer);
-}
-
-function renderAsHTML(definitionFn) {
-  var computer;
-  var isReactClass = false;
-  if (definitionFn &&
-    typeof definitionFn === 'object' &&
-    typeof definitionFn.subscribe === 'function') {
-      computer = function createReactClassFromObservable() {
-        return definitionFn;
-      };
-  } else if (definitionFn && typeof definitionFn === 'function') {
-    if (definitionFn.prototype.render) {
-      isReactClass = true;
-    } else {
-      computer = definitionFn;
-    }
-  }
-  if (!isReactClass && !computer) {
-    throw new Error('Invalid definitionFn');
-  }
-  if (isReactClass) {
-    var reactElement = React.createElement(definitionFn);
-    return Rx.Observable.just(React.renderToString(reactElement));
-  }
-
-  var cycleComponent = digestDefinitionFnOutput(
-    computer(makeEmptyInteractions(), makeEmptyPropsObservable())
-  );
-  return cycleComponent.vtree$
-    .map(function convertReactElementToString(vtree) {
-      return React.renderToString(vtree);
-    });
-}
-
-module.exports = {
-  createReactClass: createReactClass,
-  applyToDOM: render,
-  renderAsHTML: renderAsHTML,
-  React: React,
-  h: h,
-  Rx: Rx
-};
+module.exports = createReactClass;

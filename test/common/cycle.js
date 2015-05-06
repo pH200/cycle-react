@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it */
 let assert = require('assert');
-let Cycle = require('../../src/render-react');
+let Cycle = require('../../src/cycle');
 
 describe('Cycle', function () {
   describe('API', function () {
