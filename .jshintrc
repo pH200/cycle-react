@@ -2,7 +2,6 @@
   "strict": true,
   "indent": 2,
   "maxlen": 90,
-  "maxparams": 3,
   "maxdepth": 5,
   "maxstatements": 40,
   "curly": true,

@@ -1,32 +1,31 @@
 'use strict';
-let Cycle = require('../../../src/cycle');
+let Cycle = require('../../../src/render-react');
 let {Rx, h} = Cycle;
 
-function myelement(interactions, props) {
+function myelement(interactions, props$) {
   return {
-    vtree$: props.get('content')
+    vtree$: props$
+      .map(p => p.content)
+      .distinctUntilChanged()
       .map(content => h('h3.myelementclass', content))
   };
 }
 
 function makeModelNumber$() {
-  return Rx.Observable.merge(
-    Rx.Observable.just(123).delay(50),
-    Rx.Observable.just(456).delay(400)
-  );
+  return Rx.Observable.of(123, 456).controlled();
 }
 
-function viewWithContainerFn(number$) {
+function viewWithContainerFn(number$, MyElement) {
   return number$.map(number =>
     h('div', [
-      h('myelement', {content: String(number)})
+      h(MyElement, {content: String(number)})
     ])
   );
 }
 
-function viewWithoutContainerFn(number$) {
+function viewWithoutContainerFn(number$, MyElement) {
   return number$.map(number =>
-    h('myelement', {content: String(number)})
+    h(MyElement, {content: String(number)})
   );
 }
 

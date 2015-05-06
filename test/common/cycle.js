@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it */
 let assert = require('assert');
-let Cycle = require('../../src/cycle');
+let Cycle = require('../../src/render-react');
 
 describe('Cycle', function () {
   describe('API', function () {
@@ -9,20 +9,16 @@ describe('Cycle', function () {
       assert.strictEqual(typeof Cycle.applyToDOM, 'function');
     });
 
-    it('should have `renderAsHTML`', function () {
-      assert.strictEqual(typeof Cycle.renderAsHTML, 'function');
-    });
-
-    it('should have `registerCustomElement`', function () {
-      assert.strictEqual(typeof Cycle.registerCustomElement, 'function');
+    it('should have `createReactClass`', function () {
+      assert.strictEqual(typeof Cycle.createReactClass, 'function');
     });
 
     it('should have a shortcut to Rx', function () {
       assert.strictEqual(typeof Cycle.Rx, 'object');
     });
 
-    it('should have a shortcut to virtual-hyperscript', function () {
-      assert.strictEqual(typeof Cycle.h, 'function');
+    it('should have a shortcut to React', function () {
+      assert.strictEqual(typeof Cycle.React, 'object');
     });
   });
 });

@@ -16,15 +16,18 @@
   ],
   "main": "lib/cycle.js",
   "dependencies": {
-    "rx": "2.5.2",
-    "virtual-dom": "2.0.1",
     "es6-map": "0.1.1",
-    "vdom-to-html": "^2.0.0"
+    "react": "^0.13.2",
+    "rx": "2.5.2",
+    "vdom-to-html": "^2.0.0",
+    "virtual-dom": "2.0.1",
+    "virtual-hyperscript": "^4.6.0"
   },
   "devDependencies": {
     "babel": "5.1.x",
     "babelify": "6.0.x",
     "browserify": "9.0.8",
+    "cheerio": "^0.19.0",
     "jscs": "1.12.x",
     "jshint": "2.7.x",
     "markdox": "0.1.8",

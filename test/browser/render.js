@@ -1,8 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach */
 let assert = require('assert');
-let Cycle = require('../../src/cycle');
-let CustomElements = require('../../src/custom-elements');
+let Cycle = require('../../src/render-react');
 let Fixture89 = require('./fixtures/issue-89');
 let {Rx, h} = Cycle;
 
@@ -15,7 +14,6 @@ function createRenderTarget() {
 
 describe('Rendering', function () {
   beforeEach(function () {
-    CustomElements.unregisterAllCustomElements();
     let testDivs = Array.prototype.slice.call(document.querySelectorAll('.cycletest'));
     testDivs.forEach(function (x) {
       if (x.remove) {
@@ -27,31 +25,21 @@ describe('Rendering', function () {
   describe('Cycle.applyToDOM', function () {
     it('should accept a DOM element as input', function () {
       let element = createRenderTarget();
-      let subscription;
       assert.doesNotThrow(function () {
-        subscription = Cycle.applyToDOM(element, () => Rx.Observable.empty());
+        Cycle.applyToDOM(element, () => Rx.Observable.empty());
       });
-      subscription.dispose();
     });
 
-    it('should accept a DocumentFragment as input', function () {
-      let element = document.createDocumentFragment();
-      let subscription;
-      assert.doesNotThrow(function () {
-        subscription = Cycle.applyToDOM(element, () => Rx.Observable.empty());
-      });
-      subscription.dispose();
-    });
+    // React is not aceepting DocumentFragment as container right now.
+    it.skip('should accept a DocumentFragment as input');
 
     it('should accept a string selector to an existing element as input', function () {
       let id = 'testShouldAcceptSelectorToExisting';
       let element = createRenderTarget();
       element.id = id;
-      let subscription;
       assert.doesNotThrow(function () {
-        subscription = Cycle.applyToDOM('#' + id, () => Rx.Observable.empty());
+        Cycle.applyToDOM('#' + id, () => Rx.Observable.empty());
       });
-      subscription.dispose();
     });
 
     it('should not accept a selector to an unknown element as input', function () {
@@ -63,7 +51,7 @@ describe('Rendering', function () {
     it('should throw if definitionFn returns bad output', function () {
       assert.throws(function () {
         Cycle.applyToDOM(createRenderTarget(), () => ({}));
-      }, /definitionFn given to applyToDOM must return an Observable of/);
+      }, /definitionFn given to/);
     });
 
     it('should not accept a number as input', function () {
@@ -78,91 +66,72 @@ describe('Rendering', function () {
         h('option', {value: 'bar'}, 'Bar'),
         h('option', {value: 'baz'}, 'Baz')
       ]));
-      let subscription = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+      Cycle.applyToDOM(createRenderTarget(), () => vtree$);
       let selectEl = document.querySelector('.my-class');
       assert.notStrictEqual(selectEl, null);
       assert.notStrictEqual(typeof selectEl, 'undefined');
       assert.strictEqual(selectEl.tagName, 'SELECT');
-      subscription.dispose();
     });
 
-    it('should catch interaction events coming from wrapped View', function (done) {
-      // Make a View reactively imitating another View
-      let vtree$ = Rx.Observable.just(h('h3.myelementclass', 'Foobar'));
-      let wrapper$ = vtree$.flatMap(vtree => Rx.Observable.just(vtree));
-      let subscription = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
-      subscription.interactions.get('.myelementclass', 'click').subscribe(ev => {
-        assert.strictEqual(ev.type, 'click');
-        assert.strictEqual(ev.target.innerHTML, 'Foobar');
-        done();
+    it('should accept a ReactClass as definitionFn', function () {
+      let MyElement = Cycle.createReactClass('MyElement', function () {
+        return Rx.Observable.just(h('h3.myelementclass'));
       });
-      // Make assertions
-      let myElement = document.querySelector('.myelementclass');
-      assert.notStrictEqual(myElement, null);
-      assert.notStrictEqual(typeof myElement, 'undefined');
-      assert.strictEqual(myElement.tagName, 'H3');
-      assert.doesNotThrow(function () {
-        myElement.click();
-      });
-      subscription.dispose();
+      Cycle.applyToDOM(createRenderTarget(), MyElement);
+      let myelement = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myelement, null);
+      assert.notStrictEqual(typeof myelement, 'undefined');
+      assert.strictEqual(myelement.tagName, 'H3');
     });
 
-    it('should allow subscribing to interactions', function (done) {
-      // Make a View reactively imitating another View
-      let vtree$ = Rx.Observable.just(h('h3.myelementclass', 'Foobar'));
-      let subscription = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
-      subscription.interactions.get('.myelementclass', 'click').subscribe(ev => {
-        assert.strictEqual(ev.type, 'click');
-        assert.strictEqual(ev.target.innerHTML, 'Foobar');
-        done();
-      });
-      // Make assertions
-      let myElement = document.querySelector('.myelementclass');
-      assert.notStrictEqual(myElement, null);
-      assert.notStrictEqual(typeof myElement, 'undefined');
-      assert.strictEqual(myElement.tagName, 'H3');
-      assert.doesNotThrow(function () {
-        myElement.click();
-      });
-    });
-
-    it('should accept a view wrapping a custom element (#89)', function (done) {
-      Cycle.registerCustomElement('myelement', Fixture89.myelement);
-      let number$ = Fixture89.makeModelNumber$();
-      let vtree$ = Fixture89.viewWithContainerFn(number$);
-      let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
-
-      setTimeout(() => {
-        let myelement = document.querySelector('.myelementclass');
-        assert.notStrictEqual(myelement, null);
-        assert.strictEqual(myelement.tagName, 'H3');
-        assert.strictEqual(myelement.innerHTML, '123');
-      }, 100);
-      setTimeout(() => {
-        let myelement = document.querySelector('.myelementclass');
-        assert.notStrictEqual(myelement, null);
-        assert.strictEqual(myelement.tagName, 'H3');
-        assert.strictEqual(myelement.innerHTML, '456');
-        domUI.dispose();
-        done();
-      }, 500);
-    });
-
-    it('should reject a view with custom element as the root of vtree$', function (done) {
-      Cycle.registerCustomElement('myelement', Fixture89.myelement);
-      let number$ = Fixture89.makeModelNumber$();
-      let vtree$ = Fixture89.viewWithoutContainerFn(number$);
-      let observer = Rx.Observer.create(
-        () => {},
-        (err) => {
-          let errMsg = 'Illegal to use a Cycle custom element as the root of a View.';
-          assert.strictEqual(err.message, errMsg);
-          // TODO: cannot dispose because applyToDOM has not yet completed.
-          // domUI.dispose();
+    it('should catch interaction events', function (done) {
+      function computer(interactions) {
+        let vtree$ = Rx.Observable.just(h('h3.myelementclass', 'Foobar'));
+        interactions.get('.myelementclass', 'click').subscribe(ev => {
+          assert.strictEqual(ev.type, 'click');
+          assert.strictEqual(ev.target.innerHTML, 'Foobar');
           done();
-        }
-      );
-      let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$, observer);
+        });
+        return vtree$;
+      }
+      Cycle.applyToDOM(createRenderTarget(), computer);
+      // Make assertions
+      let myElement = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myElement, null);
+      assert.notStrictEqual(typeof myElement, 'undefined');
+      assert.strictEqual(myElement.tagName, 'H3');
+      assert.doesNotThrow(function () {
+        myElement.click();
+      });
+    });
+
+    it('should accept a view wrapping a custom element (#89)', function () {
+      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let number$ = Fixture89.makeModelNumber$();
+      let vtree$ = Fixture89.viewWithContainerFn(number$, MyElement);
+      Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+
+      number$.request(1);
+      let myelement1 = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myelement1, null);
+      assert.strictEqual(myelement1.tagName, 'H3');
+      assert.strictEqual(myelement1.innerHTML, '123');
+
+      number$.request(1);
+      let myelement2 = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myelement2, null);
+      assert.strictEqual(myelement2.tagName, 'H3');
+      assert.strictEqual(myelement2.innerHTML, '456');
+    });
+
+    it('should accept a view with custom element as the root of vtree$', function () {
+      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let number$ = Fixture89.makeModelNumber$();
+      let vtree$ = Fixture89.viewWithoutContainerFn(number$, MyElement);
+      assert.doesNotThrow(() => {
+        Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+        number$.request(1);
+      });
     });
   });
 });
