@@ -34,7 +34,7 @@ function computer(interactions) {
     .map(function (name) {
       return h('div', [
         h('label', 'Name:'),
-        h('input.myinput', {attributes: {type: 'text'}}),
+        h('input.myinput', {type: 'text'}),
         h('hr'),
         h('h1', 'Hello ' + name)
       ]);
