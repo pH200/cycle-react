@@ -3,15 +3,15 @@
 An [RxJS Functional](https://github.com/Reactive-Extensions/RxJS) interface
 to [Facebook's React](http://facebook.github.io/react/).
 
-cycle-react allows you to write React applications in functional style.
+cycle-react allows you to write [React](https://github.com/facebook/react)
+applications in functional style.
 No classes, no mixins and no boilerplates. In addition,
 cycle-react is immutable and use
-(PureRenderMixin)[https://facebook.github.io/react/docs/pure-render-mixin.html]
+[PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
 internally by default.
 
-On the other hand, cycle-react is an implementation of
-[Cycle.js](https://github.com/staltz/cycle) by using
-[React](https://github.com/facebook/react) as backend.
+On the other hand, cycle-react is a React-style implementation of a beautiful
+framework called [Cycle.js](https://github.com/staltz/cycle).
 
 ## Installing
 
@@ -105,4 +105,4 @@ NODE_ENV=production npm run dist
 
 ### Work in progress
 
-Just like Cycle.js, Changes to API will occur before 1.0.
+Just like Cycle.js, changes to API will occur before 1.0.
