@@ -1,22 +1,26 @@
 {
-  "name": "cyclejs",
+  "name": "react-rx",
   "version": "0.20.4",
-  "author": "Andre Staltz",
-  "description": "An honestly reactive framework for web user interfaces",
+  "author": {
+    "name": "pH200",
+    "email": "ph.minamo@cytisan.com"
+  },
+  "description": "An RxJS Observable Interface to Facebook's React",
   "license": "MIT",
-  "homepage": "https://github.com/staltz/cycle",
-  "bugs": "https://github.com/staltz/cycle/issues",
+  "homepage": "https://github.com/pH200/react-rx",
+  "bugs": "https://github.com/pH200/react-rx/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/staltz/cycle"
+    "url": "https://github.com/pH200/react-rx"
   },
   "keywords": [
-    "mvi",
-    "virtual-dom"
+    "react",
+    "Rx",
+    "web",
+    "frontend"
   ],
   "main": "lib/cycle.js",
   "dependencies": {
-    "es6-map": "0.1.1",
     "react": "^0.13.2",
     "rx": "2.5.2",
     "vdom-to-html": "^2.0.0",
@@ -49,7 +53,7 @@
     "posttest-browser": "rm test/browser/page/tests-bundle.js",
     "test": "npm run jshint && npm run jscs && npm run test-node && npm run test-browser",
     "travis-test": "npm run jshint && npm run jscs && npm run test-node",
-    "browserify": "browserify src/cycle.js -t babelify --standalone Cycle --outfile dist/cycle.js",
+    "browserify": "browserify src/cycle.js -t babelify --standalone ReactRx --outfile dist/cycle.js",
     "uglify": "uglifyjs dist/cycle.js -o dist/cycle.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
     "docs": "node ./scripts/make-api-docs.js",
