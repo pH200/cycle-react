@@ -22,23 +22,21 @@ npm install cycle-react
 ## Example
 
 ```js
-var Cycle = require('cycle-react');
-var React = Cycle.React;
+let Cycle = require('cycle-react');
+let React = Cycle.React;
 
 function computer(interactions) {
   return interactions.get('.myinput', 'input')
-    .map(function (ev) {
-      return ev.target.value;
-    })
+    .map(ev => ev.target.value)
     .startWith('')
-    .map(function (name) {
-      return <div>
+    .map(name =>
+      <div>
         <label>Name:</label>
         <input className="myinput" type="text"></input>
         <hr />
         <h1>Hello {name}</h1>
-      </div>;
-    });
+      </div>
+    );
 }
 
 Cycle.applyToDOM('.js-container', computer);
@@ -50,24 +48,22 @@ user interaction events happening on elements on the DOM, which you can query us
 ## Custom element example
 
 ```js
-var Cycle = require('cycle-react');
-var React = Cycle.React;
-var Rx = Cycle.Rx;
+let Cycle = require('cycle-react');
+let React = Cycle.React;
+let Rx = Cycle.Rx;
 
 // "createReactClass" returns a native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
-var CounterText = Cycle.createReactClass('CounterText',
+let CounterText = Cycle.createReactClass('CounterText',
   function (interactions, props$) {
-    return props$.get('counter').map(function (counter) {
-      return <h3>{counter}</h3>;
-    });
+    return props$.get('counter').map(counter => <h3>{counter}</h3>);
   }
 );
 
-var Timer = Cycle.createReactClass('Timer', function () {
-  return Rx.Observable.interval(1000).map(function (i) {
-    return <CounterText counter={i}></CounterText>;
-  });
+let Timer = Cycle.createReactClass('Timer', function () {
+  return Rx.Observable.interval(1000).map(i =>
+    <CounterText counter={i}></CounterText>
+  );
 });
 
 Cycle.applyToDOM('.js-container', Timer);
