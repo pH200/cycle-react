@@ -60,7 +60,8 @@ function makeDispatchFunction(elementGetter, eventName) {
       element.dispatchEvent(event);
     } else {
       console.warn(
-        eventName + ' event has dispatched after the has been distroyed'
+        eventName +
+        ' event dispatched after the element has been destroyed'
       );
     }
   };
