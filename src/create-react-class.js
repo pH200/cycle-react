@@ -198,7 +198,7 @@ function createReactClass(
       this.propsSubject$.onNext(nextProps);
     },
     render: function render() {
-      if (this.state) {
+      if (this.state && this.state.vtree) {
         return this.state.vtree;
       }
       return React.createElement(rootTagName ? rootTagName : 'div');
