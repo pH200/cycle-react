@@ -19,7 +19,7 @@
     "web",
     "frontend"
   ],
-  "main": "lib/cycle.js",
+  "main": "src/cycle.js",
   "dependencies": {
     "react": "^0.13.2",
     "rx": "2.5.2",
