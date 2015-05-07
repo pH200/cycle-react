@@ -23,7 +23,7 @@ npm install cycle-react
 
 ```js
 var Cycle = require('cycle-react');
-var h = Cycle.h;
+var React = Cycle.React;
 
 function computer(interactions) {
   return interactions.get('.myinput', 'input')
@@ -32,12 +32,12 @@ function computer(interactions) {
     })
     .startWith('')
     .map(function (name) {
-      return h('div', [
-        h('label', 'Name:'),
-        h('input.myinput', {type: 'text'}),
-        h('hr'),
-        h('h1', 'Hello ' + name)
-      ]);
+      return <div>
+        <label>Name:</label>
+        <input className="myinput" type="text"></input>
+        <hr />
+        <h1>Hello {name}</h1>
+      </div>;
     });
 }
 
@@ -53,21 +53,20 @@ user interaction events happening on elements on the DOM, which you can query us
 var Cycle = require('cycle-react');
 var React = Cycle.React;
 var Rx = Cycle.Rx;
-var h = Cycle.h;
 
 // "createReactClass" returns a native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
 var CounterText = Cycle.createReactClass('CounterText',
   function (interactions, props$) {
     return props$.get('counter').map(function (counter) {
-      return h('h3', String(counter));
+      return <h3>{counter}</h3>;
     });
   }
 );
 
 var Timer = Cycle.createReactClass('Timer', function () {
   return Rx.Observable.interval(1000).map(function (i) {
-    return h(CounterText, {counter: i});
+    return <CounterText counter={i}></CounterText>;
   });
 });
 
@@ -77,6 +76,12 @@ Cycle.applyToDOM('.js-container', Timer);
 //   React.createElement(Timer),
 //   document.querySelector('.js-container'));
 ```
+
+You can use `h` and without JSX just like you did in Cycle.js.
+This was made possible by
+[react-hyperscript](https://github.com/mlmorg/react-hyperscript).
+
+[The example](https://github.com/pH200/cycle-react/blob/master/examples/timer/timer.js).
 
 ## But you said no classes
 
