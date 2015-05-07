@@ -92,7 +92,7 @@ event handler of the element.
 Example: `<button onClick={eventSubject.onEvent} />`
 
 To subscribe a user-defined event, append "on" before the event name
-with $ prefix.
+with a postfix "$".
 
 Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
 
