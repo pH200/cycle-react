@@ -1,10 +1,10 @@
-var h = ReactRx.h;
+var h = Cycle.h;
 
 function manyComponent(interactions, props) {
   var id$ = props.get('itemid').shareReplay(1);
   var color$ = props.get('color').startWith('#888').shareReplay(1);
   var width$ = props.get('width').startWith(200).shareReplay(1);
-  var vtree$ = ReactRx.Rx.Observable
+  var vtree$ = Cycle.Rx.Observable
     .combineLatest(id$, color$, width$, function (id, color, width) {
       var style = {
         border: '1px solid #000',
@@ -49,4 +49,4 @@ function manyComponent(interactions, props) {
   };
 }
 
-var ManyItem = ReactRx.createReactClass('ManyItem', manyComponent);
+var ManyItem = Cycle.createReactClass('ManyItem', manyComponent);

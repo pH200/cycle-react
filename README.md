@@ -1,4 +1,4 @@
-# react-rx
+# cycle-react
 
 An [RxJS Observable](https://github.com/Reactive-Extensions/RxJS) interface
 to [Facebook's React](http://facebook.github.io/react/).
@@ -7,22 +7,22 @@ This is an experiment project for implementing
 [Cycle.js](https://github.com/staltz/cycle) by using
 [React](https://github.com/facebook/react) as backend.
 
-react-rx is a fork of Cycle.js. Cycle.js is an awesome framework with
-remarkable concepts built-in. The only difference between Cycle.js and react-rx
+cycle-react is a fork of Cycle.js. Cycle.js is an awesome framework with
+remarkable concepts built-in. The only difference between Cycle.js and cycle-react
 is Cycle.js rendering [virtual-dom](https://github.com/Matt-Esch/virtual-dom)
-while react-rx rendering React elements.
+while cycle-react rendering React elements.
 
 ## Installing
 
 ```
-npm install react-rx
+npm install cycle-react
 ```
 
 ## Example
 
 ```js
-var ReactRx = require('react-rx');
-var h = ReactRx.h;
+var Cycle = require('cycle-react');
+var h = Cycle.h;
 
 function computer(interactions) {
   return interactions.get('.myinput', 'input')
@@ -40,20 +40,20 @@ function computer(interactions) {
     });
 }
 
-ReactRx.applyToDOM('.js-container', computer);
+Cycle.applyToDOM('.js-container', computer);
 ```
 
 Custom elements:
 
 ```js
-var ReactRx = require('react-rx');
-var React = ReactRx.React;
-var Rx = ReactRx.Rx;
-var h = ReactRx.h;
+var Cycle = require('cycle-react');
+var React = Cycle.React;
+var Rx = Cycle.Rx;
+var h = Cycle.h;
 
 // "createReactClass" returns native react class which can be used normally
-// by "React.createElement" and "ReactRx.applyToDOM".
-var CounterText = ReactRx.createReactClass('CounterText',
+// by "React.createElement" and "Cycle.applyToDOM".
+var CounterText = Cycle.createReactClass('CounterText',
   function (interactions, props$) {
     return props$.get('counter').map(function (counter) {
       return h('h3', String(counter));
@@ -61,13 +61,13 @@ var CounterText = ReactRx.createReactClass('CounterText',
   }
 );
 
-var Timer = ReactRx.createReactClass('Timer', function () {
+var Timer = Cycle.createReactClass('Timer', function () {
   return Rx.Observable.interval(1000).map(function (i) {
     return h(CounterText, {counter: i});
   });
 });
 
-ReactRx.applyToDOM('.js-container', Timer);
+Cycle.applyToDOM('.js-container', Timer);
 // or
 // React.render(
 //  React.createElement(Timer),

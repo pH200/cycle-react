@@ -1,5 +1,5 @@
 function manyView(items$) {
-  var h = ReactRx.h;
+  var h = Cycle.h;
 
   function vrenderTopButtons() {
     return h('div.topButtons', [

@@ -1,4 +1,4 @@
-var h = ReactRx.h;
+var h = Cycle.h;
 
 function computer(interactions) {
   return interactions.get('.myinput', 'input')
@@ -16,4 +16,4 @@ function computer(interactions) {
     });
 }
 
-ReactRx.applyToDOM('.js-container', computer);
+Cycle.applyToDOM('.js-container', computer);

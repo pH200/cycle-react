@@ -1,17 +1,17 @@
 {
-  "name": "react-rx",
-  "version": "0.20.5",
+  "name": "cycle-react",
+  "version": "0.21.0",
   "author": {
     "name": "pH200",
     "email": "ph.minamo@cytisan.com"
   },
   "description": "An RxJS Observable Interface to Facebook's React",
   "license": "MIT",
-  "homepage": "https://github.com/pH200/react-rx",
-  "bugs": "https://github.com/pH200/react-rx/issues",
+  "homepage": "https://github.com/pH200/cycle-react",
+  "bugs": "https://github.com/pH200/cycle-react/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pH200/react-rx"
+    "url": "https://github.com/pH200/cycle-react"
   },
   "keywords": [
     "react",
@@ -52,8 +52,8 @@
     "posttest-browser": "rm test/browser/page/tests-bundle.js",
     "test": "npm run jshint && npm run jscs && npm run test-node && npm run test-browser",
     "travis-test": "npm run jshint && npm run jscs && npm run test-node",
-    "browserify": "browserify src/cycle.js --standalone ReactRx -o dist/react-rx.js",
-    "uglify": "uglifyjs dist/react-rx.js -o dist/react-rx.min.js",
+    "browserify": "browserify src/cycle.js --standalone Cycle -o dist/cycle-react.js",
+    "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
     "docs": "node ./scripts/make-api-docs.js",
     "release": "npm run release-patch",

@@ -1,7 +1,7 @@
 function manyIntent(interactions) {
   var addOneBtnClick$ = interactions.get('.add-one-btn', 'click');
   var addManyBtnClick$ = interactions.get('.add-many-btn', 'click');
-  var addItem$ = ReactRx.Rx.Observable.merge(
+  var addItem$ = Cycle.Rx.Observable.merge(
     addOneBtnClick$.map(function () { return 1; }),
     addManyBtnClick$.map(function () { return 1000; })
   );
