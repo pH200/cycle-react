@@ -109,22 +109,6 @@ function composingCustomEventAttributes(props) {
   return eventHandlers;
 }
 
-function fixClassName(className) {
-  return function innerFixClassName(vtree) {
-    if (!className) {
-      return vtree;
-    }
-    var props = vtree.props;
-    if (typeof props.className !== 'string' ||
-      props.className === '') {
-      props.className = className;
-    } else {
-      props.className = props.className + ' ' + className;
-    }
-    return vtree;
-  };
-}
-
 function createGetPropFn(propsSubject$) {
   return function getProp(propName, comparer) {
     var prop$ = propsSubject$.map(function mapProp(p) {
@@ -171,9 +155,6 @@ function createReactClass(
       this.cycleComponent = cycleComponent;
       this.onMount = cycleComponent.onMount;
       var vtree$ = cycleComponent.vtree$;
-      if (this.props.className) {
-        vtree$ = vtree$.doOnNext(fixClassName(this.props.className));
-      }
       var vtreeDoSet$ = vtree$.doOnNext(function onNextVTree(vtree) {
         self.setState({vtree: vtree});
       });

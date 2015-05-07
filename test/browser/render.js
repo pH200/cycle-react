@@ -131,6 +131,17 @@ describe('Rendering', function () {
       });
     });
 
+    it('should not set props.className to the root element', function () {
+      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let vtree$ = Rx.Observable.just(h(MyElement, {className: 'ERR'}));
+      Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+      // Make assertions
+      let myElement = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myElement, null);
+      assert.notStrictEqual(typeof myElement, 'undefined');
+      assert.strictEqual(myElement.className.indexOf('ERR'), -1);
+    });
+
     it('should accept a view wrapping a custom element (#89)', function () {
       let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
       let number$ = Fixture89.makeModelNumber$();

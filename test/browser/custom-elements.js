@@ -203,9 +203,11 @@ describe('Custom Elements', function () {
       [{id: 23}, {id: 45}]
     ).controlled();
     function computer(interactions) {
-      return sequence$.concat(
-          interactions.get('.slider', 'remove').map(event => event.data)
-        )
+      let eventData$ = interactions
+        .get('.allSliders > *', 'remove')
+        .map(event => event.data);
+      return sequence$
+        .concat(eventData$)
         .scan((items, x) => {
           if (typeof x === 'object') {
             return x;
