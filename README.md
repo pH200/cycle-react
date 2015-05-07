@@ -70,7 +70,8 @@ let Rx = Cycle.Rx;
 // by "React.createElement" and "Cycle.applyToDOM".
 let CounterText = Cycle.createReactClass('CounterText',
   function (interactions, props$) {
-    return props$.get('counter').map(counter => <h3>{counter}</h3>);
+    return props$.get('counter')
+      .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
   }
 );
 

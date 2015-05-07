@@ -7,7 +7,7 @@ var h = Cycle.h;
 var CounterText = Cycle.createReactClass('CounterText',
   function (interactions, props$) {
     return props$.get('counter').map(function (counter) {
-      return h('h3', String(counter));
+      return h('h3', 'Seconds Elapsed: '+ counter);
     });
   }
 );
@@ -18,7 +18,7 @@ var Timer = Cycle.createReactClass('Timer', function () {
   });
 });
 
-// Cycle.applyToDOM('.js-container', Timer);
+Cycle.applyToDOM('.js-container', Timer);
 // or
 // React.render(
 //  React.createElement(Timer),
