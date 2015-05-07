@@ -1,12 +1,12 @@
 # cycle-react
 
-An [RxJS Functional](https://github.com/Reactive-Extensions/RxJS) interface
+An [RxJS](https://github.com/Reactive-Extensions/RxJS) functional interface
 to [Facebook's React](http://facebook.github.io/react/).
 
 cycle-react allows you to write [React](https://github.com/facebook/react)
 applications in functional style.
 No classes, no mixins and no boilerplates. In addition,
-cycle-react is immutable and use
+cycle-react is immutable and uses
 [PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
 internally by default.
 
@@ -44,8 +44,22 @@ function computer(interactions) {
 Cycle.applyToDOM('.js-container', computer);
 ```
 
-The input of the `computer` is `interactions`, a collection containing all possible
-user interaction events happening on elements on the DOM, which you can query using `interactions.get(selector, eventType)`. Function `applyToDOM` will take your `computer` function and plug it with the `user` function and solve the fixed point equation `vtree$ == computer(user(vtree$))`, where `vtree$` is an Observable of virtual DOM elements, the output of the `computer`. The result of this is Human-Computer Interaction, i.e. your UI program, happening under the container element selected by `'.js-container'`.
+The input of the `computer` is `interactions`, a collection containing all
+possible user interaction events happening on elements on the DOM, which you
+can query using `interactions.get(selector, eventType)`.
+
+The output of the `computer` is `IObservable<ReactElement>`
+(a reactive sequence of elements, in other words, view).
+
+Function `applyToDOM` subscribes that Observable of elements and renders the
+elements to DOM, by using `React.createClass` and `React.render` internally.
+
+Notice that although `React.createClass` is mentioned here, you don't have to
+use it. That's why cycle-react was made. We took functions over classes
+and mutable states.
+
+The description of the concept behind `applyToDOM` can be found at
+[Cycle.js](https://github.com/staltz/cycle)'s page.
 
 ## Custom element example
 
@@ -89,7 +103,7 @@ This was made possible by
 you get a ReactClass but without writing a class definition. The point is that
 ReactClass **is** a function indeed and it should always be used as a
 function object, because you don't `new`, `extends` or `this` to access
-properties. In fact, we don't want you to that.
+properties. In fact, we don't want you to do that.
 
 Apps written in cycle-react are `this`-less. You won't find a single `this`
 in the examples.
