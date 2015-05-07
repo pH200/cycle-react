@@ -2,9 +2,17 @@
 # `Cycle` object API
 
 - [`applyToDOM`](#applyToDOM)
+
 - [`renderAsHTML`](#renderAsHTML)
+
 - [`createReactClass`](#createReactClass)
+
+- [`createEventSubject`](#createEventSubject)
+
+- [`React`](#React)
+
 - [`Rx`](#Rx)
+
 - [`h`](#h)
 
 ### <a id="applyToDOM"></a> `applyToDOM(container, computer)`
@@ -24,10 +32,6 @@ Example: `interactions.get('.mybutton', 'click').map(ev => ...)`
 
 - `container :: String|HTMLElement` the DOM selector for the element (or the element itself) to contain the rendering of the VTrees.
 - `computer :: Function` a function that takes `interactions` as input and outputs an Observable of React elements.
-
-#### Return:
-
-*(Object)* an object containing properties `rootElem$`, `interactions`, `dispose()` that can be used for debugging or testing.
 
 - - -
 
@@ -73,9 +77,29 @@ they are treated as custom events of the custom element.
 #### Arguments:
 
 - `tagName :: String` a name for identifying the React class.
-- `computer :: Function` the implementation for the custom element.
-This function takes two arguments: `interactions`, and `properties`, and
+- `computer :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
+
+- - -
+
+### <a id="createEventSubject"></a> `createEventSubject()`
+
+Creates a subject with an `onEvent` method bind to the subject.
+This subject is useful if you don't want to use `interactions.get`. And
+prefer catching events by providing `subject.onEvent` directly to the
+event attribute of the element.
+
+Example: `<button onClick={eventSubject.onEvent} />`
+
+#### Return:
+
+*(Rx.Subject)* a subject with a instance method "onEvent"
+
+- - -
+
+### <a id="React"></a> `React`
+
+A shortcut to the root object of React.
 
 - - -
 
@@ -91,3 +115,6 @@ This is a helper for creating VTrees in Views. The API is identical to
 [virtual-hyperscript](
 https://github.com/Matt-Esch/virtual-dom/tree/master/virtual-hyperscript)
 but returns React element tree instead.
+
+- - -
+

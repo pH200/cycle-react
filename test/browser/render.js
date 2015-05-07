@@ -105,6 +105,32 @@ describe('Rendering', function () {
       });
     });
 
+    it('should catch events by using EventSubject', function (done) {
+      function computer() {
+        let onClick$ = Cycle.createEventSubject();
+        let vtree$ = Rx.Observable.just(
+          h('h3.myelementclass', {
+            onClick: onClick$.onEvent
+          }, 'Foobar')
+        );
+        onClick$.subscribe(ev => {
+          assert.strictEqual(ev.type, 'click');
+          assert.strictEqual(ev.target.innerHTML, 'Foobar');
+          done();
+        });
+        return vtree$;
+      }
+      Cycle.applyToDOM(createRenderTarget(), computer);
+      // Make assertions
+      let myElement = document.querySelector('.myelementclass');
+      assert.notStrictEqual(myElement, null);
+      assert.notStrictEqual(typeof myElement, 'undefined');
+      assert.strictEqual(myElement.tagName, 'H3');
+      assert.doesNotThrow(function () {
+        myElement.click();
+      });
+    });
+
     it('should accept a view wrapping a custom element (#89)', function () {
       let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
       let number$ = Fixture89.makeModelNumber$();

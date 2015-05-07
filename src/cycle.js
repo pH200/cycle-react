@@ -2,6 +2,7 @@
 var applyToDOM = require('./render-dom');
 var renderAsHTML = require('./render-html');
 var createReactClass = require('./create-react-class');
+var createEventSubject = require('./event-subject');
 var React = require('react');
 var Rx = require('rx');
 var h = require('./h');
@@ -67,6 +68,18 @@ var Cycle = {
    * @function createReactClass
    */
   createReactClass: createReactClass,
+
+  /**
+   * Creates a subject with an `onEvent` method bind to the subject.
+   * This subject is useful if you don't want to use `interactions.get`. And
+   * prefer catching events by providing `subject.onEvent` directly to the
+   * event attribute of the element.
+   *
+   * Example: `<button onClick={eventSubject.onEvent} />`
+   * @return {Rx.Subject} a subject with a instance method "onEvent"
+   * @function createEventSubject
+   */
+  createEventSubject: createEventSubject,
 
   /**
    * A shortcut to the root object of React.

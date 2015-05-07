@@ -5,7 +5,7 @@
     "name": "pH200",
     "email": "ph.minamo@cytisan.com"
   },
-  "description": "RxJS Functional Interface to Facebook's React",
+  "description": "Rx functional interface to Facebook's React",
   "license": "MIT",
   "homepage": "https://github.com/pH200/cycle-react",
   "bugs": "https://github.com/pH200/cycle-react/issues",
