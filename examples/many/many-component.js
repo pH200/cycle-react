@@ -1,10 +1,10 @@
-var h = Cycle.h;
+var h = ReactRx.h;
 
 function manyComponent(interactions, props) {
   var id$ = props.get('itemid').shareReplay(1);
   var color$ = props.get('color').startWith('#888').shareReplay(1);
   var width$ = props.get('width').startWith(200).shareReplay(1);
-  var vtree$ = Cycle.Rx.Observable
+  var vtree$ = ReactRx.Rx.Observable
     .combineLatest(id$, color$, width$, function (id, color, width) {
       var style = {
         border: '1px solid #000',
@@ -18,16 +18,16 @@ function manyComponent(interactions, props) {
       return h('div.item', {style: style}, [
         h('input.color-field', {
           type: 'text',
-          attributes: {'data-item-id': id, value: color}
+          value: color
         }),
         h('div.slider-container', [
           h('input.width-slider', {
             type: 'range', min: '200', max: '1000',
-            attributes: {'data-item-id': id, value: width}
+            value: width
           })
         ]),
         h('div.width-content', String(width)),
-        h('button.remove-btn', {attributes: {'data-item-id': id}}, 'Remove')
+        h('button.remove-btn', 'Remove')
       ]);
     });
   var destroy$ = interactions.get('.remove-btn', 'click')
@@ -48,3 +48,5 @@ function manyComponent(interactions, props) {
     changeWidth$: changeWidth$
   };
 }
+
+var ManyItem = ReactRx.createReactClass('ManyItem', manyComponent);

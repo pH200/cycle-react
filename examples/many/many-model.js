@@ -44,7 +44,7 @@ function manyModel(intentions) {
     };
   });
 
-  return Cycle.Rx.Observable.merge(
+  return ReactRx.Rx.Observable.merge(
       addItemMod$, removeItemMod$, colorChangedMod$, widthChangedMod$
     )
     .startWith([{id: 0, color: 'red', width: 300}])

@@ -1,8 +1,10 @@
-var h = Cycle.h;
+var h = ReactRx.h;
 
-function userInterface(interactions) {
+function computer(interactions) {
   return interactions.get('.myinput', 'input')
-    .map(function (ev) { return ev.target.value; })
+    .map(function (ev) {
+      return ev.target.value;
+    })
     .startWith('')
     .map(function (name) {
       return h('div', [
@@ -14,4 +16,4 @@ function userInterface(interactions) {
     });
 }
 
-Cycle.applyToDOM('.js-container', userInterface);
+ReactRx.applyToDOM('.js-container', computer);

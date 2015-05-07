@@ -7,18 +7,40 @@
     <title>Many elements Example</title>
   </head>
   <body>
+    <div class="benchmark">
+      <button class="perf-btn">Benchmark</button>
+      <div class="benchmark-result"></div>
+      <p>Performance varies when NODE_ENV=production is provided for npm run dist</p>
+    </div>
     <div class="js-container"></div>
     <hr />
     <p>
-      Built with <a href="https://github.com/staltz/cycle">Cycle.js</a>. <a href="https://github.com/staltz/cycle/tree/master/examples/many">Source code</a>
+      Built with react-rx, a fork of Cycle.js.
       <br />
       <a href="http://binarymuse.github.io/react-primer/build/index.html?6">Compare with React</a>
     </p>
-    <script src="../../dist/cycle.js"></script>
+    <script src="../../dist/react-rx.js"></script>
     <script src="./many-component.js"></script>
     <script src="./many-model.js"></script>
     <script src="./many-view.js"></script>
     <script src="./many-intent.js"></script>
     <script src="./many.js"></script>
+    <script>
+    function initPerfButton() {
+      function run() {
+        var addManyBtn = document.querySelector('button.add-many-btn');
+        var t0 = performance.now();
+        addManyBtn.click();
+        var t1 = performance.now();
+        var diff = t1 - t0;
+        console.log("Call to doSomething took " + diff + " milliseconds.")
+        var benchmarkResult = document.querySelector('.benchmark-result');
+        benchmarkResult.innerText = Math.round(diff) + 'ms';
+      }
+      var perfBtn = document.querySelector('.perf-btn');
+      perfBtn.onclick = run;
+    }
+    initPerfButton();
+    </script>
   </body>
 </html>
