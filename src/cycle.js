@@ -73,9 +73,14 @@ var Cycle = {
    * Creates a subject with an `onEvent` method bind to the subject.
    * This subject is useful if you don't want to use `interactions.get`. And
    * prefer catching events by providing `subject.onEvent` directly to the
-   * event attribute of the element.
+   * event handler of the element.
    *
    * Example: `<button onClick={eventSubject.onEvent} />`
+   *
+   * To subscribe a user-defined event, append "on" before the event name
+   * with $ prefix.
+   *
+   * Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
    * @return {Rx.Subject} a subject with a instance method "onEvent"
    * @function createEventSubject
    */

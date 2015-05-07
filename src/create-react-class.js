@@ -43,7 +43,7 @@ function makeInteractions(rootElem$) {
   };
 }
 
-function makeDispatchFunction(elementGetter, eventName) {
+function makeDispatchFunction(elementGetter, eventName, handler) {
   return function dispatchCustomEvent(evData) {
     //console.log('%cdispatchCustomEvent ' + eventName,
     //  'background-color: #CCCCFF; color: black');
@@ -57,6 +57,9 @@ function makeDispatchFunction(elementGetter, eventName) {
     event.data = evData;
     var element = elementGetter();
     if (element) {
+      if (handler) {
+        handler(event);
+      }
       element.dispatchEvent(event);
     } else {
       console.warn(
@@ -67,7 +70,7 @@ function makeDispatchFunction(elementGetter, eventName) {
   };
 }
 
-function composingEventObservables(events, elementGetter) {
+function composingEventObservables(events, handlers, elementGetter) {
   var eventNames = Object.keys(events);
   var eventObservables = [];
   for (var i = 0; i < eventNames.length; i++) {
@@ -76,12 +79,34 @@ function composingEventObservables(events, elementGetter) {
       var eventObs = events[eventName];
       eventObservables.push(
         eventObs.doOnNext(
-          makeDispatchFunction(elementGetter, eventName.slice(0, -1))
+          makeDispatchFunction(
+            elementGetter,
+            eventName.slice(0, -1),
+            handlers[eventName]
+          )
         )
       );
     }
   }
   return eventObservables;
+}
+
+function composingCustomEventAttributes(props) {
+  if (!props) {
+    return {};
+  }
+  var propNames = Object.keys(props);
+  var eventHandlers = {};
+  for (var i = 0; i < propNames.length; i++) {
+    var propName = propNames[i];
+    if (/^on.+\$$/.test(propName)) {
+      var handler = props[propName];
+      if (typeof handler === 'function') {
+        eventHandlers[propName.slice(2)] = handler;
+      }
+    }
+  }
+  return eventHandlers;
 }
 
 function fixClassName(className) {
@@ -166,8 +191,10 @@ function createReactClass(
     componentDidMount: function componentDidMount() {
       // Subscribe events
       var self = this;
+      var eventHandlers = composingCustomEventAttributes(this.props);
       var eventObservables = composingEventObservables(
         this.cycleComponent.customEvents,
+        eventHandlers,
         function getCurrentElement() {
           return React.findDOMNode(self);
         }

@@ -151,6 +151,36 @@ describe('Custom Elements', function () {
     number$.request(1);
   });
 
+  it('should catch customized-events by using EventSubject', function (done) {
+    let number$ = Rx.Observable.of(123, 456).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      return {
+        vtree$: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        myevent$: number$
+      };
+    });
+    // Use the custom element
+    let Root = Cycle.createReactClass('Root', function (interactions) {
+      let eventSubject$ = Cycle.createEventSubject();
+      let vtree$ = Rx.Observable.just(h('div.toplevel', [
+        h(MyElement, {key: 1, onmyevent$: eventSubject$.onEvent})
+      ]));
+      eventSubject$.subscribe(x => {
+        assert.strictEqual(x.data, 123);
+        done();
+      });
+      return vtree$;
+    });
+    Cycle.applyToDOM(createRenderTarget(), Root);
+    // Make assertions
+    let myElement = document.querySelector('.myelementclass');
+    assert.notStrictEqual(myElement, null);
+    assert.notStrictEqual(typeof myElement, 'undefined');
+    assert.strictEqual(myElement.tagName, 'H3');
+    number$.request(1);
+  });
+
   // Not sure if React would be more efficient if key was provided.
   it.skip('should warn when custom element is used with no key');
 
