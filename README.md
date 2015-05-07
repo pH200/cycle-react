@@ -10,7 +10,7 @@ cycle-react is immutable and uses
 [PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
 internally by default.
 
-On the other hand, cycle-react is a React-style implementation of a beautiful
+Additionally, cycle-react is also a React-style implementation of a beautiful
 framework called [Cycle.js](https://github.com/staltz/cycle).
 
 ## Installing
