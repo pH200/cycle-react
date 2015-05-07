@@ -139,9 +139,9 @@ function createReactClass(
       propsSubject$.get = createGetPropFn(propsSubject$);
       this.propsSubject$ = propsSubject$;
       this.rootElemSubject$ = new Rx.ReplaySubject(1);
-      var interaction$ = makeInteractions(this.rootElemSubject$);
+      var interactions = makeInteractions(this.rootElemSubject$);
       var cycleComponent = digestDefinitionFnOutput(
-        definitionFn(interaction$, this.propsSubject$)
+        definitionFn(interactions, this.propsSubject$)
       );
       this.cycleComponent = cycleComponent;
       this.onMount = cycleComponent.onMount;
