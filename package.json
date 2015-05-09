@@ -23,9 +23,11 @@
   ],
   "main": "src/cycle.js",
   "dependencies": {
-    "react": "~0.13.3",
     "rx": "2.5.2",
     "virtual-hyperscript": "^4.6.0"
+  },
+  "peerDependencies": {
+    "react": "0.13.x"
   },
   "devDependencies": {
     "babel": "^5.2.17",
