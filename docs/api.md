@@ -5,7 +5,7 @@
 
 - [`renderAsHTML`](#renderAsHTML)
 
-- [`createReactClass*`](#createReactClass*)
+- [`createReactClass`](#createReactClass)
 
 - [`createEventSubject`](#createEventSubject)
 
@@ -52,7 +52,7 @@ otherwise the output `html$` will never emit an HTML string.
 
 - - -
 
-### <a id="createReactClass*"></a> `createReactClass*(tagName, computer, [options])`
+### <a id="createReactClass"></a> `createReactClass(tagName, computer, [options])`
 
 Takes a `computer` function which outputs an Observable of React
 elements, and returns a converted React class which can be used normally

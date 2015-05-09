@@ -114,7 +114,7 @@ var Cycle = {
    * This function takes two arguments: `interactions`, and `properties`, and
    * should output an object of Observables.
    * @param {Object} [options] the options for createReactClass.
-   * @function createReactClass*
+   * @function createReactClass
    */
   createReactClass: createReactClass,
 
