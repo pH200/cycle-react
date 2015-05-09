@@ -5,8 +5,8 @@ var h = Cycle.h;
 // "createReactClass" returns native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
 var CounterText = Cycle.createReactClass('CounterText',
-  function (interactions, props$) {
-    return props$.get('counter').map(function (counter) {
+  function (interactions, props) {
+    return props.get('counter').map(function (counter) {
       return h('h3', 'Seconds Elapsed: '+ counter);
     });
   }

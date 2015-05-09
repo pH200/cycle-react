@@ -39,9 +39,9 @@ describe('Custom Elements', function () {
   it('should render inner state and properties independently', function () {
     // Make custom element with internal state, and properties as input
     let number$ = Rx.Observable.range(1, 10).controlled();
-    let MyElement = Cycle.createReactClass('MyElement', function (interactions, props$) {
+    let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
       return Rx.Observable.combineLatest(
-        props$.get('color'),
+        props.get('color'),
         number$,
         function (color, number) {
           return h('h3.stateful-element',
@@ -324,7 +324,7 @@ describe('Custom Elements', function () {
     assert.strictEqual(items[1].textContent, 'item2');
   });
 
-  it('should distinct property changes for props$.get', function () {
+  it('should distinct property changes for props.get', function () {
     let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
       return props.get('list').map(list =>
         h('div', [

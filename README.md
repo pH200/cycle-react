@@ -69,8 +69,8 @@ let Rx = Cycle.Rx;
 // "createReactClass" returns a native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
 let CounterText = Cycle.createReactClass('CounterText',
-  function (interactions, props$) {
-    return props$.get('counter')
+  function (interactions, props) {
+    return props.get('counter')
       .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
   }
 );
