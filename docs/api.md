@@ -98,7 +98,7 @@ Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
 
 #### Return:
 
-*(Rx.Subject)* a subject with a instance method "onEvent"
+*(Rx.Subject)* a subject with an instance method "onEvent"
 
 - - -
 

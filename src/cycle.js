@@ -81,7 +81,7 @@ var Cycle = {
    * with a postfix "$".
    *
    * Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
-   * @return {Rx.Subject} a subject with a instance method "onEvent"
+   * @return {Rx.Subject} a subject with an instance method "onEvent"
    * @function createEventSubject
    */
   createEventSubject: createEventSubject,
