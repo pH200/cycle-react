@@ -1,5 +1,5 @@
 {
-  "esnext": true,
+  "esnext": false,
   "requireCurlyBraces": [
     "if",
     "else",
