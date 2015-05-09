@@ -35,6 +35,51 @@ describe('Cycle', function () {
     });
   });
 
+  describe('createReactClass', function () {
+    it('should overwrite rootTagName', function () {
+      var MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        'h3'
+      );
+      var element = MyElement.prototype.render();
+      assert.strictEqual(element.type, 'h3');
+    });
+
+    it('should not overwrite rootTagName by null argument', function () {
+      var MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        null
+      );
+      var element = MyElement.prototype.render();
+      assert.strictEqual(element.type, 'div');
+    });
+
+    it('should overwrite mixins', function () {
+      var MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        null,
+        []
+      );
+      assert.equal(MyElement.prototype.shouldComponentUpdate, null);
+    });
+
+    it('should not overwrite mixins by null argument', function () {
+      var MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        null,
+        null
+      );
+      assert.strictEqual(
+        typeof MyElement.prototype.shouldComponentUpdate,
+        'function'
+      );
+    });
+  })
+
   describe('createEventSubject', function () {
     it('should have onEvent', function () {
       let subject = createEventSubject();

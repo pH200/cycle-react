@@ -128,6 +128,7 @@ function createReactClass(
   displayName,
   definitionFn,
   rootTagName,
+  mixins,
   observer,
   eventObserver) {
   if (typeof displayName !== 'string') {
@@ -140,7 +141,7 @@ function createReactClass(
     displayName: displayName,
     // https://facebook.github.io/react/docs/pure-render-mixin.html
     // This works perfectly because we're only setting vtree for the state.
-    mixins: [PureRenderMixin],
+    mixins: Array.isArray(mixins) ? mixins : [PureRenderMixin],
     getInitialState: function getInitialState() {
       return {vtree: null};
     },
