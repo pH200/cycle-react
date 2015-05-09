@@ -65,6 +65,7 @@ var Cycle = {
    * The `options` is optional and can be ignored in most cases.
    *
    * options example:
+   *
    *     createReactClass('displayName', computer, {
    *       rootTagName: 'div',
    *       mixins: [PureRenderMixin],
