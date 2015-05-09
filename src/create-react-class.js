@@ -136,10 +136,11 @@ function createReactClass(
   if (typeof definitionFn !== 'function') {
     throw new Error('Invalid definitionFn');
   }
-  // The default value('div') is specified at render()
-  var rootTagName = options ? options.rootTagName : null;
+  options = options || {};
+  // The option for the default root element type.
+  var rootTagName = options.rootTagName || 'div';
   // The option for passing "this" to definitionFn
-  var bindThis = options ? (!!options.bindThis) : false;
+  var bindThis = !!options.bindThis;
 
   var reactClassProto = {
     displayName: displayName,
@@ -216,22 +217,31 @@ function createReactClass(
       if (this.state && this.state.vtree) {
         return this.state.vtree;
       }
-      return React.createElement(rootTagName ? rootTagName : 'div');
+      return React.createElement(rootTagName);
     }
   };
 
-  if (options) {
-    if (Array.isArray(options.mixins)) {
-      reactClassProto.mixins = options.mixins;
-    }
-    if (options.propTypes) {
-      reactClassProto.propTypes = options.propTypes;
-    }
-  }
-  if (!reactClassProto.mixins) {
+  if (Array.isArray(options.mixins)) {
+    reactClassProto.mixins = options.mixins;
+  } else {
     // https://facebook.github.io/react/docs/pure-render-mixin.html
     // This works perfectly because the state is always set by the new vtree.
     reactClassProto.mixins = [PureRenderMixin];
+  }
+  if (options.propTypes) {
+    reactClassProto.propTypes = options.propTypes;
+  }
+  // Override forceUpdate for react-hot-loader
+  if (options._testForceHotLoader ||
+    (!options.disableHotLoader && module.hot))
+  {
+    reactClassProto.forceUpdate = function hotForceUpdate(callback) {
+      this.componentWillUnmount();
+      this.componentWillMount();
+      if (callback) {
+        callback();
+      }
+    };
   }
 
   return React.createClass(reactClassProto);

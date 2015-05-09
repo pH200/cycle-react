@@ -45,6 +45,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "lint": "npm run jshint && npm run jscs",
     "jshint": "jshint src/",
     "jscs": "jscs src/",
     "test-common": "mocha --compilers js:babel/register test/common",

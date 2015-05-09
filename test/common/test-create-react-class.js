@@ -85,7 +85,6 @@ describe('createReactClass', function () {
     let plan = 0;
     let MyElement = Cycle.createReactClass(
       'MyElement',
-      // Arrow function would replace the this context
       (_1, _2, self) => {
         assert.strictEqual(self.foo, 'bar');
         plan++;
@@ -99,5 +98,33 @@ describe('createReactClass', function () {
     let element = new MyElement();
     element.componentWillMount();
     assert.strictEqual(plan, 1);
+  });
+
+  it('should override forceUpdate for react-hot-loader', function () {
+    let MyElement = Cycle.createReactClass(
+      'MyElement',
+      () => Rx.Observable.empty(),
+      // _testForceHotLoader is only for tests
+      // The override for react-hot-loader is enabled by default
+      // if module.hot == true
+      {_testForceHotLoader: true}
+    );
+    assert.strictEqual(
+      MyElement.prototype.forceUpdate.name,
+      'hotForceUpdate'
+    );
+  });
+
+  it('should not override forceUpdate by default', function () {
+    let MyElement = Cycle.createReactClass(
+      'MyElement',
+      () => Rx.Observable.empty()
+    );
+    if (MyElement.prototype.forceUpdate) {
+      assert.notStrictEqual(
+        MyElement.prototype.forceUpdate.name,
+        'hotForceUpdate'
+      );
+    }
   });
 });
