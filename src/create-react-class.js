@@ -127,8 +127,7 @@ function createGetPropFn(propsSubject$) {
 function createReactClass(
   displayName,
   definitionFn,
-  rootTagName,
-  mixins,
+  options,
   observer,
   eventObserver) {
   if (typeof displayName !== 'string') {
@@ -137,11 +136,11 @@ function createReactClass(
   if (typeof definitionFn !== 'function') {
     throw new Error('Invalid definitionFn');
   }
-  return React.createClass({
+  // The default value('div') is specified at render()
+  var rootTagName = options ? options.rootTagName : null;
+
+  var reactClassProto = {
     displayName: displayName,
-    // https://facebook.github.io/react/docs/pure-render-mixin.html
-    // This works perfectly because we're only setting vtree for the state.
-    mixins: Array.isArray(mixins) ? mixins : [PureRenderMixin],
     getInitialState: function getInitialState() {
       return {vtree: null};
     },
@@ -215,7 +214,23 @@ function createReactClass(
       }
       return React.createElement(rootTagName ? rootTagName : 'div');
     }
-  });
+  };
+
+  if (options) {
+    if (Array.isArray(options.mixins)) {
+      reactClassProto.mixins = options.mixins;
+    }
+    if (options.propTypes) {
+      reactClassProto.propTypes = options.propTypes;
+    }
+  }
+  if (!reactClassProto.mixins) {
+    // https://facebook.github.io/react/docs/pure-render-mixin.html
+    // This works perfectly because the state is always set by the new vtree.
+    reactClassProto.mixins = [PureRenderMixin];
+  }
+
+  return React.createClass(reactClassProto);
 }
 
 module.exports = createReactClass;

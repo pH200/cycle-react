@@ -36,42 +36,60 @@ describe('Cycle', function () {
   });
 
   describe('createReactClass', function () {
-    it('should overwrite rootTagName', function () {
-      var MyElement = Cycle.createReactClass(
+    it('should have a default rootTagName', function () {
+      let MyElement = Cycle.createReactClass(
         'MyElement',
-        () => Rx.Observable.empty(),
-        'h3'
+        () => Rx.Observable.empty()
       );
-      var element = MyElement.prototype.render();
-      assert.strictEqual(element.type, 'h3');
-    });
-
-    it('should not overwrite rootTagName by null argument', function () {
-      var MyElement = Cycle.createReactClass(
-        'MyElement',
-        () => Rx.Observable.empty(),
-        null
-      );
-      var element = MyElement.prototype.render();
+      let element = MyElement.prototype.render();
       assert.strictEqual(element.type, 'div');
     });
 
-    it('should overwrite mixins', function () {
-      var MyElement = Cycle.createReactClass(
+    it('should overwrite rootTagName', function () {
+      let MyElement = Cycle.createReactClass(
         'MyElement',
         () => Rx.Observable.empty(),
-        null,
-        []
+        {rootTagName: 'h3'}
+      );
+      let element = MyElement.prototype.render();
+      assert.strictEqual(element.type, 'h3');
+    });
+
+    it('should not overwrite rootTagName by null options', function () {
+      let MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        {rootTagName: null}
+      );
+      let element = MyElement.prototype.render();
+      assert.strictEqual(element.type, 'div');
+    });
+
+    it('should have default mixins', function () {
+      let MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty()
+      );
+      assert.strictEqual(
+        typeof MyElement.prototype.shouldComponentUpdate,
+        'function'
+      );
+    });
+
+    it('should overwrite mixins', function () {
+      let MyElement = Cycle.createReactClass(
+        'MyElement',
+        () => Rx.Observable.empty(),
+        {mixins: []}
       );
       assert.equal(MyElement.prototype.shouldComponentUpdate, null);
     });
 
-    it('should not overwrite mixins by null argument', function () {
-      var MyElement = Cycle.createReactClass(
+    it('should not overwrite mixins by null options', function () {
+      let MyElement = Cycle.createReactClass(
         'MyElement',
         () => Rx.Observable.empty(),
-        null,
-        null
+        {mixins: null}
       );
       assert.strictEqual(
         typeof MyElement.prototype.shouldComponentUpdate,
