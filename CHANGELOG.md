@@ -11,6 +11,10 @@ Additionally, props equals to props.get('\*') in cycle-react. Which means you
 can skip `.get('*')` and get the Observable of the properties object.
 This shortcut is not available for the original Cycle.js.
 
+Add feature: createEventSubject, a helper for using Rx subject as event handler
+
+Details can be found at API docs.
+
 ## 0.21.0
 
 The alpha.
