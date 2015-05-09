@@ -111,6 +111,9 @@ function composingCustomEventAttributes(props) {
 
 function createGetPropFn(propsSubject$) {
   return function getProp(propName, comparer) {
+    if (propName === '*') {
+      return propsSubject$;
+    }
     var prop$ = propsSubject$.map(function mapProp(p) {
       return p[propName];
     });
