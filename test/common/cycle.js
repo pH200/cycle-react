@@ -2,6 +2,7 @@
 /* global describe, it */
 let assert = require('assert');
 let Cycle = require('../../src/cycle');
+let Rx = Cycle.Rx;
 let createEventSubject = Cycle.createEventSubject;
 
 describe('Cycle', function () {
@@ -95,6 +96,41 @@ describe('Cycle', function () {
         typeof MyElement.prototype.shouldComponentUpdate,
         'function'
       );
+    });
+
+    it('should not bind `this` for definitionFn by default', function () {
+      let plan = 0;
+      let MyElement = Cycle.createReactClass(
+        'MyElement',
+        (_1, _2, self) => {
+          assert.equal(self, null);
+          plan++;
+          return Rx.Observable.empty();
+        }
+      );
+      let element = new MyElement();
+      element.componentWillMount();
+      assert.strictEqual(plan, 1);
+    });
+
+    it('should be able to bind `this` for definitionFn', function () {
+      let plan = 0;
+      let MyElement = Cycle.createReactClass(
+        'MyElement',
+        // Arrow function would replace the this context
+        (_1, _2, self) => {
+          assert.strictEqual(self.foo, 'bar');
+          plan++;
+          return Rx.Observable.empty();
+        },
+        {
+          bindThis: true,
+          mixins: [{foo: 'bar'}]
+        }
+      );
+      let element = new MyElement();
+      element.componentWillMount();
+      assert.strictEqual(plan, 1);
     });
   })
 

@@ -138,6 +138,8 @@ function createReactClass(
   }
   // The default value('div') is specified at render()
   var rootTagName = options ? options.rootTagName : null;
+  // The option for passing "this" to definitionFn
+  var bindThis = options ? (!!options.bindThis) : false;
 
   var reactClassProto = {
     displayName: displayName,
@@ -153,6 +155,8 @@ function createReactClass(
       this.rootElemSubject$ = new Rx.ReplaySubject(1);
       var interactions = makeInteractions(this.rootElemSubject$);
       var cycleComponent = digestDefinitionFnOutput(
+        bindThis ?
+        definitionFn(interactions, this.propsSubject$, this) :
         definitionFn(interactions, this.propsSubject$)
       );
       this.cycleComponent = cycleComponent;
