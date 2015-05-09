@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.23.0
+
+Add feature: Support react-hot-loader
+
+cycle-react now overrides `forceUpdate` when `module.hot == true`
+(webpack hot module enabled). No extra configuration needed.
+This overriding behavior only affects the ReactClass created by cycle-react
+and has no effect if webpack-hot-module was disabled.
+
+Add feature: createReactClass options, see docs/api.md for details
+
+Change: "react" is moved to peer dependencies
+
 ## 0.22.0
 
 Add feature: props.get('\*') for custom elements

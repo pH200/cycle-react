@@ -5,7 +5,7 @@
 
 - [`renderAsHTML`](#renderAsHTML)
 
-- [`createReactClass`](#createReactClass)
+- [`createReactClass*`](#createReactClass*)
 
 - [`createEventSubject`](#createEventSubject)
 
@@ -52,7 +52,7 @@ otherwise the output `html$` will never emit an HTML string.
 
 - - -
 
-### <a id="createReactClass"></a> `createReactClass(tagName, computer)`
+### <a id="createReactClass*"></a> `createReactClass*(tagName, computer, [options])`
 
 Takes a `computer` function which outputs an Observable of React
 elements, and returns a converted React class which can be used normally
@@ -74,11 +74,59 @@ The `computer` must output an object containing the property `vtree$`
 as an Observable. If the output object contains other Observables, then
 they are treated as custom events of the custom element.
 
+The `options` is optional and can be ignored in most cases.
+
+options example:
+    createReactClass('displayName', computer, {
+      rootTagName: 'div',
+      mixins: [PureRenderMixin],
+      propTypes: null,
+      disableHotLoader: false,
+      bindThis: false
+    });
+
+`opt.rootTagName` is the default tagName for the root element.
+Normally, you don't need to set this option if your root element is div or
+you have an initial value for the vtree$. Examples:
+
+    // The element for the first render would be <h1 />
+    createReactClass('displayName', () => Rx.spawn(<h1 />), {
+      rootTagName: 'div'
+    });
+
+    // The element for the first render would be <div></div>,
+    // and the second element would be <h1 /> (after 1000ms)
+    createReactClass('displayName',
+      () => Rx.Observable.timer(1000).map(() => <h1 />), {
+      rootTagName: 'div'
+    });
+
+    // The element for the first render would be <h2 />,
+    // and the second element would be <h1 /> (after 1000ms)
+    // rootTagName has no effect in this case
+    createReactClass('displayName',
+      () => Rx.Observable.timer(1000)
+        .map(() => <h1 />)
+        .startWith(<h2 />), {
+      rootTagName: 'div'
+    });
+
+`opt.mixins` is the mixins property used by React.createClass in
+cycle-react internally. The value must be an Array. Setting
+`mixins: [AnyMixin]` will overwrite the default mixins [PureRenderMixin].
+So, make sure you always append [PureRenderMixin] if you need that
+feature.
+
+`opt.bindThis` will append the third parameter `this` to `computer()`
+Normally, you don't want to use this. However, it might be required for
+working with some React components.
+
 #### Arguments:
 
 - `tagName :: String` a name for identifying the React class.
 - `computer :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
+- `[options] :: Object` the options for createReactClass.
 
 - - -
 

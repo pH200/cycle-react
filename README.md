@@ -111,6 +111,25 @@ cycle-react shares the same API as Cycle.js, except of doing custom elements.
 A more comprehensive README can be found at
 https://github.com/staltz/cycle
 
+## FAQ
+
+### Can I use cycle-react with [react-hot-loader](https://github.com/gaearon/react-hot-loader)?
+
+Yes. And no extra configuration needed.
+
+[Example](https://github.com/cycle-react-examples/react-hot-boilerplate)
+
+### Can I use cycle-react with other React components and libraries?
+
+Yes. You can even use cycle-react with your current React apps. Because
+`createReactClass` creates the native ReactClass for you.
+
+Examples for integrating cycle-react with other libraries are work in progress.
+
+### more
+
+[docs/faq.md](https://github.com/pH200/cycle-react/blob/master/docs/faq.md)
+
 ## Build standalone js
 
 ```
