@@ -145,9 +145,10 @@ function createReactClass(
   var reactClassProto = {
     displayName: displayName,
     getInitialState: function getInitialState() {
+      this.hasMounted = false;
       return {vtree: null};
     },
-    componentWillMount: function componentWillMount() {
+    _subscribeCycleComponent: function () {
       var self = this;
       this.disposable = new Rx.CompositeDisposable();
       var propsSubject$ = new Rx.BehaviorSubject(this.props);
@@ -172,13 +173,18 @@ function createReactClass(
       this.disposable.add(this.rootElemSubject$);
       this.disposable.add(subscription);
     },
-    componentWillUnmount: function componentWillUnmount() {
-      this.propsSubject$.onCompleted();
-      this.rootElemSubject$.onCompleted();
-      this.disposable.dispose();
+    _unsubscribeCycleComponent: function () {
+      if (this.propsSubject$) {
+        this.propsSubject$.onCompleted();
+      }
+      if (this.rootElemSubject$) {
+        this.rootElemSubject$.onCompleted();
+      }
+      if (this.disposable) {
+        this.disposable.dispose();
+      }
     },
-    componentDidMount: function componentDidMount() {
-      // Subscribe events
+    _subscribeCycleEvents: function () {
       var self = this;
       var eventHandlers = composingCustomEventAttributes(this.props);
       var eventObservables = composingEventObservables(
@@ -205,6 +211,16 @@ function createReactClass(
       if (this.onMount) {
         this.onMount(node);
       }
+      this.hasMounted = true;
+    },
+    componentWillMount: function componentWillMount() {
+      this._subscribeCycleComponent();
+    },
+    componentWillUnmount: function componentWillUnmount() {
+      this._unsubscribeCycleComponent();
+    },
+    componentDidMount: function componentDidMount() {
+      this._subscribeCycleEvents();
     },
     componentDidUpdate: function componentDidUpdate() {
       var node = React.findDOMNode(this);
@@ -236,8 +252,11 @@ function createReactClass(
     (!options.disableHotLoader && module.hot))
   {
     reactClassProto.forceUpdate = function hotForceUpdate(callback) {
-      this.componentWillUnmount();
-      this.componentWillMount();
+      if (this.hasMounted) {
+        this._unsubscribeCycleComponent();
+        this._subscribeCycleComponent();
+        this._subscribeCycleEvents();
+      }
       if (callback) {
         callback();
       }
