@@ -180,6 +180,14 @@ function createReactClass(
       if (this.rootElemSubject$) {
         this.rootElemSubject$.onCompleted();
       }
+      if (this.cycleComponent.dispose) {
+        var dispose = this.cycleComponent.dispose;
+        if (typeof dispose === 'function') {
+          this.disposable.add(Rx.Disposable.create(dispose));
+        } else if (typeof dispose.dispose === 'function') {
+          this.disposable.add(dispose);
+        }
+      }
       if (this.disposable) {
         this.disposable.dispose();
       }

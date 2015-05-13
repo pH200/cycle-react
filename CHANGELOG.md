@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.24.0
+
+Add feature: Disposable element
+
+Sometimes, it's not an easy task to manage all your disposables by
+using `Observable.using`. This new property of custom-element allows
+you to dispose resources when React triggered the `componentWillUnmount`
+lifecycle method.
+
+```js
+Cycle.createReactClass('MyElement', () => {
+  return {
+    vtree$: ...,
+    dispose: function dispose() {
+      // This function will be called during
+      // componentWillUnmount lifecycle event
+    }
+    // You can set Rx.Disposable objects(e.g. subscription)
+    // instead of function to the dispose property, too.
+  }
+});
+```
+
 ## 0.23.0
 
 Add feature: Support react-hot-loader

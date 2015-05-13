@@ -504,4 +504,104 @@ describe('Custom Elements', function () {
     number$.request(1);
     assert.notStrictEqual(log.length, 3);
   });
+
+  it('should dispose Disposable from custom element after destruction', function () {
+    let log = [];
+    let number$ = Rx.Observable.range(1, 2).controlled();
+    let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      let subscription = number$.subscribe(i => log.push(i));
+      return {
+        vtree$: Rx.Observable.just(h('h3.myelementclass')),
+        dispose: subscription
+      };
+    });
+    // Use the custom element
+    let vtree$ = customElementSwitch$.map(theSwitch => {
+      return theSwitch === 0 ?
+        h('div.toplevel', [h(MyElement, {key: 1})]) :
+        h('div.toplevel', []);
+    })
+    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    // Make assertions
+    customElementSwitch$.request(1);
+    number$.request(1);
+    assert.strictEqual(log.length, 1);
+
+    // Destroy the element
+    customElementSwitch$.request(1);
+    // Try to trigger subscription inside myelement
+    number$.request(1);
+    assert.notStrictEqual(log.length, 2);
+  });
+
+  it('should call dispose from custom element after destruction', function () {
+    let log = [];
+    let log2 = 'notbar';
+    let number$ = Rx.Observable.range(1, 2).controlled();
+    let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      let subscription = number$.subscribe(i => log.push(i));
+      return {
+        vtree$: Rx.Observable.just(h('h3.myelementclass')),
+        dispose: () => {
+          log2 = 'bar';
+          subscription.dispose();
+        }
+      };
+    });
+    // Use the custom element
+    let vtree$ = customElementSwitch$.map(theSwitch => {
+      return theSwitch === 0 ?
+        h('div.toplevel', [h(MyElement, {key: 1})]) :
+        h('div.toplevel', []);
+    })
+    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    // Make assertions
+    customElementSwitch$.request(1);
+    number$.request(1);
+    assert.strictEqual(log.length, 1);
+
+    // Destroy the element
+    customElementSwitch$.request(1);
+    // Try to trigger subscription inside myelement
+    number$.request(1);
+    assert.notStrictEqual(log.length, 2);
+    assert.strictEqual(log2, 'bar');
+  });
+
+  it('should dispose the vtree$ which created by Observable.using', function () {
+    let log = [];
+    let number$ = Rx.Observable.range(1, 2).controlled();
+    let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      let subscription = number$.subscribe(i => log.push(i));
+      return Rx.Observable.using(
+        () => subscription,
+        () => number$.map(() => h('h3.myelementclass'))
+      );
+    });
+    // Use the custom element
+    let vtree$ = customElementSwitch$.map(theSwitch => {
+      return theSwitch === 0 ?
+        h('div.toplevel', [h(MyElement, {key: 1})]) :
+        h('div.toplevel', []);
+    })
+    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    // Make assertions
+    customElementSwitch$.request(1);
+    number$.request(1);
+    let myElement = document.querySelector('.myelementclass');
+    assert.notStrictEqual(myElement, null);
+    assert.strictEqual(log.length, 1);
+
+    // Destroy the element
+    customElementSwitch$.request(1);
+    // Try to trigger subscription inside myelement
+    number$.request(1);
+    assert.notStrictEqual(log.length, 2);
+  });
 });
