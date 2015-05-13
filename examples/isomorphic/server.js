@@ -23,24 +23,26 @@ function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   `;
 }
 
-let clientBundle$ = (() => {
-  let replaySubject = new Rx.ReplaySubject(1);
-  let bundleString = '';
+let clientBundle$ = Rx.Observable.create(observer => {
+  console.log('Compiling client bundle...');
   let bundleStream = browserify()
     .transform('babelify')
     .transform({global: true}, 'uglifyify')
     .add('./client.js')
     .bundle();
   bundleStream.on('data', function (data) {
-    bundleString += data;
+    observer.onNext(data);
+  });
+  bundleStream.on('error', function (err) {
+    observer.onError(err);
   });
   bundleStream.on('end', function () {
-    replaySubject.onNext(bundleString);
-    replaySubject.onCompleted();
+    observer.onCompleted();
     console.log('Client bundle successfully compiled.');
   });
-  return replaySubject;
-})();
+}).reduce((acc, x) => acc + x).shareReplay(1);
+// pre-compile bundle
+// clientBundle$.subscribe();
 
 let server = express();
 
