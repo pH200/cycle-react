@@ -10,21 +10,16 @@
     <div class="benchmark">
       <button class="perf-btn">Benchmark</button>
       <div class="benchmark-result"></div>
-      <p>Performance varies when NODE_ENV=production is provided for npm run dist</p>
+      <p>Performance may vary when NODE_ENV=production is used for React</p>
     </div>
     <div class="js-container"></div>
     <hr />
     <p>
-      Built with cycle-react, a fork of Cycle.js.
+      Built with Cycle-React.
       <br />
       <a href="http://binarymuse.github.io/react-primer/build/index.html?6">Compare with React</a>
     </p>
-    <script src="../../dist/cycle-react.js"></script>
-    <script src="./many-component.js"></script>
-    <script src="./many-model.js"></script>
-    <script src="./many-view.js"></script>
-    <script src="./many-intent.js"></script>
-    <script src="./many.js"></script>
+    <script src="compiled.js"></script>
     <script>
     function initPerfButton() {
       function run() {

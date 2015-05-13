@@ -1,3 +1,6 @@
+var Cycle = require('cycle-react');
+var Rx = Cycle.Rx;
+
 function manyModel(intentions) {
   function createRandomItem() {
     var hexColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -44,7 +47,7 @@ function manyModel(intentions) {
     };
   });
 
-  return Cycle.Rx.Observable.merge(
+  return Rx.Observable.merge(
       addItemMod$, removeItemMod$, colorChangedMod$, widthChangedMod$
     )
     .startWith([{id: 0, color: 'red', width: 300}])
@@ -52,3 +55,5 @@ function manyModel(intentions) {
       return modification(listItems);
     });
 }
+
+module.exports = manyModel;

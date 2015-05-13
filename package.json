@@ -34,10 +34,12 @@
     "babelify": "^6.1.2",
     "browserify": "^10.2.4",
     "cheerio": "~0.19.0",
+    "express": "^4.12.3",
     "jscs": "^1.13.1",
     "jshint": "^2.8.0",
     "markdox": "~0.1.9",
     "mocha": "^2.2.5",
+    "react": "^0.13.3",
     "testem": "~0.8.3",
     "uglify-js": "^2.4.23"
   },
@@ -59,9 +61,6 @@
     "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
     "docs": "node ./scripts/make-api-docs.js",
-    "release": "npm run release-patch",
-    "release-patch": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version patch && git push origin master --tags && npm publish",
-    "release-minor": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version minor && git push origin master --tags && npm publish",
-    "release-major": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version major && git push origin master --tags && npm publish"
+    "examples": "node examples/server.js"
   }
 }

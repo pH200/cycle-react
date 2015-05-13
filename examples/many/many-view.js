@@ -1,10 +1,16 @@
-function manyView(items$) {
-  var h = Cycle.h;
+var Cycle = require('cycle-react');
+var h = Cycle.h;
+var ManyItem = require('./many-component');
 
+function manyView(items$, interactions) {
   function vrenderTopButtons() {
     return h('div.topButtons', [
-      h('button.add-one-btn', 'Add New Item'),
-      h('button.add-many-btn', 'Add Many Items'),
+      h('button.add-one-btn', {
+        onClick: interactions.listener('AddOne')
+      }, 'Add New Item'),
+      h('button.add-many-btn', {
+        onClick: interactions.listener('AddMany')
+      }, 'Add Many Items'),
     ]);
   }
 
@@ -14,7 +20,10 @@ function manyView(items$) {
       itemid: itemData.id,
       color:  itemData.color,
       width:  itemData.width,
-      key: itemData.id
+      key: itemData.id,
+      onChangeColor: interactions.listener('ItemChangeColor'),
+      onChangeWidth: interactions.listener('ItemChangeWidth'),
+      onDestroy: interactions.listener('ItemDestroy')
     });
   }
 
@@ -26,3 +35,5 @@ function manyView(items$) {
       ]);
     });
 }
+
+module.exports = manyView;

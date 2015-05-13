@@ -1,3 +1,4 @@
+var Cycle = require('cycle-react');
 var React = Cycle.React;
 var Rx = Cycle.Rx;
 var h = Cycle.h;

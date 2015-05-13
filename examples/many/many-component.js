@@ -1,10 +1,12 @@
+var Cycle = require('cycle-react');
+var Rx = Cycle.Rx;
 var h = Cycle.h;
 
 function manyComponent(interactions, props) {
   var id$ = props.get('itemid').shareReplay(1);
   var color$ = props.get('color').startWith('#888').shareReplay(1);
   var width$ = props.get('width').startWith(200).shareReplay(1);
-  var vtree$ = Cycle.Rx.Observable
+  var vtree$ = Rx.Observable
     .combineLatest(id$, color$, width$, function (id, color, width) {
       var style = {
         border: '1px solid #000',
@@ -18,37 +20,45 @@ function manyComponent(interactions, props) {
       return h('div.item', {style: style}, [
         h('input.color-field', {
           type: 'text',
-          value: color
+          value: color,
+          onChange: interactions.listener('OnChangeColor')
         }),
         h('div.slider-container', [
           h('input.width-slider', {
             type: 'range', min: '200', max: '1000',
-            value: width
+            value: width,
+            onChange: interactions.listener('OnChangeWidth')
           })
         ]),
         h('div.width-content', String(width)),
-        h('button.remove-btn', 'Remove')
+        h('button.remove-btn', {
+          onClick: interactions.listener('OnRemoveClick')
+        }, 'Remove')
       ]);
     });
-  var destroy$ = interactions.get('.remove-btn', 'click')
-      .withLatestFrom(id$, function (ev, id) { return id; });
-  var changeColor$ = interactions.get('.color-field', 'input')
-      .withLatestFrom(id$, function (ev, id) {
-        return {id: id, color: ev.target.value};
-      });
-  var changeWidth$ = interactions.get('.width-slider', 'input')
-      .withLatestFrom(id$, function (ev, id) {
-        return {id: id, width: parseInt(ev.target.value)};
-      });
+  var destroy$ = interactions.get('OnRemoveClick')
+    .withLatestFrom(id$, (ev, id) => id);
+  var changeColor$ = interactions.get('OnChangeColor')
+    .withLatestFrom(id$, (ev, id) => ({
+      id: id,
+      color: ev.target.value
+    }));
+  var changeWidth$ = interactions.get('OnChangeWidth')
+    .withLatestFrom(id$, (ev, id) => ({
+      id: id,
+      width: ev.target.value | 0
+    }));
 
   return {
     view: vtree$,
     events: {
-      destroy: destroy$,
-      changeColor: changeColor$,
-      changeWidth: changeWidth$
+      onDestroy: destroy$,
+      onChangeColor: changeColor$,
+      onChangeWidth: changeWidth$
     }
   };
 }
 
 var ManyItem = Cycle.component('ManyItem', manyComponent);
+
+module.exports = ManyItem;

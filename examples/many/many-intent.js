@@ -1,16 +1,16 @@
+var Cycle = require('cycle-react');
+var Rx = Cycle.Rx;
+
 function manyIntent(interactions) {
-  var addOneBtnClick$ = interactions.get('.add-one-btn', 'click');
-  var addManyBtnClick$ = interactions.get('.add-many-btn', 'click');
-  var addItem$ = Cycle.Rx.Observable.merge(
-    addOneBtnClick$.map(function () { return 1; }),
-    addManyBtnClick$.map(function () { return 1000; })
+  var addOneBtnClick$ = interactions.get('AddOne');
+  var addManyBtnClick$ = interactions.get('AddMany');
+  var addItem$ = Rx.Observable.merge(
+    addOneBtnClick$.map(() => 1),
+    addManyBtnClick$.map(() => 1000)
   );
-  var changeColor$ = interactions.get('.item', 'changeColor')
-    .map(function (ev) { return ev.detail; });
-  var changeWidth$ = interactions.get('.item', 'changeWidth')
-    .map(function (ev) { return ev.detail; });
-  var removeItem$ = interactions.get('.item', 'destroy')
-    .map(function (ev) { return ev.detail; });
+  var changeColor$ = interactions.get('ItemChangeColor');
+  var changeWidth$ = interactions.get('ItemChangeWidth');
+  var removeItem$ = interactions.get('ItemDestroy');
 
   return {
     addItem$: addItem$,
@@ -19,3 +19,5 @@ function manyIntent(interactions) {
     removeItem$: removeItem$
   };
 }
+
+module.exports = manyIntent;

@@ -1,7 +1,8 @@
+var Cycle = require('cycle-react');
 var h = Cycle.h;
 
 function computer(interactions) {
-  return interactions.get('.myinput', 'input')
+  return interactions.get('OnInputChange')
     .map(function (ev) {
       return ev.target.value;
     })
@@ -9,7 +10,10 @@ function computer(interactions) {
     .map(function (name) {
       return h('div', [
         h('label', 'Name:'),
-        h('input.myinput', {type: 'text'}),
+        h('input.myinput', {
+          type: 'text',
+          onChange: interactions.listener('OnInputChange')
+        }),
         h('hr'),
         h('h1', 'Hello ' + name)
       ]);
