@@ -425,6 +425,23 @@ describe('Custom Elements', function () {
     );
   });
 
+  it('should accept vtree as function if bindThis was provided', function (done) {
+    let vtreeController$ = Rx.Observable.range(0, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
+      vtreeController$.subscribe(() => {
+        let editField = Cycle.React.findDOMNode(self.refs.theRef);
+        assert.notStrictEqual(editField, null);
+        assert.strictEqual(editField.tagName, 'H3');
+        done();
+      })
+      return Rx.Observable.just(() => h('h3.myelementclass', {ref: 'theRef'}));
+    }, {bindThis: true});
+    Cycle.applyToDOM(createRenderTarget(), MyElement);
+    // Make assertions
+    vtreeController$.request(1);
+  });
+
   it('should dispose vtree$ after destruction', function () {
     let log = [];
     let number$ = Rx.Observable.range(1, 2).controlled();

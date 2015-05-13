@@ -239,6 +239,11 @@ function createReactClass(
     },
     render: function render() {
       if (this.state && this.state.vtree) {
+        if (bindThis && typeof this.state.vtree === 'function') {
+          // invoke literal is sufficient even though `addComponentAsRefTo`
+          // might has something to do with `this`
+          return this.state.vtree();
+        }
         return this.state.vtree;
       }
       return React.createElement(rootTagName);
