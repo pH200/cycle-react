@@ -211,9 +211,6 @@ describe('Custom Elements', function () {
     number$.request(1);
   });
 
-  // Not sure if React would be more efficient if key was provided.
-  it.skip('should warn when custom element is used with no key');
-
   it('should not miss custom events from a list of custom elements #87', function () {
     // Make custom element
     let Slider = Cycle.createReactClass('Slider', function (interactions, props) {
@@ -285,9 +282,6 @@ describe('Custom Elements', function () {
     assert.strictEqual(wrapper.tagName, 'DIV');
   });
 
-  // This task is up to React.
-  it.skip('should throw error if children property is explicitly used');
-
   it('should recognize changes on a mutable collection given as props', function () {
     let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
       return props.get('list', () => false).map(list =>
@@ -358,9 +352,9 @@ describe('Custom Elements', function () {
     assert.strictEqual(items.length, 0);
   });
 
-  // This test is difficult.
-  // Because we have no idea that the element is changing itself.
-  it.skip('should emit events even when dynamically evolving', function (done) {
+  // TODO: Test interactions when we found a better way to catch
+  // all events by selector
+  it('should emit events even when dynamically evolving', function (done) {
     let number$ = Rx.Observable.of(123, 456).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
@@ -378,13 +372,17 @@ describe('Custom Elements', function () {
       };
     });
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function (interactions) {
+    let Root = Cycle.createReactClass('Root', function () {
+      let myeventSubject$ = Cycle.createEventSubject();
       let vtree$ = Rx.Observable.just(
         h('div.toplevel', [
-          h(MyElement, {key: 1, className: 'eventsource'})
+          h(MyElement, {
+            key: 1,
+            onmyevent$: myeventSubject$.onEvent
+          })
         ])
       );
-      interactions.get('.eventsource', 'myevent').subscribe(function (x) {
+      myeventSubject$.subscribe(function (x) {
         assert.strictEqual(x.data, 123);
         done();
       });

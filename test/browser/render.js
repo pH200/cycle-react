@@ -30,9 +30,6 @@ describe('Rendering', function () {
       });
     });
 
-    // React is not aceepting DocumentFragment as container right now.
-    it.skip('should accept a DocumentFragment as input');
-
     it('should accept a string selector to an existing element as input', function () {
       let id = 'testShouldAcceptSelectorToExisting';
       let element = createRenderTarget();
