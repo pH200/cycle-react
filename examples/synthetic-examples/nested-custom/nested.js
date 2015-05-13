@@ -7,8 +7,8 @@ var h = Cycle.h;
 // - Whether Model streams internal to a custom element can be used in the custom
 //   element's return object. E.g. model.foo$.
 
-Cycle.registerCustomElement('inner-elem', function (interactions, props) {
-  var refreshData$ = interactions.get('.innerRoot', 'click')
+var InnerElem = Cycle.createReactClass('InnerElem', function (interactions, props) {
+  var refreshData$ = interactions.get('.inner', 'click')
     .map(function () { return 'x'; }).share();
   var foo$ = props.get('foo');
   var content$ = refreshData$
@@ -17,7 +17,7 @@ Cycle.registerCustomElement('inner-elem', function (interactions, props) {
     .shareReplay(1);
   var vtree$ = content$
     .map(function (content) {
-      return h('h2.innerRoot', {
+      return h('h2.inner', {
         style: {
           margin: '10px',
           background: '#ececec',
@@ -58,21 +58,22 @@ function computer(interactions) {
             border: '1px solid #323232',
             padding: '20px'}},
         [
-          h('inner-elem.inner', {foo: 17, content: 153, key: 1}),
+          h(InnerElem, {foo: 17, content: 153, key: 1}),
           h('p', {style: {color: color}}, String(color)),
           h('p', '(Please check also the logs)')]);
     });
 }
 
-var domUI = Cycle.applyToDOM('.js-container', computer);
-
 console.info('You should see both \'foo: ...\' and \'content: ...\' ' +
   'logs every time you click on the inner box.'
 );
-domUI.interactions.get('.inner', 'fooOnRefresh').subscribe(function (ev) {
-  console.log('foo: ' + ev.data);
-});
-domUI.interactions.get('.inner', 'contentOnRefresh').subscribe(function (ev) {
-  console.log('content: ' + ev.data);
-});
 
+Cycle.applyToDOM('.js-container', function (interactions) {
+  interactions.get('.inner', 'fooOnRefresh').subscribe(function (ev) {
+    console.log('foo: ' + ev.data);
+  });
+  interactions.get('.inner', 'contentOnRefresh').subscribe(function (ev) {
+    console.log('content: ' + ev.data);
+  });
+  return computer(interactions);
+});

@@ -1,7 +1,7 @@
 var h = Cycle.h;
 var Rx = Cycle.Rx;
 
-Cycle.registerCustomElement('ticker', function (interactions, props) {
+var Ticker = Cycle.createReactClass('Ticker', function (interactions, props) {
   var removeClicks$ = interactions.get('.remove-btn', 'click').share();
   var stop$ = removeClicks$.map(function () { return 'stop'; });
   var remove$ = removeClicks$.map(function () { return 'remove'; }).delay(500);
@@ -46,7 +46,7 @@ function computer(interactions) {
   return Rx.Observable.combineLatest(color$, tickerExists$,
     function (color, tickerExists) {
       return h('div#the-view', [
-        tickerExists ? h('ticker.ticker', {key: 1, color: color}) : null
+        tickerExists ? h(Ticker, {key: 1, color: color}) : null
       ]);
     }
   );
