@@ -1,6 +1,15 @@
 'use strict';
-let Cycle = require('../../lib/cycle');
-let {makeComputerFn} = require('./app');
+let Cycle = require('../../src/cycle');
+let React = Cycle.React;
+let {App} = require('./app');
 
-let context$ = Cycle.Rx.Observable.just(window.appContext);
-Cycle.applyToDOM('.app-container', makeComputerFn(context$));
+React.render(
+  React.createElement(App, {context: window.appContext}),
+  document.querySelector('.app-container'));
+// or
+// Cycle.applyToDOM(
+//   '.app-container',
+//   () => Cycle.Rx.Observable.just(
+//     Cycle.h(App, {context: window.appContext})
+//   )
+// );

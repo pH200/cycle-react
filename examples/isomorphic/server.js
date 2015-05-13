@@ -1,34 +1,26 @@
 'use strict';
-let Cycle = require('../../lib/cycle');
+let Cycle = require('../../src/cycle');
 let express = require('express');
 let browserify = require('browserify');
 let serialize = require('serialize-javascript');
 let {Rx, h} = Cycle;
-let {makeComputerFn} = require('./app');
+let {App} = require('./app');
 
 function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
-  return h('html', [
-    h('head', [
-      h('title', 'Cycle Isomorphism Example')
-    ]),
-    h('body', [
-      h('div.app-container', [vtree]),
-      h('script', `window.appContext = ${serialize(context)};`),
-      h('script', clientBundle)
-    ])
-  ]);
-}
-
-function prependHTML5Doctype(html) {
-  return `<!doctype html>${html}`;
-}
-
-function makeEmptyInteractions() {
-  return {
-    get() {
-      return Rx.Observable.empty();
-    }
-  };
+  return `<!doctype html>
+  <html>
+  <head>
+    <title>Cycle Isomorphism Example</title>
+  </head>
+  <body>
+    <div class="app-container">
+      ${vtree}
+    </div>
+    <script>window.appContext = ${serialize(context)};</script>
+    <script>${clientBundle}</script>
+  </body>
+  </html>
+  `;
 }
 
 let clientBundle$ = (() => {
@@ -62,12 +54,15 @@ server.use(function (req, res) {
 
   console.log(`req: ${req.method} ${req.url}`);
 
-  let context$ = Rx.Observable.just({route: req.url});
-  let computer = makeComputerFn(context$);
-  let vtree$ = computer(makeEmptyInteractions())
-    .combineLatest(context$, clientBundle$, wrapVTreeWithHTMLBoilerplate);
-  let html$ = Cycle.renderAsHTML(vtree$).map(prependHTML5Doctype);
-  html$.subscribe(html => res.send(html));
+  let context = {route: req.url};
+  let html$ = Cycle.renderAsHTML(
+    Rx.Observable.just(h(App, {context: context}))
+  ).combineLatest(
+    Rx.Observable.just(context),
+    clientBundle$,
+    wrapVTreeWithHTMLBoilerplate
+  );
+  html$.take(1).subscribe(html => res.send(html));
 });
 
 let port = process.env.PORT || 3000;
