@@ -51,11 +51,12 @@ describe('interactions', function () {
       assert.strictEqual(value, 'bar');
       done();
     });
-    interactions.getEventSubject('foo').onEvent('bar');
+    let proxyHandler = interactions.getEventSubject('foo').onEvent;
+    proxyHandler('bar');
   });
 
   it('should have subject alias of getEventSubject', function () {
-    let interactions = makeEmptyInteractions();
+    let interactions = makeInteractions();
     assert.strictEqual(interactions.subject, interactions.getEventSubject);
   });
 });
