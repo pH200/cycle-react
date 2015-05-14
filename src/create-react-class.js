@@ -162,6 +162,7 @@ function createReactClass(
         definitionFn(interactions, this.propsSubject$)
       );
       this.cycleComponent = cycleComponent;
+      this.cycleComponentDispose = cycleComponent.dispose;
       this.onMount = cycleComponent.onMount;
       var vtree$ = cycleComponent.vtree$;
       var vtreeDoSet$ = vtree$.doOnNext(function onNextVTree(vtree) {
@@ -180,8 +181,8 @@ function createReactClass(
       if (this.rootElemSubject$) {
         this.rootElemSubject$.onCompleted();
       }
-      if (this.cycleComponent.dispose) {
-        var dispose = this.cycleComponent.dispose;
+      if (this.cycleComponentDispose) {
+        var dispose = this.cycleComponentDispose;
         if (typeof dispose === 'function') {
           this.disposable.add(Rx.Disposable.create(dispose));
         } else if (typeof dispose.dispose === 'function') {
