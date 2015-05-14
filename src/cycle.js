@@ -2,7 +2,6 @@
 var applyToDOM = require('./render-dom');
 var renderAsHTML = require('./render-html');
 var createReactClass = require('./create-react-class');
-var createEventSubject = require('./event-subject');
 var React = require('react');
 var Rx = require('rx');
 var h = require('./h');
@@ -19,6 +18,23 @@ var Cycle = {
    * interactions of type `eventName` happening on the element identified by
    * `selector`.
    * Example: `interactions.get('.mybutton', 'click').map(ev => ...)`
+   *
+   * `interactions.subject(name)`
+   * `interactions.getEventSubject(name)`
+   *
+   * Get a subject with an `onEvent` method bind to the subject.
+   * This subject is useful if you don't want to use `interactions.get`. And
+   * prefer catching events by providing `subject.onEvent` directly to the
+   * event handler of the element.
+   *
+   * Example:
+   * `<button onClick={interactions.getEventSubject('onClick').onEvent} />`
+   *
+   * To subscribe a event from cycle-react's custom element,
+   * append "on" before the event name
+   * with a postfix "$".
+   *
+   * Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
    *
    * @param {(String|HTMLElement)} container the DOM selector for the element
    * (or the element itself) to contain the rendering of the VTrees.
@@ -118,23 +134,6 @@ var Cycle = {
    * @function createReactClass
    */
   createReactClass: createReactClass,
-
-  /**
-   * Creates a subject with an `onEvent` method bind to the subject.
-   * This subject is useful if you don't want to use `interactions.get`. And
-   * prefer catching events by providing `subject.onEvent` directly to the
-   * event handler of the element.
-   *
-   * Example: `<button onClick={eventSubject.onEvent} />`
-   *
-   * To subscribe a user-defined event, append "on" before the event name
-   * with a postfix "$".
-   *
-   * Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
-   * @return {Rx.Subject} a subject with an instance method "onEvent"
-   * @function createEventSubject
-   */
-  createEventSubject: createEventSubject,
 
   /**
    * A shortcut to the root object of React.

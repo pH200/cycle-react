@@ -103,11 +103,11 @@ describe('Rendering', function () {
     });
 
     it('should catch events by using EventSubject', function (done) {
-      function computer() {
-        let onClick$ = Cycle.createEventSubject();
+      function computer(interactions) {
+        let onClick$ = interactions.getEventSubject('onClick');
         let vtree$ = Rx.Observable.just(
           h('h3.myelementclass', {
-            onClick: onClick$.onEvent
+            onClick: interactions.getEventSubject('onClick').onEvent
           }, 'Foobar')
         );
         onClick$.subscribe(ev => {

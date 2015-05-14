@@ -7,8 +7,6 @@
 
 - [`createReactClass`](#createReactClass)
 
-- [`createEventSubject`](#createEventSubject)
-
 - [`React`](#React)
 
 - [`Rx`](#Rx)
@@ -27,6 +25,23 @@ rendered. You must query this collection with
 interactions of type `eventName` happening on the element identified by
 `selector`.
 Example: `interactions.get('.mybutton', 'click').map(ev => ...)`
+
+`interactions.subject(name)`
+`interactions.getEventSubject(name)`
+
+Get a subject with an `onEvent` method bind to the subject.
+This subject is useful if you don't want to use `interactions.get`. And
+prefer catching events by providing `subject.onEvent` directly to the
+event handler of the element.
+
+Example:
+`<button onClick={interactions.getEventSubject('onClick').onEvent} />`
+
+To subscribe a event from cycle-react's custom element,
+append "on" before the event name
+with a postfix "$".
+
+Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
 
 #### Arguments:
 
@@ -128,26 +143,6 @@ working with some React components.
 - `computer :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
 - `[options] :: Object` the options for createReactClass.
-
-- - -
-
-### <a id="createEventSubject"></a> `createEventSubject()`
-
-Creates a subject with an `onEvent` method bind to the subject.
-This subject is useful if you don't want to use `interactions.get`. And
-prefer catching events by providing `subject.onEvent` directly to the
-event handler of the element.
-
-Example: `<button onClick={eventSubject.onEvent} />`
-
-To subscribe a user-defined event, append "on" before the event name
-with a postfix "$".
-
-Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
-
-#### Return:
-
-*(Rx.Subject)* a subject with an instance method "onEvent"
 
 - - -
 

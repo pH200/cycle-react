@@ -3,20 +3,29 @@ var Rx = require('rx');
 var createEventSubject = require('./event-subject');
 
 function makeEmptyInteractions() {
+  function getEventSubject() {
+    return createEventSubject();
+  }
   return {
     get: function get() {
       return Rx.Observable.empty();
     },
-    getEventSubject: function getEventSubject() {
-      return createEventSubject();
-    }
+    subject: getEventSubject,
+    getEventSubject: getEventSubject
   };
 }
 
 function makeInteractions(rootElem$) {
   var subjects = {};
+  function getEventSubject(name) {
+    if (!subjects[name]) {
+      subjects[name] = createEventSubject();
+    }
+    return subjects[name];
+  }
+
   return {
-    get: function get(selector, eventName, isSingle) {
+    get: function get(selector, eventName, isSingle, isRoot) {
       if (typeof selector !== 'string') {
         throw new Error('interactions.get() expects first argument to be a ' +
           'string as a CSS selector');
@@ -32,7 +41,7 @@ function makeInteractions(rootElem$) {
           }
           var klass = selector.replace('.', '');
           var klassRegex = new RegExp('\\b' + klass + '\\b');
-          if (klassRegex.test(rootElem.className)) {
+          if (isRoot || klassRegex.test(rootElem.className)) {
             return Rx.Observable.fromEvent(rootElem, eventName);
           }
           if (isSingle) {
@@ -49,12 +58,8 @@ function makeInteractions(rootElem$) {
           return Rx.Observable.empty();
         });
     },
-    getEventSubject: function getEventSubject(name) {
-      if (!subjects[name]) {
-        subjects[name] = createEventSubject();
-      }
-      return subjects[name];
-    }
+    subject: getEventSubject,
+    getEventSubject: getEventSubject
   };
 }
 

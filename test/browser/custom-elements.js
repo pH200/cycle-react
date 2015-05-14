@@ -192,11 +192,14 @@ describe('Custom Elements', function () {
     });
     // Use the custom element
     let Root = Cycle.createReactClass('Root', function (interactions) {
-      let eventSubject$ = Cycle.createEventSubject();
+      let onmyevent$ = interactions.getEventSubject('onmyevent');
       let vtree$ = Rx.Observable.just(h('div.toplevel', [
-        h(MyElement, {key: 1, onmyevent$: eventSubject$.onEvent})
+        h(MyElement, {
+          key: 1,
+          onmyevent$: interactions.getEventSubject('onmyevent').onEvent
+        })
       ]));
-      eventSubject$.subscribe(x => {
+      onmyevent$.subscribe(x => {
         assert.strictEqual(x.data, 123);
         done();
       });
@@ -372,17 +375,17 @@ describe('Custom Elements', function () {
       };
     });
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function () {
-      let myeventSubject$ = Cycle.createEventSubject();
+    let Root = Cycle.createReactClass('Root', function (interactions) {
+      let onmyevent$ = interactions.getEventSubject('onmyevent');
       let vtree$ = Rx.Observable.just(
         h('div.toplevel', [
           h(MyElement, {
             key: 1,
-            onmyevent$: myeventSubject$.onEvent
+            onmyevent$: interactions.getEventSubject('onmyevent').onEvent
           })
         ])
       );
-      myeventSubject$.subscribe(function (x) {
+      onmyevent$.subscribe(function (x) {
         assert.strictEqual(x.data, 123);
         done();
       });
