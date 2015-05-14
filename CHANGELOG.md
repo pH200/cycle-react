@@ -38,9 +38,9 @@ See `working-with-react.md` for details.
 
 Add feature: Support react-hot-loader
 
-cycle-react now overrides `forceUpdate` when `module.hot == true`
+Cycle-React now overrides `forceUpdate` when `module.hot == true`
 (webpack hot module enabled). No extra configuration needed.
-This overriding behavior only affects the ReactClass created by cycle-react
+This overriding behavior only affects the ReactClass created by Cycle-React
 and has no effect if webpack-hot-module was disabled.
 
 Add feature: createReactClass options, see docs/api.md for details
@@ -54,7 +54,7 @@ Add feature: props.get('\*') for custom elements
 props.get('\*') returns the Observable of the whole properties object,
 as given to the custom element in the parent vtree context.
 
-Additionally, props equals to props.get('\*') in cycle-react. Which means you
+Additionally, props equals to props.get('\*') in Cycle-React. Which means you
 can skip `.get('*')` and get the Observable of the properties object.
 This shortcut is not available for the original Cycle.js.
 

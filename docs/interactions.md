@@ -37,7 +37,7 @@ var inputChanged$ = interactions.getEventSubject('onEditInput')
   .map(ev => ev.target.value);
 ```
 
-To subscribe a event from cycle-react's custom element,
+To subscribe a event from Cycle-React's custom element,
 append "on" before the event name with a postfix "$".
 
 Example:
@@ -50,7 +50,7 @@ var MyElement = createReactClass('MyElement', function computer() {
     tickEvent$: Rx.Observable.interval(500)
   }
 });
-// cycle-react would also try to
+// Cycle-React would also try to
 // emit onTickEvent$ if ontickEvent$ was not found
 <MyElement ontickEvent$={interactions.subject('ontick').onEvent} />
 // You can still use interactions.get for custom elements

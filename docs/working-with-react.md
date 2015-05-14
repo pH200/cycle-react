@@ -1,7 +1,7 @@
 # Working with React
 
 You can ignore following guidelines if you're not going to work with other
-React components. And it's perfectly fine if you want to do that, cycle-react
+React components. And it's perfectly fine if you want to do that, Cycle-React
 provides you everything essential for rolling your own components. However,
 if you have to work with other React components or libraries, these guidelines
 could be helpful.
@@ -9,11 +9,11 @@ could be helpful.
 ## Event handler
 
 React components use event handler(from props) instead of `dispatchEvent` for
-child-parent communications. cycle-react provides EventSubject for receiving
+child-parent communications. Cycle-React provides EventSubject for receiving
 these events. It's a Subject with an instance method `onEvent` and it has a
 [simple](https://github.com/pH200/cycle-react/blob/master/src/event-subject.md)
 implementation.
-Details of using event handlers in cycle-react can be found at
+Details of using event handlers in Cycle-React can be found at
 [interactions.getEventSubject](https://github.com/pH200/cycle-react/blob/master/docs/interactions.md#interactions.getEventSubject).
 
 In addition, properties that end with `$` except `vtree$` from your custom
@@ -29,7 +29,7 @@ let MyElement = createReactClass('MyElement', function computer() {
     tickEvent$: Rx.Observable.interval(500)
   }
 });
-// cycle-react would also try to
+// Cycle-React would also try to
 // emit onTickEvent$ if ontickEvent$ was not found
 <MyElement ontickEvent$={myEventHandler} />
 // You can still use interactions.get for custom elements
@@ -38,12 +38,12 @@ interactions.get('.myelement', 'tickEvent').map(...);
 
 ## Mixins
 
-Working with mixins could make your cycle-react apps written in a
+Working with mixins could make your Cycle-React apps written in a
 less-functional style. However, it might be needed if you want to take
 advantage of other React components.
 
 `opts.mixins` is the mixins property used by React.createClass in
-cycle-react internally. This value must be an Array. Setting
+Cycle-React internally. This value must be an Array. Setting
 `mixins: [AnyMixin]` will overwrite the default mixins `[PureRenderMixin]` with
 `[AnyMixin]`. So, make sure you always append `PureRenderMixin` back if you
 need its feature.
@@ -81,7 +81,7 @@ let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
 
 ## Refs
 
-If you've ever tried to set `ref` to the element with cycle-react, you're
+If you've ever tried to set `ref` to the element with Cycle-React, you're
 probably encountered this following error:
 
 ```
@@ -91,7 +91,7 @@ have an owner (that is, was not created inside of another component's `render`
 method).
 ```
 
-This is because cycle-react evaluates the vtree(ReactElement) inside the Rx
+This is because Cycle-React evaluates the vtree(ReactElement) inside the Rx
 subscription instead of `ReactClass.prototype.render`. In order to fix this,
 you can return the lazy value of ReactElement with the option
 `{bindThis: true}` set.
@@ -111,10 +111,10 @@ let MyElement = Cycle.createReactClass('MyElement', (_1, _2, self) => {
 
 ## react-hot-loader
 
-cycle-react supports
+Cycle-React supports
 [react-hot-loader](https://github.com/gaearon/react-hot-loader).
 
-cycle-react overrides `forceUpdate` when `module.hot == true`
+Cycle-React overrides `forceUpdate` when `module.hot == true`
 (webpack hot module enabled). No extra configuration needed.
-This overriding behavior only affects the ReactClass created by cycle-react
+This overriding behavior only affects the ReactClass created by Cycle-React
 and has no effect if webpack-hot-module was disabled.

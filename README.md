@@ -1,21 +1,21 @@
-# cycle-react
+# Cycle-React
 
 An [RxJS](https://github.com/Reactive-Extensions/RxJS) functional interface
 to [Facebook's React](http://facebook.github.io/react/).
 
-cycle-react allows users to write [React](https://github.com/facebook/react)
+Cycle-React allows users to write [React](https://github.com/facebook/react)
 applications in functional style and represents their UIs as Observables.
-In addition, cycle-react is immutable and uses
+In addition, Cycle-React is immutable and uses
 [PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
 internally by default.
 
-Additionally, cycle-react is also a React-style implementation of a beautiful
+Additionally, Cycle-React is also a React-style implementation of a beautiful
 framework called [Cycle.js](https://github.com/staltz/cycle).
 
 ## Installing
 
 ```
-npm install cycle-react
+npm install Cycle-React
 ```
 
 ## Example
@@ -52,7 +52,7 @@ Function `applyToDOM` subscribes that Observable of elements and renders the
 elements to DOM, by using `React.createClass` and `React.render` internally.
 
 Notice that although `React.createClass` is mentioned here, you don't have to
-use it. That's why cycle-react was made. We took functions over classes
+use it. That's why Cycle-React was made. We took functions over classes
 and mutable states.
 
 The description of the concept behind `applyToDOM` and `Cycle` can be found at
@@ -100,29 +100,29 @@ ReactClass **is** a function indeed and it should always be used as a
 function object, because you don't `new`, `extends` or `this` to access
 properties. In fact, we don't want you to do that.
 
-Apps written in cycle-react are `this`-less. You won't find a single `this`
+Apps written in Cycle-React are `this`-less. You won't find a single `this`
 in the examples.
 
 ## Learn more
 
-cycle-react shares the same API as Cycle.js, except of doing custom elements.
+Cycle-React shares the same API as Cycle.js, except of doing custom elements.
 A more comprehensive README can be found at
 https://github.com/staltz/cycle
 
 ## FAQ
 
-### Can I use cycle-react with [react-hot-loader](https://github.com/gaearon/react-hot-loader)?
+### Can I use Cycle-React with [react-hot-loader](https://github.com/gaearon/react-hot-loader)?
 
 Yes. And no extra configuration needed.
 
 [Example](https://github.com/cycle-react-examples/react-hot-boilerplate)
 
-### Can I use cycle-react with other React components and libraries?
+### Can I use Cycle-React with other React components and libraries?
 
-Yes. You can even use cycle-react with your current React apps. Because
+Yes. You can even use Cycle-React with your current React apps. Because
 `createReactClass` creates the native ReactClass for you.
 
-Examples for integrating cycle-react with other libraries are work in progress.
+Examples for integrating Cycle-React with other libraries are work in progress.
 
 Meanwhile, See
 "[Working with React](https://github.com/pH200/cycle-react/blob/master/docs/working-with-react.md)"
@@ -140,7 +140,7 @@ npm run dist
 
 ## Community
 
-* Ask "_how do I...?_" questions in cycle-react's Gitter: <br/>
+* Ask "_how do I...?_" questions in Cycle-React's Gitter: <br/>
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 * Propose and discuss significant changes as a GitHub issues
 * In addition, more resources can be found at
