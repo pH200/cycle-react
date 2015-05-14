@@ -18,6 +18,25 @@ describe('renderAsHTML()', function () {
     });
   });
 
+  it('should not emit events', function (done) {
+    var log = 0;
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      return {
+        vtree$: Rx.Observable.just(h('div.test-element', ['Foobar'])),
+        myevent$: Rx.Observable.just(123).doOnNext(n => log = n)
+      }
+    });
+    let html$ = Cycle.renderAsHTML(MyElement);
+    html$.subscribe(function (html) {
+      let $ = cheerio.load(html);
+      assert.ok($('*').first().is('div.test-element'));
+      assert.strictEqual($('div.test-element').length, 1);
+      assert.strictEqual($('div.test-element').text(), 'Foobar');
+      assert.notStrictEqual(log, 123);
+      done();
+    });
+  });
+
   it('should render a simple nested custom element as HTML', function (done) {
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return Rx.Observable.just(h('h3.myelementclass'));
