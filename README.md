@@ -3,10 +3,9 @@
 An [RxJS](https://github.com/Reactive-Extensions/RxJS) functional interface
 to [Facebook's React](http://facebook.github.io/react/).
 
-cycle-react allows you to write [React](https://github.com/facebook/react)
-applications in functional style.
-No classes, no mixins and no boilerplates. In addition,
-cycle-react is immutable and uses
+cycle-react allows users to write [React](https://github.com/facebook/react)
+applications in functional style and represents their UIs as Observables.
+In addition, cycle-react is immutable and uses
 [PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
 internally by default.
 
@@ -46,7 +45,7 @@ The input of the `computer` is `interactions`, a collection containing all
 possible user interaction events happening on elements on the DOM, which you
 can query using `interactions.get(selector, eventType)`.
 
-The output of the `computer` is `IObservable<ReactElement>`
+The output of the `computer` is `Observable<ReactElement>`
 (a reactive sequence of elements, in other words, view).
 
 Function `applyToDOM` subscribes that Observable of elements and renders the
@@ -56,8 +55,8 @@ Notice that although `React.createClass` is mentioned here, you don't have to
 use it. That's why cycle-react was made. We took functions over classes
 and mutable states.
 
-The description of the concept behind `applyToDOM` can be found at
-[Cycle.js](https://github.com/staltz/cycle)'s page.
+The description of the concept behind `applyToDOM` and `Cycle` can be found at
+[Cycle.js](https://github.com/staltz/cycle) README.
 
 ## Custom element example
 
@@ -91,7 +90,6 @@ Cycle.applyToDOM('.js-container', Timer);
 You can use `h` and without JSX just like you did in Cycle.js.
 This was made possible by
 [react-hyperscript](https://github.com/mlmorg/react-hyperscript).
-
 [The example](https://github.com/pH200/cycle-react/blob/master/examples/timer/timer.js).
 
 ## But you said no classes
@@ -126,6 +124,10 @@ Yes. You can even use cycle-react with your current React apps. Because
 
 Examples for integrating cycle-react with other libraries are work in progress.
 
+Meanwhile, See
+"[Working with React](https://github.com/pH200/cycle-react/blob/master/docs/working-with-react.md)"
+for guidelines.
+
 ### more
 
 [docs/faq.md](https://github.com/pH200/cycle-react/blob/master/docs/faq.md)
@@ -133,8 +135,16 @@ Examples for integrating cycle-react with other libraries are work in progress.
 ## Build standalone js
 
 ```
-NODE_ENV=production npm run dist
+npm run dist
 ```
+
+## Community
+
+* Ask "_how do I...?_" questions in cycle-react's Gitter: <br/>
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+* Propose and discuss significant changes as a GitHub issues
+* In addition, more resources can be found at
+[Cycle.js](https://github.com/staltz/cycle)' page
 
 ## Disclaimer
 

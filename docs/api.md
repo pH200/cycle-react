@@ -26,23 +26,6 @@ interactions of type `eventName` happening on the element identified by
 `selector`.
 Example: `interactions.get('.mybutton', 'click').map(ev => ...)`
 
-`interactions.subject(name)`
-`interactions.getEventSubject(name)`
-
-Get a subject with an `onEvent` method bind to the subject.
-This subject is useful if you don't want to use `interactions.get`. And
-prefer catching events by providing `subject.onEvent` directly to the
-event handler of the element.
-
-Example:
-`<button onClick={interactions.getEventSubject('onClick').onEvent} />`
-
-To subscribe a event from cycle-react's custom element,
-append "on" before the event name
-with a postfix "$".
-
-Example: `<MyElement onMyEvent$={eventSubject.onEvent}` />
-
 #### Arguments:
 
 - `container :: String|HTMLElement` the DOM selector for the element (or the element itself) to contain the rendering of the VTrees.
@@ -67,9 +50,9 @@ otherwise the output `html$` will never emit an HTML string.
 
 - - -
 
-### <a id="createReactClass"></a> `createReactClass(tagName, computer, [options])`
+### <a id="createReactClass"></a> `createReactClass(tagName, definitionFn, [options])`
 
-Takes a `computer` function which outputs an Observable of React
+Takes a `definitionFn` function which outputs an Observable of React
 elements, and returns a converted React class which can be used normally
 by `React.createElement` and "Cycle.applyToDOM".
 
@@ -79,13 +62,13 @@ you're doing it wrong.
 
 "React class" shares the same terminology as Cycle's "custom element".
 
-The given `computer` function takes two parameters as input, in this order:
+The given `definitionFn` function takes two parameters as input, in this order:
 `interactions` and `properties`. The former works just like it does in the
-`computer` function given to `applyToDOM`, and the later contains
+`definitionFn` function given to `applyToDOM`, and the later contains
 Observables representing properties of the custom element, given from the
 parent context. `properties.get('foo')` will return the Observable `foo$`.
 
-The `computer` must output an object containing the property `vtree$`
+The `definitionFn` must output an object containing the property `vtree$`
 as an Observable. If the output object contains other Observables, then
 they are treated as custom events of the custom element.
 
@@ -93,7 +76,7 @@ The `options` is optional and can be ignored in most cases.
 
 options example:
 
-    createReactClass('displayName', computer, {
+    createReactClass('displayName', definitionFn, {
       rootTagName: 'div',
       mixins: [PureRenderMixin],
       propTypes: null,
@@ -127,20 +110,10 @@ you have an initial value for the vtree$. Examples:
       rootTagName: 'div'
     });
 
-`opt.mixins` is the mixins property used by React.createClass in
-cycle-react internally. The value must be an Array. Setting
-`mixins: [AnyMixin]` will overwrite the default mixins [PureRenderMixin].
-So, make sure you always append [PureRenderMixin] if you need that
-feature.
-
-`opt.bindThis` will append the third parameter `this` to `computer()`
-Normally, you don't want to use this. However, it might be required for
-working with some React components.
-
 #### Arguments:
 
 - `tagName :: String` a name for identifying the React class.
-- `computer :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
+- `definitionFn :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
 - `[options] :: Object` the options for createReactClass.
 

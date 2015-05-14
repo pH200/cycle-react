@@ -2,6 +2,13 @@
 
 ## 0.24.0
 
+Breaking change: createEventSubject has been removed
+
+Use `interactions.getEventSubject(name)` and
+`interactions.subject(name)`(alias) instead. It's a better design to have
+event subscriptions stay within the interactions. See `interactions.md` for
+details.
+
 Add feature: Disposable element
 
 Sometimes, it's not an easy task to manage all your disposables by
@@ -25,30 +32,7 @@ Cycle.createReactClass('MyElement', () => {
 
 Add feature: Refs compatibility
 
-If you've ever tried to set `ref` for the element with cycle-react, you're
-probably encountered this following error:
-
-```
-Invariant Violation: addComponentAsRefTo(...): Only a ReactOwner can have refs.
-This usually means that you're trying to add a ref to a component that doesn't
-have an owner (that is, was not created inside of another component's `render`
-method).
-```
-
-This is because cycle-react evaluates the vtree(ReactElement) inside the Rx
-subscription instead of `ReactClass.prototype.render`. Now, this error can
-be avoided by sending the lazy value of vtree with the option
-`{bindThis: true}` set.
-
-Example:
-
-```js
-Cycle.createReactClass('MyElement', (_1, _2, self) => {
-  // Send lambda instead of plain vtree
-  return Rx.Observable.just(() => <input ref="myInput" />);
-}, {bindThis: true});
-// The bindThis option must be set
-```
+See `working-with-react.md` for details.
 
 ## 0.23.0
 
