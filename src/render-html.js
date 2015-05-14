@@ -2,14 +2,7 @@
 var React = require('react');
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
-
-function makeEmptyInteractions() {
-  return {
-    get: function get() {
-      return Rx.Observable.empty();
-    }
-  };
-}
+var makeEmptyInteractions = require('./interactions').makeEmptyInteractions;
 
 function makeEmptyPropsObservable() {
   var empty = Rx.Observable.empty();

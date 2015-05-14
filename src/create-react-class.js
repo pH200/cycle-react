@@ -3,45 +3,7 @@ var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
-
-function makeInteractions(rootElem$) {
-  return {
-    get: function get(selector, eventName, isSingle) {
-      if (typeof selector !== 'string') {
-        throw new Error('interactions.get() expects first argument to be a ' +
-          'string as a CSS selector');
-      }
-      if (typeof eventName !== 'string') {
-        throw new Error('interactions.get() expects second argument to be a ' +
-          'string representing the event type to listen for.');
-      }
-
-      return rootElem$
-        .flatMapLatest(function flatMapDOMUserEventStream(rootElem) {
-          if (!rootElem) {
-            return Rx.Observable.empty();
-          }
-          var klass = selector.replace('.', '');
-          var klassRegex = new RegExp('\\b' + klass + '\\b');
-          if (klassRegex.test(rootElem.className)) {
-            return Rx.Observable.fromEvent(rootElem, eventName);
-          }
-          if (isSingle) {
-            var targetElement = rootElem.querySelector(selector);
-            if (targetElement) {
-              return Rx.Observable.fromEvent(targetElement, eventName);
-            }
-          } else {
-            var targetElements = rootElem.querySelectorAll(selector);
-            if (targetElements && targetElements.length > 0) {
-              return Rx.Observable.fromEvent(targetElements, eventName);
-            }
-          }
-          return Rx.Observable.empty();
-        });
-    }
-  };
-}
+var makeInteractions = require('./interactions').makeInteractions;
 
 function makeDispatchFunction(elementGetter, eventName, handler) {
   return function dispatchCustomEvent(evData) {
