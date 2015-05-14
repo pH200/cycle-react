@@ -1,6 +1,13 @@
+### Documentations
+
+- [API](https://github.com/pH200/cycle-react/blob/master/docs/api.md)
+- [Interactions API](https://github.com/pH200/cycle-react/blob/master/docs/interactions.md)
+- [Working with React](https://github.com/pH200/cycle-react/blob/master/docs/working-with-react.md)
+
 ### Where to ask for help?
 
-Join the Gitter chat room <br />[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/staltz/cycle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Join the Gitter chat room <br />
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## What does the suffixed dollar sign `$` mean?
 
