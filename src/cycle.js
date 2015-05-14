@@ -78,7 +78,7 @@ var Cycle = {
    * you have an initial value for the vtree$. Examples:
    *
    *     // The element for the first render would be <h1 />
-   *     createReactClass('displayName', () => Rx.spawn(<h1 />), {
+   *     createReactClass('displayName', () => Rx.Observable.just(<h1 />), {
    *       rootTagName: 'div'
    *     });
    *

@@ -45,7 +45,7 @@ Example:
 ```js
 var MyElement = createReactClass('MyElement', function computer() {
   return {
-    vtree$: Rx.spawn(<h3 className="myelement">My Element</h3>),
+    vtree$: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     // The event observable
     tickEvent$: Rx.Observable.interval(500)
   }

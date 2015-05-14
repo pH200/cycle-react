@@ -24,7 +24,7 @@ Example:
 ```js
 let MyElement = createReactClass('MyElement', function computer() {
   return {
-    vtree$: Rx.spawn(<h3 className="myelement">My Element</h3>),
+    vtree$: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     // The event observable
     tickEvent$: Rx.Observable.interval(500)
   }
@@ -75,7 +75,7 @@ let options = {
   bindThis: true
 };
 let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
-  return Rx.spawn(<div onClick={() => self.goBack()}>Go back</div>)
+  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>)
 }, options);
 ```
 
