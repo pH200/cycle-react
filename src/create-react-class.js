@@ -70,19 +70,19 @@ function makeDispatchFunction(elementGetter, eventName, handler) {
   };
 }
 
-function composingEventObservables(events, handlers, elementGetter) {
+function composingEventObservables(events, handlerGetter, elementGetter) {
   var eventNames = Object.keys(events);
   var eventObservables = [];
   for (var i = 0; i < eventNames.length; i++) {
     var eventName = eventNames[i];
-    if (/\$$/.test(eventName) && eventName !== 'vtree$') {
+    if (/.\$$/.test(eventName) && eventName !== 'vtree$') {
       var eventObs = events[eventName];
       eventObservables.push(
         eventObs.doOnNext(
           makeDispatchFunction(
             elementGetter,
             eventName.slice(0, -1),
-            handlers[eventName]
+            handlerGetter(eventName)
           )
         )
       );
@@ -91,22 +91,31 @@ function composingEventObservables(events, handlers, elementGetter) {
   return eventObservables;
 }
 
-function composingCustomEventAttributes(props) {
-  if (!props) {
-    return {};
-  }
-  var propNames = Object.keys(props);
-  var eventHandlers = {};
-  for (var i = 0; i < propNames.length; i++) {
-    var propName = propNames[i];
-    if (/^on.+\$$/.test(propName)) {
-      var handler = props[propName];
-      if (typeof handler === 'function') {
-        eventHandlers[propName.slice(2)] = handler;
+function getEventHandlerGetter(self) {
+  return function eventHandlerGetter(eventName) {
+    if (!self.props) {
+      return null;
+    }
+    var eventHandler = self.props['on' + eventName];
+    if (eventHandler) {
+      if (typeof eventHandler === 'function') {
+        return eventHandler;
+      } else {
+        throw new Error('on' + eventName + ' handler must be a function.');
       }
     }
-  }
-  return eventHandlers;
+    var caseConvertedName =
+      'on' + eventName.substr(0, 1).toUpperCase() + eventName.substr(1);
+    var caseConvertedHandler = self.props[caseConvertedName];
+    if (caseConvertedHandler) {
+      if (typeof caseConvertedHandler === 'function') {
+        return caseConvertedHandler;
+      } else {
+        throw new Error(caseConvertedName + ' handler must be a function.');
+      }
+    }
+    return null;
+  };
 }
 
 function createGetPropFn(propsSubject$) {
@@ -195,10 +204,9 @@ function createReactClass(
     },
     _subscribeCycleEvents: function () {
       var self = this;
-      var eventHandlers = composingCustomEventAttributes(this.props);
       var eventObservables = composingEventObservables(
         this.cycleComponent.customEvents,
-        eventHandlers,
+        getEventHandlerGetter(self),
         function getCurrentElement() {
           return React.findDOMNode(self);
         }
