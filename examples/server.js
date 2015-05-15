@@ -34,7 +34,8 @@ function compileExample(exampleName, examplePath) {
 var examples = {
   hello: compileExample('hello', path.join(__dirname, './hello/hello.js')),
   many: compileExample('many', path.join(__dirname, './many/many.js')),
-  timer: compileExample('timer', path.join(__dirname, './timer/timer.js'))
+  timer: compileExample('timer', path.join(__dirname, './timer/timer.js')),
+  todomvc: compileExample('todomvc', path.join(__dirname, './todomvc/app.js'))
 };
 
 function compiledJsRoute(req, res) {
