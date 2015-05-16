@@ -55,7 +55,7 @@
     "test-browser": "testem",
     "test": "npm run jshint && npm run test-node && npm run test-browser -- ci -l PhantomJS",
     "pretravis-test": "npm install react",
-    "travis-test": "npm run test",
+    "travis-test": "npm run jshint && npm run test-node && testem ci -l PhantomJS",
     "browserify": "NODE_ENV=production browserify src/cycle.js --standalone Cycle -o dist/cycle-react.js",
     "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
