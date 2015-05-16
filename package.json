@@ -54,7 +54,7 @@
     "test-node": "npm run test-common && npm run test-onlynode",
     "test-browser": "testem",
     "test": "npm run jshint && npm run test-node && npm run test-browser -- ci -l PhantomJS",
-    "travis-test": "npm run jshint && npm run jscs && npm run test-node",
+    "travis-test": "npm run test",
     "browserify": "NODE_ENV=production browserify src/cycle.js --standalone Cycle -o dist/cycle-react.js",
     "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
