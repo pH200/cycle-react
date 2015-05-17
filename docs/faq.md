@@ -35,7 +35,7 @@ function computer(interactions) {
     .map(ev =>
       h('div', [
         h('my-element.target'),
-        h('h2', ev.data)
+        h('h2', ev.detail)
       ])
     );
 }

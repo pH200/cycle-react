@@ -70,10 +70,10 @@ console.info('You should see both \'foo: ...\' and \'content: ...\' ' +
 
 Cycle.applyToDOM('.js-container', function (interactions) {
   interactions.get('.inner', 'fooOnRefresh').subscribe(function (ev) {
-    console.log('foo: ' + ev.data);
+    console.log('foo: ' + ev.detail);
   });
   interactions.get('.inner', 'contentOnRefresh').subscribe(function (ev) {
-    console.log('content: ' + ev.data);
+    console.log('content: ' + ev.detail);
   });
   return computer(interactions);
 });

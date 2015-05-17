@@ -10,6 +10,9 @@ function makeEmptyInteractions() {
     get: function get() {
       return Rx.Observable.empty();
     },
+    granularGet: function granularGet() {
+      return Rx.Observable.empty();
+    },
     subject: getEventSubject,
     getEventSubject: getEventSubject
   };
@@ -26,9 +29,62 @@ function makeInteractions(rootElem$) {
     }
     return subjects[name];
   }
+  function match(selector, isRoot) {
+    return function filterSelector(e) {
+      if (isRoot) {
+        return true;
+      }
+      var className = selector.replace(/^\./, '');
+      var classRegex = new RegExp('\\b' + className + '\\b');
+      if (classRegex.test(e.target.className)) {
+        return true;
+      }
+      if (e.target.matches) {
+        return e.target.matches(selector);
+      }
+      if (e.target.matchesSelector) {
+        return e.target.matchesSelector(selector);
+      }
+      if (e.target.webkitMatchesSelector) {
+        return e.target.webkitMatchesSelector(selector);
+      }
+      if (e.target.mozMatchesSelector) {
+        return e.target.mozMatchesSelector(selector);
+      }
+      if (e.target.msMatchesSelector) {
+        return e.target.msMatchesSelector(selector);
+      }
+      return false;
+    };
+  }
 
   return {
     get: function get(selector, eventName, isSingle, isRoot) {
+      if (typeof selector !== 'string') {
+        throw new Error('interactions.get() expects first argument to be a ' +
+          'string as a CSS selector');
+      }
+      if (typeof eventName !== 'string') {
+        throw new Error('interactions.get() expects second argument to be a ' +
+          'string representing the event type to listen for.');
+      }
+      return rootElem$
+        .distinctUntilChanged(Rx.helpers.identity, function compareNode(x , y) {
+          return x === y || x.isEqualNode(y);
+        })
+        .flatMapLatest(function flatMapDOMUserEventStream(rootElem) {
+          if (!rootElem) {
+            return Rx.Observable.empty();
+          }
+          var eventObservable = Rx.Observable.fromEvent(rootElem, eventName)
+            .filter(match(selector, isRoot));
+          if (isSingle) {
+            return eventObservable.take(1);
+          }
+          return eventObservable;
+        });
+    },
+    granularGet: function granularGet(selector, eventName, isSingle, isRoot) {
       if (typeof selector !== 'string') {
         throw new Error('interactions.get() expects first argument to be a ' +
           'string as a CSS selector');

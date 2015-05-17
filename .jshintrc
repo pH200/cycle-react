@@ -17,9 +17,5 @@
   "unused": true,
   "boss": true,
   "eqnull": true,
-  "node": true,
-  "browser": true,
-  "globals": {
-    "Map": true
-  }
+  "node": true
 }

@@ -3,19 +3,17 @@ var React = require('react');
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 var makeInteractions = require('./interactions').makeInteractions;
+var createCustomEvent = require('./CustomEvent');
 
 function makeDispatchFunction(elementGetter, eventName, handler) {
   return function dispatchCustomEvent(evData) {
     //console.log('%cdispatchCustomEvent ' + eventName,
     //  'background-color: #CCCCFF; color: black');
-    var event;
-    try {
-      event = new Event(eventName);
-    } catch (err) {
-      event = document.createEvent('Event');
-      event.initEvent(eventName, true, true);
-    }
-    event.data = evData;
+    var event = createCustomEvent(eventName, {
+      detail: evData,
+      bubbles: true,
+      cancelable: true
+    });
     var element = elementGetter();
     if (element) {
       if (handler) {

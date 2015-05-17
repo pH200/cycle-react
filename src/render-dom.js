@@ -1,3 +1,4 @@
+/* jshint browser:true */
 'use strict';
 var React = require('react');
 var createReactClass = require('./create-react-class');

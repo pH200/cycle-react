@@ -167,7 +167,7 @@ describe('Custom Elements', function () {
         h(MyElement, {key: 1})
       ]));
       interactions.get('.myelementclass', 'myevent').subscribe(x => {
-        assert.strictEqual(x.data, 123);
+        assert.strictEqual(x.detail, 123);
         done();
       });
       return vtree$;
@@ -200,7 +200,7 @@ describe('Custom Elements', function () {
         })
       ]));
       onmyevent$.subscribe(x => {
-        assert.strictEqual(x.data, 123);
+        assert.strictEqual(x.detail, 123);
         done();
       });
       return vtree$;
@@ -214,7 +214,7 @@ describe('Custom Elements', function () {
     number$.request(1);
   });
 
-  it('should not miss custom events from a list of custom elements #87', function () {
+  it('should not miss custom events from a list of custom elements', function () {
     // Make custom element
     let Slider = Cycle.createReactClass('Slider', function (interactions, props) {
       let remove$ = interactions.get('.internalslider', 'click')
@@ -234,8 +234,8 @@ describe('Custom Elements', function () {
     ).controlled();
     function computer(interactions) {
       let eventData$ = interactions
-        .get('.allSliders > *', 'remove')
-        .map(event => event.data);
+        .get('.internalslider', 'remove')
+        .map(event => event.detail);
       return sequence$
         .concat(eventData$)
         .scan((items, x) => {
@@ -386,7 +386,7 @@ describe('Custom Elements', function () {
         ])
       );
       onmyevent$.subscribe(function (x) {
-        assert.strictEqual(x.data, 123);
+        assert.strictEqual(x.detail, 123);
         done();
       });
       return vtree$;
@@ -508,7 +508,7 @@ describe('Custom Elements', function () {
     Rx.Observable.fromEvent(myElement, 'myevent')
       .take(3)
       .subscribe(function (ev){
-        assert.notStrictEqual(ev.data, 3);
+        assert.notStrictEqual(ev.detail, 3);
       });
 
     // Trigger the event
