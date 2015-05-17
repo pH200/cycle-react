@@ -59,4 +59,20 @@ describe('interactions', function () {
     let interactions = makeInteractions();
     assert.strictEqual(interactions.subject, interactions.getEventSubject);
   });
+
+  it('should return created EventSubject from the inserted key', function () {
+    let interactions = makeInteractions();
+    assert.strictEqual(
+      interactions.getEventSubject('foo'),
+      interactions.getEventSubject('foo')
+    );
+  });
+
+  it('should create standalone EventSubject by getEventSubject()', function () {
+    let interactions = makeInteractions();
+    assert.notStrictEqual(
+      interactions.getEventSubject(),
+      interactions.getEventSubject()
+    );
+  });
 });

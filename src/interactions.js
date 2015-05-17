@@ -18,6 +18,9 @@ function makeEmptyInteractions() {
 function makeInteractions(rootElem$) {
   var subjects = {};
   function getEventSubject(name) {
+    if (name === null || name === (void 0)) {
+      return createEventSubject();
+    }
     if (!subjects[name]) {
       subjects[name] = createEventSubject();
     }
