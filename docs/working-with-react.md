@@ -43,10 +43,7 @@ less-functional style. However, it might be needed if you want to take
 advantage of other React components.
 
 `opts.mixins` is the mixins property used by React.createClass in
-Cycle-React internally. This value must be an Array. Setting
-`mixins: [AnyMixin]` will overwrite the default mixins `[PureRenderMixin]` with
-`[AnyMixin]`. So, make sure you always append `PureRenderMixin` back if you
-need its feature.
+Cycle-React internally. This value must be an array.
 
 Example:
 

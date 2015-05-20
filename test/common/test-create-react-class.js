@@ -46,24 +46,27 @@ describe('createReactClass', function () {
   });
 
   it('should overwrite mixins', function () {
+    let Mixin = {
+      foo: 'bar'
+    };
     let MyElement = Cycle.createReactClass(
       'MyElement',
       () => Rx.Observable.empty(),
-      {mixins: []}
+      {mixins: [Mixin]}
     );
-    assert.equal(MyElement.prototype.shouldComponentUpdate, null);
+    assert.strictEqual(MyElement.prototype.foo, 'bar');
   });
 
-  it('should not overwrite mixins by null options', function () {
+  it('should not overwrite mixins by an object', function () {
+    let Mixin = {
+      foo: 'bar'
+    };
     let MyElement = Cycle.createReactClass(
       'MyElement',
       () => Rx.Observable.empty(),
-      {mixins: null}
+      {mixins: Mixin}
     );
-    assert.strictEqual(
-      typeof MyElement.prototype.shouldComponentUpdate,
-      'function'
-    );
+    assert.strictEqual(MyElement.prototype.foo, (void 0));
   });
 
   it('should not bind `this` for definitionFn by default', function () {

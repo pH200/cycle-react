@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.0
+
+Breaking change: shouldComponentUpdate is now built-in and no longer being
+able to be overridden by mixins
+
 ## 0.24.0
 
 Breaking change: createEventSubject has been removed

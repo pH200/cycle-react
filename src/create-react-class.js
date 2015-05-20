@@ -1,6 +1,5 @@
 'use strict';
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 var makeInteractions = require('./interactions').makeInteractions;
@@ -192,6 +191,11 @@ function createReactClass(
       }
       this.hasMounted = true;
     },
+    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+      // https://facebook.github.io/react/docs/pure-render-mixin.html
+      // This works perfectly because the state is always set by the new vtree.
+      return this.props !== nextProps || this.state !== nextState;
+    },
     componentWillMount: function componentWillMount() {
       this._subscribeCycleComponent();
     },
@@ -223,10 +227,6 @@ function createReactClass(
 
   if (Array.isArray(options.mixins)) {
     reactClassProto.mixins = options.mixins;
-  } else {
-    // https://facebook.github.io/react/docs/pure-render-mixin.html
-    // This works perfectly because the state is always set by the new vtree.
-    reactClassProto.mixins = [PureRenderMixin];
   }
   if (options.propTypes) {
     reactClassProto.propTypes = options.propTypes;

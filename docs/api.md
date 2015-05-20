@@ -78,7 +78,7 @@ options example:
 
     createReactClass('displayName', definitionFn, {
       rootTagName: 'div',
-      mixins: [PureRenderMixin],
+      mixins: [],
       propTypes: null,
       disableHotLoader: false,
       bindThis: false
