@@ -15,7 +15,7 @@ framework called [Cycle.js](https://github.com/staltz/cycle).
 ## Installing
 
 ```
-npm install Cycle-React
+npm install cycle-react
 ```
 
 ## Example
