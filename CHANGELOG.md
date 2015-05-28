@@ -5,6 +5,23 @@
 Breaking change: shouldComponentUpdate is now built-in and no longer being
 able to be overridden by mixins
 
+Breaking change: like
+[Cycle.js 0.22](https://github.com/staltz/cycle/releases/tag/v0.22.0),
+`event.detail` is now used instead of `event.data`
+
+Breaking change: `interaction.get` is now implemented as:
+
+```
+Rx.Observable.fromEvent(RootElement, eventName)
+  .filter(e => e.target.matches(selector))
+```
+
+Instead of:
+
+```
+Rx.Observable.fromEvent(RootElement.querySelector(selector), eventName)
+```
+
 ## 0.24.0
 
 Breaking change: createEventSubject has been removed
