@@ -1,6 +1,6 @@
 'use strict';
-var document = require("global/document");
-var window = require("global/window");
+var document = require('global/document');
+var window = require('global/window');
 
 var createCustomEvent;
 if (window && window.CustomEvent && typeof window.CustomEvent === 'function') {
