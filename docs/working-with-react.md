@@ -11,10 +11,10 @@ could be helpful.
 React components use event handler(from props) instead of `dispatchEvent` for
 child-parent communications. Cycle-React provides EventSubject for receiving
 these events. It's a Subject with an instance method `onEvent` and it has a
-[simple](https://github.com/pH200/cycle-react/blob/master/src/event-subject.md)
+[simple](/src/event-subject.js)
 implementation.
 Details of using event handlers in Cycle-React can be found at
-[interactions.getEventSubject](https://github.com/pH200/cycle-react/blob/master/docs/interactions.md#interactions.getEventSubject).
+[interactions.getEventSubject](/docs/interactions.md#interactions.getEventSubject).
 
 In addition, properties that end with `$` except `vtree$` from your custom
 element will be converted to event handlers of the rendered element.

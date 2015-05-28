@@ -1,8 +1,8 @@
 ### Documentations
 
-- [API](https://github.com/pH200/cycle-react/blob/master/docs/api.md)
-- [Interactions API](https://github.com/pH200/cycle-react/blob/master/docs/interactions.md)
-- [Working with React](https://github.com/pH200/cycle-react/blob/master/docs/working-with-react.md)
+- [API](/docs/api.md)
+- [Interactions API](/docs/interactions.md)
+- [Working with React](/docs/working-with-react.md)
 
 ### Where to ask for help?
 

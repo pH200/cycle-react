@@ -92,7 +92,7 @@ Cycle.applyToDOM('.js-container', Timer);
 You can use `h` and without JSX just like you did in Cycle.js.
 This was made possible by
 [react-hyperscript](https://github.com/mlmorg/react-hyperscript).
-[The example](https://github.com/pH200/cycle-react/blob/master/examples/timer/timer.js).
+[The example](/examples/timer/timer.js).
 
 ## But you said no classes
 
@@ -127,12 +127,12 @@ Yes. You can even use Cycle-React with your current React apps. Because
 Examples for integrating Cycle-React with other libraries are work in progress.
 
 Meanwhile, See
-"[Working with React](https://github.com/pH200/cycle-react/blob/master/docs/working-with-react.md)"
+"[Working with React](/docs/working-with-react.md)"
 for guidelines.
 
 ### more
 
-[docs/faq.md](https://github.com/pH200/cycle-react/blob/master/docs/faq.md)
+[docs/faq.md](/docs/faq.md)
 
 ## Build standalone js
 
