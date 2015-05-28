@@ -1,5 +1,7 @@
 # Cycle-React
 
+[![Build Status](https://travis-ci.org/pH200/cycle-react.svg?branch=master)](https://travis-ci.org/pH200/cycle-react)
+
 An [RxJS](https://github.com/Reactive-Extensions/RxJS) functional interface
 to [Facebook's React](http://facebook.github.io/react/).
 
