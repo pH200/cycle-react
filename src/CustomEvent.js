@@ -4,7 +4,7 @@ var window = require('global/window');
 
 var createCustomEvent;
 if (window && window.CustomEvent && typeof window.CustomEvent === 'function') {
-  createCustomEvent = function createCustomEvent(type, eventInitDict) {
+  createCustomEvent = function createCustomEventDefault(type, eventInitDict) {
     return new window.CustomEvent(type, eventInitDict);
   };
 } else if (document && document.createEvent) {
