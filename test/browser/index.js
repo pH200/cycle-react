@@ -2,3 +2,4 @@
 require('../common/cycle.js');
 require('./custom-elements.js');
 require('./render.js');
+require('./driver.js');

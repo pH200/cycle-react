@@ -34,6 +34,10 @@ function applyToDOM(container, definitionFn) {
 
   var RxReactRoot = createReactClass('RxReactRoot', definitionFn);
   React.render(React.createElement(RxReactRoot), domContainer);
+
+  return {
+    container: domContainer
+  };
 }
 
 module.exports = applyToDOM;

@@ -2,6 +2,7 @@
 var applyToDOM = require('./render-dom');
 var renderAsHTML = require('./render-html');
 var createReactClass = require('./create-react-class');
+var makeDOMDriver = require('./cycle-driver');
 var React = require('react');
 var Rx = require('rx');
 var h = require('./h');
@@ -107,6 +108,8 @@ var Cycle = {
    * @function createReactClass
    */
   createReactClass: createReactClass,
+
+  makeDOMDriver: makeDOMDriver,
 
   /**
    * A shortcut to the root object of React.

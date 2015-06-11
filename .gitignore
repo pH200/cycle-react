@@ -9,7 +9,6 @@ node_modules
 
 # Generated
 tests-bundle.js
-lib/
 dist/
 
 # Misc
