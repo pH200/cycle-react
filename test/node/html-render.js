@@ -22,8 +22,10 @@ describe('renderAsHTML()', function () {
     var log = 0;
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        vtree$: Rx.Observable.just(h('div.test-element', ['Foobar'])),
-        myevent$: Rx.Observable.just(123).doOnNext(n => log = n)
+        DOM: Rx.Observable.just(h('div.test-element', ['Foobar'])),
+        events: {
+          myevent: Rx.Observable.just(123).doOnNext(n => log = n)
+        }
       }
     });
     let html$ = Cycle.renderAsHTML(MyElement);

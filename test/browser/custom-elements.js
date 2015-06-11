@@ -157,8 +157,10 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        vtree$: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
-        myevent$: number$
+        DOM: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        events: {
+          myevent: number$
+        }
       };
     });
     // Use the custom element
@@ -186,8 +188,10 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        vtree$: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
-        myevent$: number$
+        DOM: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        events: {
+          myevent: number$
+        }
       };
     });
     // Use the custom element
@@ -196,7 +200,7 @@ describe('Custom Elements', function () {
       let vtree$ = Rx.Observable.just(h('div.toplevel', [
         h(MyElement, {
           key: 1,
-          onmyevent$: interactions.getEventSubject('onmyevent').onEvent
+          onmyevent: interactions.getEventSubject('onmyevent').onEvent
         })
       ]));
       onmyevent$.subscribe(x => {
@@ -223,8 +227,10 @@ describe('Custom Elements', function () {
       let vtree$ = id$
         .map(id => h('h3.internalslider', String(id)));
       return {
-        vtree$: vtree$,
-        remove$: remove$.withLatestFrom(id$, (r, id) => id)
+        DOM: vtree$,
+        events: {
+          remove: remove$.withLatestFrom(id$, (r, id) => id)
+        }
       };
     });
 
@@ -365,13 +371,15 @@ describe('Custom Elements', function () {
       // Here the vtree changes from <h3> to <button>, the myevent should
       // be emitted on <button> and not from the original <h3>.
       return {
-        vtree$: customElementSwitch$.map(number => {
+        DOM: customElementSwitch$.map(number => {
           if (number === 0) {
             return h('h3.myelementclass', 'foo');
           }
           return h('button.myelementclass', 'bar');
         }),
-        myevent$: number$
+        events: {
+          myevent: number$
+        }
       };
     });
     // Use the custom element
@@ -381,7 +389,7 @@ describe('Custom Elements', function () {
         h('div.toplevel', [
           h(MyElement, {
             key: 1,
-            onmyevent$: interactions.getEventSubject('onmyevent').onEvent
+            onMyevent: interactions.getEventSubject('onmyevent').onEvent
           })
         ])
       );
@@ -487,8 +495,10 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        vtree$: Rx.Observable.just(h('h3.myelementclass')),
-        myevent$: number$.do(i => log.push(i))
+        DOM: Rx.Observable.just(h('h3.myelementclass')),
+        events: {
+          myevent$: number$.do(i => log.push(i))
+        }
       };
     });
     // Use the custom element
@@ -533,7 +543,7 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.createReactClass('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        vtree$: Rx.Observable.just(h('h3.myelementclass')),
+        DOM: Rx.Observable.just(h('h3.myelementclass')),
         dispose: subscription
       };
     });
@@ -565,7 +575,7 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.createReactClass('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        vtree$: Rx.Observable.just(h('h3.myelementclass')),
+        DOM: Rx.Observable.just(h('h3.myelementclass')),
         dispose: () => {
           log2 = 'bar';
           subscription.dispose();

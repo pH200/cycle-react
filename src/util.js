@@ -5,14 +5,14 @@ module.exports = {
     var vtree$;
     var onMount;
     var dispose;
-    var customEvents = {};
-    if (output && output.hasOwnProperty('vtree$') &&
-      typeof output.vtree$.subscribe === 'function')
+    var customEvents;
+    if (output && output.hasOwnProperty('DOM') &&
+      typeof output.DOM.subscribe === 'function')
     {
-      vtree$ = output.vtree$;
+      vtree$ = output.DOM;
       onMount = output.onMount;
       dispose = output.dispose;
-      customEvents = output;
+      customEvents = output.events;
     } else if (output && typeof output.subscribe === 'function') {
       vtree$ = output;
     } else {
@@ -25,7 +25,7 @@ module.exports = {
       vtree$: vtree$,
       onMount: onMount,
       dispose: dispose,
-      customEvents: customEvents
+      customEvents: customEvents || {}
     };
   }
 };

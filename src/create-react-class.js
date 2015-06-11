@@ -34,18 +34,16 @@ function composingEventObservables(events, handlerGetter, elementGetter) {
   var eventObservables = [];
   for (var i = 0; i < eventNames.length; i++) {
     var eventName = eventNames[i];
-    if (/.\$$/.test(eventName) && eventName !== 'vtree$') {
-      var eventObs = events[eventName];
-      eventObservables.push(
-        eventObs.doOnNext(
-          makeDispatchFunction(
-            elementGetter,
-            eventName.slice(0, -1),
-            handlerGetter(eventName)
-          )
+    var eventObs = events[eventName];
+    eventObservables.push(
+      eventObs.doOnNext(
+        makeDispatchFunction(
+          elementGetter,
+          eventName,
+          handlerGetter(eventName)
         )
-      );
-    }
+      )
+    );
   }
   return eventObservables;
 }

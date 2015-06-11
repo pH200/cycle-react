@@ -3,12 +3,10 @@ let Cycle = require('../../../src/cycle');
 let {Rx, h} = Cycle;
 
 function myelement(interactions, props) {
-  return {
-    vtree$: props
-      .map(p => p.content)
-      .distinctUntilChanged()
-      .map(content => h('h3.myelementclass', content))
-  };
+  return props
+    .map(p => p.content)
+    .distinctUntilChanged()
+    .map(content => h('h3.myelementclass', content));
 }
 
 function makeModelNumber$() {
