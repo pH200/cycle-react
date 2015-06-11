@@ -1,4 +1,4 @@
-# Using Cycle.js Driver
+# Using Cycle-React's DOM driver for Cycle.js
 
 ## Usage
 
@@ -23,12 +23,12 @@ function main(drivers) {
   }
   return {
     // The definition function is required to be wrapped by Observable
-    view: Rx.Observable.just(component)
+    DOM: Rx.Observable.just(component)
   };
 }
 
 Cycle.run(main, {
-  view: CycleReact.makeDOMDriver('.js-container')
+  DOM: CycleReact.makeDOMDriver('.js-container')
 });
 ```
 

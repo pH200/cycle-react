@@ -118,7 +118,8 @@ Starting from
 the driver architecture has been introduced.
 Cycle-React provides a DOM driver(powered by React, of course) for Cycle.js.
 
-Details can be found at ["Using Cycle.js driver"](/docs/cycle-js-driver.md).
+Details can be found at
+["Using Cycle-React's DOM driver for Cycle.js"](/docs/cycle-js-driver.md).
 
 ## FAQ
 
