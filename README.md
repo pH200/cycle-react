@@ -58,7 +58,7 @@ use it. That's why Cycle-React was made. We took functions over classes
 and mutable states.
 
 The description of the concept behind `applyToDOM` and `Cycle` can be found at
-[Cycle.js](https://github.com/staltz/cycle) README.
+[Cycle.js](https://github.com/staltz/cycle/tree/v0.22.0) README.
 
 ## Custom element example
 
@@ -78,7 +78,7 @@ let CounterText = Cycle.createReactClass('CounterText',
 
 let Timer = Cycle.createReactClass('Timer', function () {
   return Rx.Observable.interval(1000).map(i =>
-    <CounterText counter={i}></CounterText>
+    <CounterText counter={i} />
   );
 });
 
@@ -111,6 +111,15 @@ Cycle-React shares the same API as Cycle.js, except of doing custom elements.
 A more comprehensive README can be found at
 https://github.com/staltz/cycle
 
+## Cycle.js Driver
+
+Starting from
+[Cycle.js v0.23](https://github.com/staltz/cycle/releases/tag/v0.23.0),
+the driver architecture has been introduced.
+Cycle-React provides a DOM driver(powered by React, for sure) for Cycle.js.
+
+Details can be found at ["Using Cycle.js driver"](/docs/cycle-js-driver.md).
+
 ## FAQ
 
 ### Can I use Cycle-React with [react-hot-loader](https://github.com/gaearon/react-hot-loader)?
@@ -129,10 +138,6 @@ Examples for integrating Cycle-React with other libraries are work in progress.
 Meanwhile, See
 "[Working with React](/docs/working-with-react.md)"
 for guidelines.
-
-### more
-
-[docs/faq.md](/docs/faq.md)
 
 ## Build standalone js
 

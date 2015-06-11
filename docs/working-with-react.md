@@ -24,9 +24,11 @@ Example:
 ```js
 let MyElement = createReactClass('MyElement', function computer() {
   return {
-    vtree$: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
-    // The event observable
-    tickEvent$: Rx.Observable.interval(500)
+    DOM: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
+    events: {
+      // The event observable
+      tickEvent$: Rx.Observable.interval(500)
+    }
   }
 });
 // Cycle-React would also try to

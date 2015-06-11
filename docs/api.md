@@ -7,6 +7,8 @@
 
 - [`createReactClass`](#createReactClass)
 
+- [`makeDOMDriver`](#makeDOMDriver)
+
 - [`React`](#React)
 
 - [`Rx`](#Rx)
@@ -116,6 +118,23 @@ you have an initial value for the vtree$. Examples:
 - `definitionFn :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
 - `[options] :: Object` the options for createReactClass.
+
+- - -
+
+### <a id="makeDOMDriver"></a> `makeDOMDriver(container)`
+
+A factory for the Cycle.js DOM driver function. See docs/cycle-js-driver.md
+for details.
+
+#### Arguments:
+
+- `container :: String|HTMLElement` the DOM selector for the element (or the element itself) to contain the rendering of the VTrees.
+
+#### Return:
+
+*(Function)* the DOM driver function. The function expects an Observable of definitionFn as input, and outputs the response object for this
+driver, containing functions `get()` and `dispose()` that can be used for
+debugging and testing.
 
 - - -
 

@@ -1,5 +1,79 @@
 # Changelog
 
+## 0.26.0
+
+Breaking change: Cycle v0.23(or v1.0 API) compatibility changes
+
+### BEFORE
+
+```js
+var MyComponent = CycleReact.createReactClass('MyComponent',
+  function (interactions, props) {
+    var destroy$ = interactions.get('.remove-btn', 'click');
+    var id$ = props.get('itemid');
+    // ...
+    return {
+      vtree$: Rx.Observable.just(<h3>view</h3>),
+      destroy$: destroy$,
+      changeColor$: changeColor$,
+      changeWidth$: changeWidth$
+    };
+  }
+);
+```
+
+```js
+// Event handler usage
+// See docs/interactions.md
+<MyComponent onChangeColor$={interactions.subject('onChangeColor').onEvent} />
+```
+
+### AFTER
+
+```js
+var MyComponent = CycleReact.createReactClass('MyComponent',
+  function (interactions, props) {
+    var destroy$ = interactions.get('.remove-btn', 'click');
+    var id$ = props.get('itemid');
+    // ...
+    return {
+      DOM: Rx.Observable.just(<h3>view</h3>),
+      events: {
+        destroy: destroy$,
+        changeColor: changeColor$,
+        changeWidth: changeWidth$
+      }
+    };
+  }
+);
+```
+
+```js
+// Event handler usage
+// See docs/interactions.md
+<MyComponent onChangeColor={interactions.subject('onChangeColor').onEvent} />
+```
+
+### Migration
+
+1. Replace the return of the definition function from return
+{vtree$, myEvent$, ...} to return {DOM: vtree$, events: ...},
+where events: ... is an object where keys are the event name (notice no more
+dollar sign $ convention!) and values are Observables
+2. Remove the $ sign from event handlers
+3. You're good to go
+
+Unlike Cycle.js 0.23 which `interactions` and `props` are replaced by drivers,
+Cycle-React keeps these parameters because Cycle-React allows you to create
+React components outside the context of `Cycle.run`.
+
+Additionally, Cycle-React will keep `applyToDOM` and `renderAsHTML` for
+simple web-app development usage.
+
+Add feature: Cycle.js driver
+
+See docs/driver.md for details.
+
 ## 0.25.0
 
 Breaking change: shouldComponentUpdate is now built-in and no longer being
