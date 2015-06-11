@@ -116,7 +116,7 @@ https://github.com/staltz/cycle
 Starting from
 [Cycle.js v0.23](https://github.com/staltz/cycle/releases/tag/v0.23.0),
 the driver architecture has been introduced.
-Cycle-React provides a DOM driver(powered by React, for sure) for Cycle.js.
+Cycle-React provides a DOM driver(powered by React, of course) for Cycle.js.
 
 Details can be found at ["Using Cycle.js driver"](/docs/cycle-js-driver.md).
 
