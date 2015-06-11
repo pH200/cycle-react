@@ -37,7 +37,7 @@ var MyComponent = CycleReact.createReactClass('MyComponent',
     var id$ = props.get('itemid');
     // ...
     return {
-      DOM: Rx.Observable.just(<h3>view</h3>),
+      view: Rx.Observable.just(<h3>view</h3>),
       events: {
         destroy: destroy$,
         changeColor: changeColor$,
@@ -57,7 +57,7 @@ var MyComponent = CycleReact.createReactClass('MyComponent',
 ### Migration
 
 1. Replace the return of the definition function from return
-{vtree$, myEvent$, ...} to return {DOM: vtree$, events: ...},
+{vtree$, myEvent$, ...} to return {view: vtree$, events: ...},
 where events: ... is an object where keys are the event name (notice no more
 dollar sign $ convention!) and values are Observables
 2. Remove the $ sign from event handlers
@@ -72,7 +72,7 @@ simple web-app development usage.
 
 Add feature: Cycle.js driver
 
-See docs/driver.md for details.
+See docs/cycle-js-driver.md for details.
 
 ## 0.25.0
 

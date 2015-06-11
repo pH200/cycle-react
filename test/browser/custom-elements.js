@@ -157,7 +157,7 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        DOM: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
           myevent: number$
         }
@@ -188,7 +188,7 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        DOM: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
           myevent: number$
         }
@@ -227,7 +227,7 @@ describe('Custom Elements', function () {
       let vtree$ = id$
         .map(id => h('h3.internalslider', String(id)));
       return {
-        DOM: vtree$,
+        view: vtree$,
         events: {
           remove: remove$.withLatestFrom(id$, (r, id) => id)
         }
@@ -371,7 +371,7 @@ describe('Custom Elements', function () {
       // Here the vtree changes from <h3> to <button>, the myevent should
       // be emitted on <button> and not from the original <h3>.
       return {
-        DOM: customElementSwitch$.map(number => {
+        view: customElementSwitch$.map(number => {
           if (number === 0) {
             return h('h3.myelementclass', 'foo');
           }
@@ -495,7 +495,7 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function () {
       return {
-        DOM: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(h('h3.myelementclass')),
         events: {
           myevent$: number$.do(i => log.push(i))
         }
@@ -543,7 +543,7 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.createReactClass('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        DOM: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(h('h3.myelementclass')),
         dispose: subscription
       };
     });
@@ -575,7 +575,7 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.createReactClass('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        DOM: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(h('h3.myelementclass')),
         dispose: () => {
           log2 = 'bar';
           subscription.dispose();

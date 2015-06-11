@@ -6,10 +6,10 @@ module.exports = {
     var onMount;
     var dispose;
     var customEvents;
-    if (output && output.hasOwnProperty('DOM') &&
-      typeof output.DOM.subscribe === 'function')
+    if (output && output.hasOwnProperty('view') &&
+      typeof output.view.subscribe === 'function')
     {
-      vtree$ = output.DOM;
+      vtree$ = output.view;
       onMount = output.onMount;
       dispose = output.dispose;
       customEvents = output.events;
@@ -18,8 +18,8 @@ module.exports = {
     } else {
       throw new Error(
         'definitionFn given to render or createReactClass must return an ' +
-        'Observable of virtual DOM elements, or an object containing such ' +
-        'Observable named as `vtree$`');
+        'Observable of React elements, or an object containing such ' +
+        'Observable named as `view`');
     }
     return {
       vtree$: vtree$,

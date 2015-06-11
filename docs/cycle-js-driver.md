@@ -23,12 +23,12 @@ function main(drivers) {
   }
   return {
     // The definition function is required to be wrapped by Observable
-    DOM: Rx.Observable.just(component)
+    view: Rx.Observable.just(component)
   };
 }
 
 Cycle.run(main, {
-  DOM: CycleReact.makeDOMDriver('.js-container')
+  view: CycleReact.makeDOMDriver('.js-container')
 });
 ```
 

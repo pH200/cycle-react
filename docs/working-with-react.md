@@ -24,7 +24,7 @@ Example:
 ```js
 let MyElement = createReactClass('MyElement', function computer() {
   return {
-    DOM: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
+    view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
       // The event observable
       tickEvent$: Rx.Observable.interval(500)
