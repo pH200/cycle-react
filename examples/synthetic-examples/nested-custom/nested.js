@@ -29,12 +29,14 @@ var InnerElem = Cycle.createReactClass('InnerElem', function (interactions, prop
     });
 
   return {
-    vtree$: vtree$,
-    wasRefreshed$: refreshData$.delay(500).share(),
-    contentOnRefresh$: refreshData$
-      .withLatestFrom(content$, function (x, y) { return y; }),
-    fooOnRefresh$: refreshData$
-      .withLatestFrom(foo$, function (x, y) { return y; })
+    view: vtree$,
+    events: {
+      wasRefreshed: refreshData$.delay(500).share(),
+      contentOnRefresh: refreshData$
+        .withLatestFrom(content$, function (x, y) { return y; }),
+      fooOnRefresh: refreshData$
+        .withLatestFrom(foo$, function (x, y) { return y; })
+    }
   };
 });
 

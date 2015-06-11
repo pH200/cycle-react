@@ -22,8 +22,10 @@ var Ticker = Cycle.createReactClass('Ticker', function (interactions, props) {
   });
 
   return {
-    vtree$: vtree$,
-    remove$: remove$
+    view: vtree$,
+    events: {
+      remove: remove$
+    }
   };
 });
 

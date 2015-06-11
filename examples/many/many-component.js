@@ -34,18 +34,20 @@ function manyComponent(interactions, props) {
       .withLatestFrom(id$, function (ev, id) { return id; });
   var changeColor$ = interactions.get('.color-field', 'input')
       .withLatestFrom(id$, function (ev, id) {
-        return {id: id, color: ev.currentTarget.value};
+        return {id: id, color: ev.target.value};
       });
   var changeWidth$ = interactions.get('.width-slider', 'input')
       .withLatestFrom(id$, function (ev, id) {
-        return {id: id, width: parseInt(ev.currentTarget.value)};
+        return {id: id, width: parseInt(ev.target.value)};
       });
 
   return {
-    vtree$: vtree$,
-    destroy$: destroy$,
-    changeColor$: changeColor$,
-    changeWidth$: changeWidth$
+    view: vtree$,
+    events: {
+      destroy: destroy$,
+      changeColor: changeColor$,
+      changeWidth: changeWidth$
+    }
   };
 }
 
