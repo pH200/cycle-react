@@ -1,5 +1,5 @@
 'use strict';
-var Rx = require('Rx');
+var Rx = require('rx');
 var applyToDOM = require('./render-dom');
 var makeInteractions = require('./interactions').makeInteractions;
 
