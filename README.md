@@ -24,7 +24,7 @@ npm install cycle-react
 
 ```js
 let Cycle = require('cycle-react');
-let React = Cycle.React;
+let React = require('react');
 
 function computer(interactions) {
   return interactions.get('.myinput', 'input')
@@ -64,7 +64,7 @@ The description of the concept behind `applyToDOM` and `Cycle` can be found at
 
 ```js
 let Cycle = require('cycle-react');
-let React = Cycle.React;
+let React = require('react');
 let Rx = Cycle.Rx;
 
 // "createReactClass" returns a native react class which can be used normally
