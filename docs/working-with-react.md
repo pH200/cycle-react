@@ -16,7 +16,7 @@ implementation.
 Details of using event handlers in Cycle-React can be found at
 [interactions.getEventSubject](/docs/interactions.md#interactions.getEventSubject).
 
-In addition, properties that end with `$` except `vtree$` from your custom
+In addition, the properties inside of `events` object from your custom
 element will be converted to event handlers of the rendered element.
 
 Example:
@@ -27,13 +27,13 @@ let MyElement = createReactClass('MyElement', function computer() {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
       // The event observable
-      tickEvent$: Rx.Observable.interval(500)
+      tickEvent: Rx.Observable.interval(500)
     }
   }
 });
 // Cycle-React would also try to
-// emit onTickEvent$ if ontickEvent$ was not found
-<MyElement ontickEvent$={myEventHandler} />
+// emit onTickEvent if ontickEvent was not found
+<MyElement ontickEvent={myEventHandler} />
 // You can still use interactions.get for custom elements
 interactions.get('.myelement', 'tickEvent').map(...);
 ```
@@ -80,7 +80,7 @@ let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
 
 ## Refs
 
-If you've ever tried to set `ref` to the element with Cycle-React, you're
+If you've ever tried to set `ref` to the element with Cycle-React, you've
 probably encountered this following error:
 
 ```
