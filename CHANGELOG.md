@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.27.0
+
+Breaking change: Rename "createReactClass" to "component"
+
+For migrating to 0.27, simply replace the string "createReactClass"
+to "component".
+
+Fix: Remove unnecessary update on `props` change
+
+Add feature: New option "noDOMDispatchEvent" for skipping DOM dispatchEvent
+
+Use "noDOMDispatchEvent" if you want to handle events by using event handlers
+completely instead of using `interactions.get` API.
+
 ## 0.26.0
 
 Breaking change: Cycle v0.23(or v1.0 API) compatibility changes
