@@ -122,7 +122,7 @@ Examples for integrating Cycle-React with other libraries are work in progress.
 Meanwhile, See ["Working with React"](/docs/working-with-react.md)
 for guidelines.
 
-## Build standalone js
+## Build standalone JS and the library file for examples
 
 ```
 npm run dist
