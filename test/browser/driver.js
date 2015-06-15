@@ -37,7 +37,7 @@ describe('Cycle.js Driver', function () {
       DOM: Cycle.makeDOMDriver(createRenderTarget())
     });
 
-    responses.get('DOM', ':root').first().subscribe(function (root) {
+    responses.DOM.get(':root').first().subscribe(function (root) {
       let myElement = document.querySelector('.myelementclass');
       assert.notStrictEqual(myElement, null);
       assert.notStrictEqual(typeof myElement, 'undefined');
@@ -59,7 +59,7 @@ describe('Cycle.js Driver', function () {
       DOM: Cycle.makeDOMDriver(createRenderTarget())
     });
 
-    responses.get('DOM', ':root').first().subscribe(function (root) {
+    responses.DOM.get(':root').first().subscribe(function (root) {
       let myElement = document.querySelector('.myelementclass');
       assert.notStrictEqual(myElement, null);
       assert.notStrictEqual(typeof myElement, 'undefined');
@@ -75,7 +75,7 @@ describe('Cycle.js Driver', function () {
         return Rx.Observable.just(<h3 className="myelementclass">Foobar</h3>);
       }
       // Assert event
-      drivers.get('DOM', '.myelementclass', 'click')
+      drivers.DOM.get('.myelementclass', 'click')
         .take(1)
         .subscribe(ev => {
           assert.strictEqual(ev.type, 'click');
@@ -90,7 +90,7 @@ describe('Cycle.js Driver', function () {
       DOM: Cycle.makeDOMDriver(createRenderTarget())
     });
 
-    responses.get('DOM', ':root').first().subscribe(function (root) {
+    responses.DOM.get(':root').first().subscribe(function (root) {
       let myElement = document.querySelector('.myelementclass');
       assert.notStrictEqual(myElement, null);
       assert.notStrictEqual(typeof myElement, 'undefined');
@@ -109,7 +109,7 @@ describe('Cycle.js Driver', function () {
       DOM: Cycle.makeDOMDriver(createRenderTarget())
     });
 
-    responses.get('DOM', ':root').subscribe(function (root) {
+    responses.DOM.get(':root').subscribe(function (root) {
       throw new Error('Should not render');
     });
     responses.dispose();
