@@ -5,25 +5,24 @@
 ```js
 let Cycle = require('cyclejs');
 let CycleReact = require('cycle-react');
+let React = require('react');
+let Rx = require('rx');
 
 function main(drivers) {
-  // The component definition
-  function component(interactions) {
-    return interactions.get('.myinput', 'input')
-      .map(ev => ev.target.value)
-      .startWith('')
-      .map(name =>
-        <div>
-          <label>Name:</label>
-          <input className="myinput" type="text"></input>
-          <hr />
-          <h1>Hello {name}</h1>
-        </div>
-      );
-  }
+  // The component's definition
+  let TimerText = React.createClass({
+    render() {
+      return <div>Seconds Elapsed: {this.props.seconds}</div>;
+    }
+  });
+  let MainPage = function mainPageComponent() {
+    return Rx.Observable.interval(1000)
+      .map(i => <TimerText seconds={i} />);
+  };
+
   return {
     // The definition function is required to be wrapped by Observable
-    DOM: Rx.Observable.just(component)
+    DOM: Rx.Observable.just(MainPage)
   };
 }
 
