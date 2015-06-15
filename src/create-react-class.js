@@ -7,12 +7,12 @@ var createCustomEventWithOption = require('./create-custom-event');
 
 function makeDispatchFunction(elementGetter, eventName, handler, noDispatch) {
   return function dispatchCustomEvent(evData) {
+    var element = elementGetter();
     var event = createCustomEventWithOption(eventName, {
       detail: evData,
       bubbles: true,
       cancelable: true
-    }, noDispatch);
-    var element = elementGetter();
+    }, element, noDispatch);
     if (element) {
       if (handler) {
         // invoke the event handler from props

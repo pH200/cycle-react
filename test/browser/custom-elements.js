@@ -472,6 +472,8 @@ describe('Custom Elements', function () {
           assert.strictEqual(ev.type, 'myevent');
           assert.strictEqual(ev.preventDefault, (void 0));
           assert.ok(ev.detail === 123 || ev.detail === 456);
+          assert.strictEqual(ev.target.tagName, 'H3');
+          assert.strictEqual(ev.target.innerHTML, 'foobar');
           if (ev.detail === 456) {
             done();
           }
