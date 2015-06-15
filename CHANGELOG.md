@@ -97,7 +97,7 @@ Breaking change: like
 [Cycle.js 0.22](https://github.com/staltz/cycle/releases/tag/v0.22.0),
 `event.detail` is now used instead of `event.data`
 
-Breaking change: `interaction.get` is now implemented as:
+Breaking change: `interactions.get` is now implemented as:
 
 ```
 Rx.Observable.fromEvent(RootElement, eventName)
