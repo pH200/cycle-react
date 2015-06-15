@@ -436,7 +436,7 @@ describe('Custom Elements', function () {
     );
   });
 
-  it('should accept vtree as function if bindThis was provided', function (done) {
+  it('should accept vtree as function if bindThis was set', function (done) {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
     let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
@@ -451,6 +451,43 @@ describe('Custom Elements', function () {
     Cycle.applyToDOM(createRenderTarget(), MyElement);
     // Make assertions
     vtreeController$.request(1);
+  });
+
+  it('should not dispatch event if noDOMDispatchEvent was set', function (done) {
+    let number$ = Rx.Observable.of(123, 456).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.createReactClass('MyElement', function () {
+      return {
+        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        events: {
+          myevent: number$
+        }
+      };
+    }, {noDOMDispatchEvent: true});
+    // Use the custom element
+    let Root = Cycle.createReactClass('Root', function (interactions) {
+      let vtree$ = Rx.Observable.just(h(MyElement, {
+        onmyevent(ev) {
+          // Assert events
+          assert.strictEqual(ev.type, 'myevent');
+          assert.strictEqual(ev.preventDefault, (void 0));
+          assert.ok(ev.detail === 123 || ev.detail === 456);
+          if (ev.detail === 456) {
+            done();
+          }
+        }
+      }));
+
+      interactions.get('.myelementclass', 'myevent').subscribe(x => {
+        // Throw error for DOM event
+        done(new Error('Should not dispatch DOM event'));
+      });
+
+      return vtree$;
+    });
+
+    Cycle.applyToDOM(createRenderTarget(), Root);
+    number$.request(2);
   });
 
   it('should dispose vtree$ after destruction', function () {

@@ -3,23 +3,25 @@ var React = require('react');
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 var makeInteractions = require('./interactions').makeInteractions;
-var createCustomEvent = require('./CustomEvent');
+var createCustomEventWithOption = require('./create-custom-event');
 
-function makeDispatchFunction(elementGetter, eventName, handler) {
+function makeDispatchFunction(elementGetter, eventName, handler, noDispatch) {
   return function dispatchCustomEvent(evData) {
-    //console.log('%cdispatchCustomEvent ' + eventName,
-    //  'background-color: #CCCCFF; color: black');
-    var event = createCustomEvent(eventName, {
+    var event = createCustomEventWithOption(eventName, {
       detail: evData,
       bubbles: true,
       cancelable: true
-    });
+    }, noDispatch);
     var element = elementGetter();
     if (element) {
       if (handler) {
+        // invoke the event handler from props
         handler(event);
       }
-      element.dispatchEvent(event);
+      if (!noDispatch) {
+        // dispatch DOM event by default
+        element.dispatchEvent(event);
+      }
     } else {
       console.warn(
         eventName +
@@ -29,7 +31,7 @@ function makeDispatchFunction(elementGetter, eventName, handler) {
   };
 }
 
-function composingEventObservables(events, handlerGetter, elementGetter) {
+function composingEventObservables(events, handlerGetter, elementGetter, noDispatch) {
   var eventNames = Object.keys(events);
   var eventObservables = [];
   for (var i = 0; i < eventNames.length; i++) {
@@ -40,7 +42,8 @@ function composingEventObservables(events, handlerGetter, elementGetter) {
         makeDispatchFunction(
           elementGetter,
           eventName,
-          handlerGetter(eventName)
+          handlerGetter(eventName),
+          noDispatch
         )
       )
     );
@@ -107,6 +110,8 @@ function createReactClass(
   var rootTagName = options.rootTagName || 'div';
   // The option for passing "this" to definitionFn
   var bindThis = !!options.bindThis;
+  // The option for skipping DOM dispatchEvent
+  var noDOMDispatchEvent = !!options.noDOMDispatchEvent;
 
   var reactClassProto = {
     displayName: displayName,
@@ -168,7 +173,8 @@ function createReactClass(
         getEventHandlerGetter(self),
         function getCurrentElement() {
           return React.findDOMNode(self);
-        }
+        },
+        noDOMDispatchEvent
       );
       if (eventObservables.length > 0) {
         var eventSubscription;
