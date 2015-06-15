@@ -1,13 +1,15 @@
+/* jshint browser:true */
 'use strict';
-var document = require('global/document');
-var window = require('global/window');
 
 var createCustomEvent;
-if (window && window.CustomEvent && typeof window.CustomEvent === 'function') {
+if (typeof window !== 'undefined' &&
+  window.CustomEvent &&
+  typeof window.CustomEvent === 'function')
+{
   createCustomEvent = function createCustomEventDefault(type, eventInitDict) {
     return new window.CustomEvent(type, eventInitDict);
   };
-} else if (document && document.createEvent) {
+} else if (typeof document !== 'undefined' && document.createEvent) {
   // http://www.w3.org/TR/dom/#customevent
   createCustomEvent = function createCustomEventShim(type, eventInitDict) {
     var params = eventInitDict || {};

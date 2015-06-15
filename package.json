@@ -23,7 +23,6 @@
   ],
   "main": "src/cycle.js",
   "dependencies": {
-    "global": "^4.3.0",
     "rx": "2.5.2",
     "virtual-hyperscript": "^4.6.0"
   },
