@@ -1,7 +1,7 @@
 'use strict';
 var applyToDOM = require('./render-dom');
 var renderAsHTML = require('./render-html');
-var createReactClass = require('./create-react-class');
+var component = require('./create-react-class');
 var makeDOMDriver = require('./cycle-driver');
 var React = require('react');
 var Rx = require('rx');
@@ -66,7 +66,7 @@ var Cycle = {
    *
    * options example:
    *
-   *     createReactClass('displayName', definitionFn, {
+   *     component('displayName', definitionFn, {
    *       rootTagName: 'div',
    *       mixins: [],
    *       propTypes: null,
@@ -79,13 +79,13 @@ var Cycle = {
    * you have an initial value for the vtree$. Examples:
    *
    *     // The element for the first render would be <h1 />
-   *     createReactClass('displayName', () => Rx.Observable.just(<h1 />), {
+   *     component('displayName', () => Rx.Observable.just(<h1 />), {
    *       rootTagName: 'div'
    *     });
    *
    *     // The element for the first render would be <div></div>,
    *     // and the second element would be <h1 /> (after 1000ms)
-   *     createReactClass('displayName',
+   *     component('displayName',
    *       () => Rx.Observable.timer(1000).map(() => <h1 />), {
    *       rootTagName: 'div'
    *     });
@@ -93,21 +93,21 @@ var Cycle = {
    *     // The element for the first render would be <h2 />,
    *     // and the second element would be <h1 /> (after 1000ms)
    *     // rootTagName has no effect in this case
-   *     createReactClass('displayName',
+   *     component('displayName',
    *       () => Rx.Observable.timer(1000)
    *         .map(() => <h1 />)
    *         .startWith(<h2 />), {
    *       rootTagName: 'div'
    *     });
    *
-   * @param {String} tagName a name for identifying the React class.
+   * @param {String} displayName a name for identifying the React class.
    * @param {Function} definitionFn the implementation for the custom element.
    * This function takes two arguments: `interactions`, and `properties`, and
    * should output an object of Observables.
-   * @param {Object} [options] the options for createReactClass.
-   * @function createReactClass
+   * @param {Object} [options] the options for component.
+   * @function component
    */
-  createReactClass: createReactClass,
+  component: component,
 
   /**
    * A factory for the Cycle.js DOM driver function. See docs/cycle-js-driver.md

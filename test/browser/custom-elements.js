@@ -23,7 +23,7 @@ describe('Custom Elements', function () {
 
   it('should recognize and create simple element that is registered', function () {
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return Rx.Observable.just(h('h3.myelementclass'));
     });
     // Use the custom element
@@ -39,7 +39,7 @@ describe('Custom Elements', function () {
   it('should render inner state and properties independently', function () {
     // Make custom element with internal state, and properties as input
     let number$ = Rx.Observable.range(1, 10).controlled();
-    let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
+    let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return Rx.Observable.combineLatest(
         props.get('color'),
         number$,
@@ -74,7 +74,7 @@ describe('Custom Elements', function () {
 
   it('should have Observable properties object as props.get(\'*\')', function () {
     // Make custom element
-    let MyElement = Cycle.createReactClass('myElement', function (interactions, props) {
+    let MyElement = Cycle.component('myElement', function (interactions, props) {
       return props.get('*').map(propsObj => {
         assert.strictEqual(typeof propsObj, 'object');
         assert.notStrictEqual(propsObj, null);
@@ -104,11 +104,11 @@ describe('Custom Elements', function () {
 
   it('should recognize and create two unrelated elements', function () {
     // Make the first custom element
-    let MyElement1 = Cycle.createReactClass('MyElement1', function () {
+    let MyElement1 = Cycle.component('MyElement1', function () {
       return Rx.Observable.just(h('h1.myelement1class'));
     });
     // Make the second custom element
-    let MyElement2 = Cycle.createReactClass('MyElement2', function () {
+    let MyElement2 = Cycle.component('MyElement2', function () {
       return Rx.Observable.just(h('h2.myelement2class'));
     });
     // Use the custom elements
@@ -131,11 +131,11 @@ describe('Custom Elements', function () {
 
   it('should recognize and create a nested custom elements', function () {
     // Make the inner custom element
-    let Inner = Cycle.createReactClass('Inner', function () {
+    let Inner = Cycle.component('Inner', function () {
       return Rx.Observable.just(h('h3.innerClass'));
     });
     // Make the outer custom element
-    let Outer = Cycle.createReactClass('Outer', function () {
+    let Outer = Cycle.component('Outer', function () {
       return Rx.Observable.just(
         h('div.outerClass', [
           h(Inner, {key: 1})
@@ -155,7 +155,7 @@ describe('Custom Elements', function () {
   it('should catch interactions coming from custom element', function (done) {
     let number$ = Rx.Observable.of(123, 456).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
@@ -164,7 +164,7 @@ describe('Custom Elements', function () {
       };
     });
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function (interactions) {
+    let Root = Cycle.component('Root', function (interactions) {
       let vtree$ = Rx.Observable.just(h('div.toplevel', [
         h(MyElement, {key: 1})
       ]));
@@ -186,7 +186,7 @@ describe('Custom Elements', function () {
   it('should catch customized-events by using EventSubject', function (done) {
     let number$ = Rx.Observable.of(123, 456).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
@@ -195,7 +195,7 @@ describe('Custom Elements', function () {
       };
     });
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function (interactions) {
+    let Root = Cycle.component('Root', function (interactions) {
       let onmyevent$ = interactions.getEventSubject('onmyevent');
       let vtree$ = Rx.Observable.just(h('div.toplevel', [
         h(MyElement, {
@@ -220,7 +220,7 @@ describe('Custom Elements', function () {
 
   it('should not miss custom events from a list of custom elements', function () {
     // Make custom element
-    let Slider = Cycle.createReactClass('Slider', function (interactions, props) {
+    let Slider = Cycle.component('Slider', function (interactions, props) {
       let remove$ = interactions.get('.internalslider', 'click')
         .map(() => true);
       let id$ = props.get('id').shareReplay(1);
@@ -272,7 +272,7 @@ describe('Custom Elements', function () {
 
   it('should recognize nested vtree as properties.get(\'children\')', function () {
     // Make simple custom element
-    let SimpleWrapper = Cycle.createReactClass('SimpleWrapper', function (interactions, props) {
+    let SimpleWrapper = Cycle.component('SimpleWrapper', function (interactions, props) {
       return props.get('children').map(children => {
         return h('div.wrapper', children);
       });
@@ -292,7 +292,7 @@ describe('Custom Elements', function () {
   });
 
   it('should recognize changes on a mutable collection given as props', function () {
-    let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
+    let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return props.get('list', () => false).map(list =>
         h('div', [
           h('ol', list.map(value => h('li.test-item', null, value)))
@@ -328,7 +328,7 @@ describe('Custom Elements', function () {
   });
 
   it('should distinct property changes for props.get', function () {
-    let MyElement = Cycle.createReactClass('MyElement', function (interactions, props) {
+    let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return props.get('list').map(list =>
         h('div', [
           h('ol', list.map(value => h('li.test-item', null, value)))
@@ -367,7 +367,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.of(123, 456).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       // Here the vtree changes from <h3> to <button>, the myevent should
       // be emitted on <button> and not from the original <h3>.
       return {
@@ -383,7 +383,7 @@ describe('Custom Elements', function () {
       };
     });
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function (interactions) {
+    let Root = Cycle.component('Root', function (interactions) {
       let onmyevent$ = interactions.getEventSubject('onmyevent');
       let vtree$ = Rx.Observable.just(
         h('div.toplevel', [
@@ -413,7 +413,7 @@ describe('Custom Elements', function () {
   it('should not silently catch exceptions inside of custom elements', function () {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return vtreeController$.map(control => {
         if (control === 0) {
           return h('h3.myelementclass');
@@ -439,7 +439,7 @@ describe('Custom Elements', function () {
   it('should accept vtree as function if bindThis was set', function (done) {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
+    let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
       vtreeController$.subscribe(() => {
         let editField = Cycle.React.findDOMNode(self.refs.theRef);
         assert.notStrictEqual(editField, null);
@@ -456,7 +456,7 @@ describe('Custom Elements', function () {
   it('should not dispatch event if noDOMDispatchEvent was set', function (done) {
     let number$ = Rx.Observable.of(123, 456).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
@@ -465,7 +465,7 @@ describe('Custom Elements', function () {
       };
     }, {noDOMDispatchEvent: true});
     // Use the custom element
-    let Root = Cycle.createReactClass('Root', function (interactions) {
+    let Root = Cycle.component('Root', function (interactions) {
       let vtree$ = Rx.Observable.just(h(MyElement, {
         onmyevent(ev) {
           // Assert events
@@ -497,7 +497,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.range(1, 2).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return number$
         .do(i => log.push(i))
         .map(i => h('h3.myelementclass', String(i)));
@@ -532,7 +532,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.range(1, 3).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(h('h3.myelementclass')),
         events: {
@@ -579,7 +579,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.range(1, 2).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
         view: Rx.Observable.just(h('h3.myelementclass')),
@@ -611,7 +611,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.range(1, 2).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
         view: Rx.Observable.just(h('h3.myelementclass')),
@@ -646,7 +646,7 @@ describe('Custom Elements', function () {
     let number$ = Rx.Observable.range(1, 2).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return Rx.Observable.using(
         () => subscription,

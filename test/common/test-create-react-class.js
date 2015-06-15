@@ -4,9 +4,9 @@ let assert = require('assert');
 let Cycle = require('../../src/cycle');
 let Rx = Cycle.Rx;
 
-describe('createReactClass', function () {
+describe('component', function () {
   it('should have a default rootTagName', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty()
     );
@@ -15,7 +15,7 @@ describe('createReactClass', function () {
   });
 
   it('should overwrite rootTagName', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty(),
       {rootTagName: 'h3'}
@@ -25,7 +25,7 @@ describe('createReactClass', function () {
   });
 
   it('should not overwrite rootTagName by null options', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty(),
       {rootTagName: null}
@@ -35,7 +35,7 @@ describe('createReactClass', function () {
   });
 
   it('should have default mixins', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty()
     );
@@ -49,7 +49,7 @@ describe('createReactClass', function () {
     let Mixin = {
       foo: 'bar'
     };
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty(),
       {mixins: [Mixin]}
@@ -61,7 +61,7 @@ describe('createReactClass', function () {
     let Mixin = {
       foo: 'bar'
     };
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty(),
       {mixins: Mixin}
@@ -71,7 +71,7 @@ describe('createReactClass', function () {
 
   it('should not bind `this` for definitionFn by default', function () {
     let plan = 0;
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       (_1, _2, self) => {
         assert.equal(self, null);
@@ -86,7 +86,7 @@ describe('createReactClass', function () {
 
   it('should be able to bind `this` for definitionFn', function () {
     let plan = 0;
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       (_1, _2, self) => {
         assert.strictEqual(self.foo, 'bar');
@@ -104,7 +104,7 @@ describe('createReactClass', function () {
   });
 
   it('should override forceUpdate for react-hot-loader', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty(),
       // _testForceHotLoader is only for tests
@@ -119,7 +119,7 @@ describe('createReactClass', function () {
   });
 
   it('should not override forceUpdate by default', function () {
-    let MyElement = Cycle.createReactClass(
+    let MyElement = Cycle.component(
       'MyElement',
       () => Rx.Observable.empty()
     );

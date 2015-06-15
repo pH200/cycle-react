@@ -19,7 +19,7 @@ function renderAsHTML(definitionFn) {
     typeof definitionFn === 'object' &&
     typeof definitionFn.subscribe === 'function')
   {
-    computer = function createReactClassFromObservable() {
+    computer = function componentFromObservable() {
       return definitionFn;
     };
   } else if (definitionFn && typeof definitionFn === 'function') {

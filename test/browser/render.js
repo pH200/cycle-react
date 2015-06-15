@@ -71,7 +71,7 @@ describe('Rendering', function () {
     });
 
     it('should accept a ReactClass as definitionFn', function () {
-      let MyElement = Cycle.createReactClass('MyElement', function () {
+      let MyElement = Cycle.component('MyElement', function () {
         return Rx.Observable.just(h('h3.myelementclass'));
       });
       Cycle.applyToDOM(createRenderTarget(), MyElement);
@@ -129,7 +129,7 @@ describe('Rendering', function () {
     });
 
     it('should not set props.className to the root element', function () {
-      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let MyElement = Cycle.component('MyElement', Fixture89.myelement);
       let vtree$ = Rx.Observable.just(h(MyElement, {className: 'ERR'}));
       Cycle.applyToDOM(createRenderTarget(), () => vtree$);
       // Make assertions
@@ -140,7 +140,7 @@ describe('Rendering', function () {
     });
 
     it('should accept a view wrapping a custom element (#89)', function () {
-      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let MyElement = Cycle.component('MyElement', Fixture89.myelement);
       let number$ = Fixture89.makeModelNumber$();
       let vtree$ = Fixture89.viewWithContainerFn(number$, MyElement);
       Cycle.applyToDOM(createRenderTarget(), () => vtree$);
@@ -159,7 +159,7 @@ describe('Rendering', function () {
     });
 
     it('should accept a view with custom element as the root of vtree$', function () {
-      let MyElement = Cycle.createReactClass('MyElement', Fixture89.myelement);
+      let MyElement = Cycle.component('MyElement', Fixture89.myelement);
       let number$ = Fixture89.makeModelNumber$();
       let vtree$ = Fixture89.viewWithoutContainerFn(number$, MyElement);
       assert.doesNotThrow(() => {

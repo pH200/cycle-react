@@ -93,7 +93,7 @@ function createGetPropFn(propsSubject$) {
   };
 }
 
-function createReactClass(
+function component(
   displayName,
   definitionFn,
   options,
@@ -255,4 +255,4 @@ function createReactClass(
   return React.createClass(reactClassProto);
 }
 
-module.exports = createReactClass;
+module.exports = component;

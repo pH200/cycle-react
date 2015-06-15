@@ -1,7 +1,7 @@
 var h = Cycle.h;
 var Rx = Cycle.Rx;
 
-var WrapperElement = Cycle.createReactClass('WrapperElement',
+var WrapperElement = Cycle.component('WrapperElement',
   function (interactions, props) {
     return props.get('children')
       .map(function (children) {

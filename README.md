@@ -67,16 +67,16 @@ let Cycle = require('cycle-react');
 let React = require('react');
 let Rx = Cycle.Rx;
 
-// "createReactClass" returns a native react class which can be used normally
+// "component" returns a native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
-let CounterText = Cycle.createReactClass('CounterText',
+let CounterText = Cycle.component('CounterText',
   function (interactions, props) {
     return props.get('counter')
       .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
   }
 );
 
-let Timer = Cycle.createReactClass('Timer', function () {
+let Timer = Cycle.component('Timer', function () {
   return Rx.Observable.interval(1000).map(i =>
     <CounterText counter={i} />
   );
@@ -96,7 +96,7 @@ This was made possible by
 
 ## But you said no classes
 
-`createReactClass` transforms your `computer()` function into a ReactClass. So,
+`component` transforms your `computer()` function into a ReactClass. So,
 you get a ReactClass but without writing a class definition. The point is that
 ReactClass **is** a function indeed and it should always be used as a
 function object, because you don't `new`, `extends` or `this` to access
@@ -132,7 +132,7 @@ Yes. And no extra configuration needed.
 ### Can I use Cycle-React with other React components and libraries?
 
 Yes. You can even use Cycle-React with your current React apps. Because
-`createReactClass` creates the native ReactClass for you.
+`component` creates the native ReactClass for you.
 
 Examples for integrating Cycle-React with other libraries are work in progress.
 

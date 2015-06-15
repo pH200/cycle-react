@@ -44,7 +44,7 @@ Cycle.js. Since they're using their own driver context instead of the drivers
 defined from `Cycle.run`, it would be weird if we merged this context only for
 the root definition.
 
-Plus, Cycle-React's `createReactClass` was not only designed to be returning the
+Plus, Cycle-React's `component` was not only designed to be returning the
 native React class, but also it can be used without the `Cycle.run`. So it's
-weird if we changed the `createReactClass` by using drivers without making it
+weird if we changed the `component` by using drivers without making it
 running with `Cycle.run`.

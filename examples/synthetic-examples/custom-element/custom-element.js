@@ -1,7 +1,7 @@
 var h = Cycle.h;
 var Rx = Cycle.Rx;
 
-var Ticker = Cycle.createReactClass('Ticker', function (interactions, props) {
+var Ticker = Cycle.component('Ticker', function (interactions, props) {
   var removeClicks$ = interactions.get('.remove-btn', 'click').share();
   var stop$ = removeClicks$.map(function () { return 'stop'; });
   var remove$ = removeClicks$.map(function () { return 'remove'; }).delay(500);

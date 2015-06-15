@@ -17,7 +17,7 @@ module.exports = {
       vtree$ = output;
     } else {
       throw new Error(
-        'definitionFn given to render or createReactClass must return an ' +
+        'definitionFn given to render or component must return an ' +
         'Observable of React elements, or an object containing such ' +
         'Observable named as `view`');
     }

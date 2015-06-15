@@ -5,7 +5,7 @@
 
 - [`renderAsHTML`](#renderAsHTML)
 
-- [`createReactClass`](#createReactClass)
+- [`component`](#component)
 
 - [`makeDOMDriver`](#makeDOMDriver)
 
@@ -52,7 +52,7 @@ otherwise the output `html$` will never emit an HTML string.
 
 - - -
 
-### <a id="createReactClass"></a> `createReactClass(tagName, definitionFn, [options])`
+### <a id="component"></a> `component(displayName, definitionFn, [options])`
 
 Takes a `definitionFn` function which outputs an Observable of React
 elements, and returns a converted React class which can be used normally
@@ -78,7 +78,7 @@ The `options` is optional and can be ignored in most cases.
 
 options example:
 
-    createReactClass('displayName', definitionFn, {
+    component('displayName', definitionFn, {
       rootTagName: 'div',
       mixins: [],
       propTypes: null,
@@ -91,13 +91,13 @@ Normally, you don't need to set this option if your root element is div or
 you have an initial value for the vtree$. Examples:
 
     // The element for the first render would be <h1 />
-    createReactClass('displayName', () => Rx.Observable.just(<h1 />), {
+    component('displayName', () => Rx.Observable.just(<h1 />), {
       rootTagName: 'div'
     });
 
     // The element for the first render would be <div></div>,
     // and the second element would be <h1 /> (after 1000ms)
-    createReactClass('displayName',
+    component('displayName',
       () => Rx.Observable.timer(1000).map(() => <h1 />), {
       rootTagName: 'div'
     });
@@ -105,7 +105,7 @@ you have an initial value for the vtree$. Examples:
     // The element for the first render would be <h2 />,
     // and the second element would be <h1 /> (after 1000ms)
     // rootTagName has no effect in this case
-    createReactClass('displayName',
+    component('displayName',
       () => Rx.Observable.timer(1000)
         .map(() => <h1 />)
         .startWith(<h2 />), {
@@ -114,10 +114,10 @@ you have an initial value for the vtree$. Examples:
 
 #### Arguments:
 
-- `tagName :: String` a name for identifying the React class.
+- `displayName :: String` a name for identifying the React class.
 - `definitionFn :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
-- `[options] :: Object` the options for createReactClass.
+- `[options] :: Object` the options for component.
 
 - - -
 

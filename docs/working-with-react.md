@@ -22,7 +22,7 @@ element will be converted to event handlers of the rendered element.
 Example:
 
 ```js
-let MyElement = createReactClass('MyElement', function computer() {
+let MyElement = component('MyElement', function computer() {
   return {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
@@ -53,7 +53,7 @@ Example:
 let options = {
   mixins: []
 };
-let MyElement = Cycle.createReactClass('MyElement', function () {
+let MyElement = Cycle.component('MyElement', function () {
   // ...
 }, options);
 ```
@@ -73,7 +73,7 @@ let options = {
   mixins: [Navigation],
   bindThis: true
 };
-let MyElement = Cycle.createReactClass('MyElement', function (_1, _2, self) {
+let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
   return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>)
 }, options);
 ```
@@ -102,7 +102,7 @@ let options = {
   // The bindThis option must be set
   bindThis: true
 };
-let MyElement = Cycle.createReactClass('MyElement', (_1, _2, self) => {
+let MyElement = Cycle.component('MyElement', (_1, _2, self) => {
   // Return lambda instead of plain vtree
   return Rx.Observable.just(() => <input ref="myInput" />);
 }, options);

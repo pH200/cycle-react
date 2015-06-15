@@ -1,7 +1,7 @@
 /* jshint browser:true */
 'use strict';
 var React = require('react');
-var createReactClass = require('./create-react-class');
+var component = require('./create-react-class');
 
 function isElement(obj) {
   return (
@@ -32,7 +32,7 @@ function applyToDOM(container, definitionFn) {
     return React.render(React.createElement(definitionFn), domContainer);
   }
 
-  var RxReactRoot = createReactClass('RxReactRoot', definitionFn);
+  var RxReactRoot = component('RxReactRoot', definitionFn);
   React.render(React.createElement(RxReactRoot), domContainer);
 
   return {

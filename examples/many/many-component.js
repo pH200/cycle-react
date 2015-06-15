@@ -51,4 +51,4 @@ function manyComponent(interactions, props) {
   };
 }
 
-var ManyItem = Cycle.createReactClass('ManyItem', manyComponent);
+var ManyItem = Cycle.component('ManyItem', manyComponent);

@@ -13,8 +13,8 @@ describe('Cycle', function () {
       assert.strictEqual(typeof Cycle.renderAsHTML, 'function');
     });
 
-    it('should have `createReactClass`', function () {
-      assert.strictEqual(typeof Cycle.createReactClass, 'function');
+    it('should have `component`', function () {
+      assert.strictEqual(typeof Cycle.component, 'function');
     });
 
     it('should have a shortcut to Rx', function () {

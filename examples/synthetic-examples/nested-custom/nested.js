@@ -7,7 +7,7 @@ var h = Cycle.h;
 // - Whether Model streams internal to a custom element can be used in the custom
 //   element's return object. E.g. model.foo$.
 
-var InnerElem = Cycle.createReactClass('InnerElem', function (interactions, props) {
+var InnerElem = Cycle.component('InnerElem', function (interactions, props) {
   var refreshData$ = interactions.get('.inner', 'click')
     .map(function () { return 'x'; }).share();
   var foo$ = props.get('foo');

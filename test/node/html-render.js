@@ -20,7 +20,7 @@ describe('renderAsHTML()', function () {
 
   it('should not emit events', function (done) {
     var log = 0;
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(h('div.test-element', ['Foobar'])),
         events: {
@@ -40,7 +40,7 @@ describe('renderAsHTML()', function () {
   });
 
   it('should render a simple nested custom element as HTML', function (done) {
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return Rx.Observable.just(h('h3.myelementclass'));
     });
     let vtree$ = Rx.Observable.just(
@@ -57,10 +57,10 @@ describe('renderAsHTML()', function () {
   });
 
   it('should render double nested custom elements as HTML', function (done) {
-    let MyElement = Cycle.createReactClass('MyElement', function () {
+    let MyElement = Cycle.component('MyElement', function () {
       return Rx.Observable.just(h('h3.myelementclass'));
     });
-    let NiceElement = Cycle.createReactClass('NiceElement', function () {
+    let NiceElement = Cycle.component('NiceElement', function () {
       return Rx.Observable.just(h('div.a-nice-element', null, [
         'foobar', h(MyElement)
       ]));
@@ -81,7 +81,7 @@ describe('renderAsHTML()', function () {
   });
 
   it('should render a nested custom element with props as HTML', function (done) {
-    let MyElement = Cycle.createReactClass('MyElement', function (_, props) {
+    let MyElement = Cycle.component('MyElement', function (_, props) {
       return props.get('foobar')
         .map(foobar => h('h3.myelementclass', null, String(foobar).toUpperCase()))
     });

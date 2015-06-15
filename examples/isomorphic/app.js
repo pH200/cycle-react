@@ -30,7 +30,7 @@ function renderAboutPage() {
   ]);
 }
 
-let App = Cycle.createReactClass('App', function (interactions, props) {
+let App = Cycle.component('App', function (interactions, props) {
   let routeFromClick$ = interactions.get('.link', 'click')
     .doOnNext(ev => ev.preventDefault())
     .map(ev => ev.currentTarget.attributes.href.value);
