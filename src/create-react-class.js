@@ -121,7 +121,9 @@ function createReactClass(
       propsSubject$.get = createGetPropFn(propsSubject$);
       this.propsSubject$ = propsSubject$;
       this.rootElemSubject$ = new Rx.ReplaySubject(1);
-      var interactions = makeInteractions(this.rootElemSubject$);
+      var interactions = makeInteractions(
+        this.rootElemSubject$.distinctUntilChanged()
+      );
       var cycleComponent = digestDefinitionFnOutput(
         bindThis ?
         definitionFn(interactions, this.propsSubject$, this) :
@@ -188,9 +190,8 @@ function createReactClass(
       this.hasMounted = true;
     },
     shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-      // https://facebook.github.io/react/docs/pure-render-mixin.html
-      // This works perfectly because the state is always set by the new vtree.
-      return this.props !== nextProps || this.state !== nextState;
+      // Only care about the state since the props have been observed.
+      return this.state !== nextState;
     },
     componentWillMount: function componentWillMount() {
       this._subscribeCycleComponent();
@@ -202,6 +203,8 @@ function createReactClass(
       this._subscribeCycleEvents();
     },
     componentDidUpdate: function componentDidUpdate() {
+      // This action should be fast since React will cache the result of findDOMNode
+      // facebook/react/src/renderers/dom/client/ReactMount.js#getNodeFromInstance
       var node = React.findDOMNode(this);
       this.rootElemSubject$.onNext(node);
     },
@@ -211,8 +214,8 @@ function createReactClass(
     render: function render() {
       if (this.state && this.state.vtree) {
         if (bindThis && typeof this.state.vtree === 'function') {
-          // invoke literal is sufficient even though `addComponentAsRefTo`
-          // might has something to do with `this`
+          // `this` is bound automatically by React.createClass so the element
+          // will have the owner set by this component
           return this.state.vtree();
         }
         return this.state.vtree;
