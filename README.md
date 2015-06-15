@@ -119,8 +119,7 @@ Yes. You can even use Cycle-React with your current React apps. Because
 
 Examples for integrating Cycle-React with other libraries are work in progress.
 
-Meanwhile, See
-"[Working with React](/docs/working-with-react.md)"
+Meanwhile, See ["Working with React"](/docs/working-with-react.md)
 for guidelines.
 
 ## Build standalone js
