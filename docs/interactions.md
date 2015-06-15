@@ -43,7 +43,7 @@ append "on" before the event name.
 Example:
 
 ```js
-var MyElement = component('MyElement', function computer() {
+var MyElement = Cycle.component('MyElement', function definition() {
   return {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {

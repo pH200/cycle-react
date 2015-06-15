@@ -57,8 +57,9 @@ Notice that although `React.createClass` is mentioned here, you don't have to
 use it. That's why Cycle-React was made. We took functions over classes
 and mutable states.
 
-The description of the concept behind `applyToDOM` and `Cycle` can be found at
-[Cycle.js](https://github.com/staltz/cycle/tree/v0.22.0) README.
+You can learn more about the concept behind `applyToDOM` and `Cycle` from
+André's amazing presentation:
+["What if the user was a function?"](https://youtu.be/1zj7M1LnJV4)
 
 ## Custom element example
 
@@ -67,18 +68,16 @@ let Cycle = require('cycle-react');
 let React = require('react');
 let Rx = Cycle.Rx;
 
-// "component" returns a native react class which can be used normally
+// "component" returns a native React component which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
-let CounterText = Cycle.component('CounterText',
-  function (interactions, props) {
-    return props.get('counter')
-      .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
-  }
-);
+let Counter = Cycle.component('Counter', function (interactions, props) {
+  return props.get('counter')
+    .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
+});
 
 let Timer = Cycle.component('Timer', function () {
   return Rx.Observable.interval(1000).map(i =>
-    <CounterText counter={i} />
+    <Counter counter={i} />
   );
 });
 
@@ -89,27 +88,11 @@ Cycle.applyToDOM('.js-container', Timer);
 //   document.querySelector('.js-container'));
 ```
 
-You can use `h` and without JSX just like you did in Cycle.js.
-This was made possible by
-[react-hyperscript](https://github.com/mlmorg/react-hyperscript).
-[The example](/examples/timer/timer.js).
-
-## But you said no classes
-
-`component` transforms your `computer()` function into a ReactClass. So,
-you get a ReactClass but without writing a class definition. The point is that
-ReactClass **is** a function indeed and it should always be used as a
-function object, because you don't `new`, `extends` or `this` to access
-properties. In fact, we don't want you to do that.
-
-Apps written in Cycle-React are `this`-less. You won't find a single `this`
-in the examples.
-
 ## Learn more
 
-Cycle-React shares the same API as Cycle.js, except of doing custom elements.
-A more comprehensive README can be found at
-https://github.com/staltz/cycle
+Cycle-React is a React-style implementation of Cycle.js, so we have the same
+concept of handling user interactions. More information of this concept can be
+found at: https://github.com/staltz/cycle
 
 ## Cycle.js Driver
 
@@ -132,7 +115,7 @@ Yes. And no extra configuration needed.
 ### Can I use Cycle-React with other React components and libraries?
 
 Yes. You can even use Cycle-React with your current React apps. Because
-`component` creates the native ReactClass for you.
+`component` creates the native React component for you.
 
 Examples for integrating Cycle-React with other libraries are work in progress.
 

@@ -22,7 +22,7 @@ element will be converted to event handlers of the rendered element.
 Example:
 
 ```js
-let MyElement = component('MyElement', function computer() {
+let MyElement = Cycle.component('MyElement', function definition() {
   return {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
@@ -91,7 +91,7 @@ method).
 ```
 
 This is because Cycle-React evaluates the vtree(ReactElement) inside the Rx
-subscription instead of `ReactClass.prototype.render`. In order to fix this,
+subscription instead of `Component.prototype.render`. In order to fix this,
 you can return the lazy value of ReactElement with the option
 `{bindThis: true}` set.
 
@@ -115,5 +115,5 @@ Cycle-React supports
 
 Cycle-React overrides `forceUpdate` when `module.hot == true`
 (webpack hot module enabled). No extra configuration needed.
-This overriding behavior only affects the ReactClass created by Cycle-React
+This overriding behavior only affects the component created by Cycle-React
 and has no effect if webpack-hot-module was disabled.

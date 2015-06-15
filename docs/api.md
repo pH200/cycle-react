@@ -55,14 +55,8 @@ otherwise the output `html$` will never emit an HTML string.
 ### <a id="component"></a> `component(displayName, definitionFn, [options])`
 
 Takes a `definitionFn` function which outputs an Observable of React
-elements, and returns a converted React class which can be used normally
+elements, and returns a native React component which can be used normally
 by `React.createElement` and "Cycle.applyToDOM".
-
-**IMPORTANT** A React class should be used as a function object instead of
-class in cycle-react apps. If you found yourself writing `this.`,
-you're doing it wrong.
-
-"React class" shares the same terminology as Cycle's "custom element".
 
 The given `definitionFn` function takes two parameters as input, in this order:
 `interactions` and `properties`. The former works just like it does in the
@@ -114,7 +108,7 @@ you have an initial value for the vtree$. Examples:
 
 #### Arguments:
 
-- `displayName :: String` a name for identifying the React class.
+- `displayName :: String` a name for identifying the React component.
 - `definitionFn :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
 should output an object of Observables.
 - `[options] :: Object` the options for component.

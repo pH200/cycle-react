@@ -43,14 +43,8 @@ var Cycle = {
 
   /**
    * Takes a `definitionFn` function which outputs an Observable of React
-   * elements, and returns a converted React class which can be used normally
+   * elements, and returns a native React component which can be used normally
    * by `React.createElement` and "Cycle.applyToDOM".
-   *
-   * **IMPORTANT** A React class should be used as a function object instead of
-   * class in cycle-react apps. If you found yourself writing `this.`,
-   * you're doing it wrong.
-   *
-   * "React class" shares the same terminology as Cycle's "custom element".
    *
    * The given `definitionFn` function takes two parameters as input, in this order:
    * `interactions` and `properties`. The former works just like it does in the
@@ -100,7 +94,7 @@ var Cycle = {
    *       rootTagName: 'div'
    *     });
    *
-   * @param {String} displayName a name for identifying the React class.
+   * @param {String} displayName a name for identifying the React component.
    * @param {Function} definitionFn the implementation for the custom element.
    * This function takes two arguments: `interactions`, and `properties`, and
    * should output an object of Observables.
