@@ -34,7 +34,7 @@ let MyElement = Cycle.component('MyElement', function definition() {
 // Cycle-React would also try to
 // emit onTickEvent if ontickEvent was not found
 <MyElement ontickEvent={myEventHandler} />
-// You can still use interactions.get for custom elements
+// You can still use interactions.get for Cycle-React's components
 interactions.get('.myelement', 'tickEvent').map(...);
 ```
 

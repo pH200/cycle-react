@@ -61,7 +61,7 @@ You can learn more about the concept behind `applyToDOM` and `Cycle` from
 André's amazing presentation:
 ["What if the user was a function?"](https://youtu.be/1zj7M1LnJV4)
 
-## Custom element example
+## React component example
 
 ```js
 let Cycle = require('cycle-react');

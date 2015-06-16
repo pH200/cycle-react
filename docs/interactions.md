@@ -37,7 +37,7 @@ var inputChanged$ = interactions.getEventSubject('onEditInput')
   .map(ev => ev.target.value);
 ```
 
-To subscribe an event from Cycle-React's custom element,
+To subscribe an event from Cycle-React's components,
 append "on" before the event name.
 
 Example:
@@ -55,7 +55,7 @@ var MyElement = Cycle.component('MyElement', function definition() {
 // Cycle-React would also try to
 // emit onTickEvent if ontickEvent was not found
 <MyElement ontickEvent={interactions.subject('ontick').onEvent} />
-// You can still use interactions.get for custom elements
+// You can still use interactions.get for Cycle-React's components
 interactions.get('.myelement', 'tickEvent').map(...);
 ```
 
