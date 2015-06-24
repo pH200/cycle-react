@@ -8,34 +8,32 @@ could be helpful.
 
 ## Event handler
 
-React components use event handler(from props) instead of `dispatchEvent` for
-child-parent communications. Cycle-React provides EventSubject for receiving
-these events. It's a Subject with an instance method `onEvent` and it has a
-[simple](/src/event-subject.js)
-implementation.
-Details of using event handlers in Cycle-React can be found at
-[interactions.getEventSubject](/docs/interactions.md#interactions.getEventSubject).
+DOM `dispatchEvent` and selector API is used for the original Cycle.js' DOM
+driver. However, React components use event handler(from props) instead of
+DOM events for child-parent communications. As a result, Cycle-React provides
+interactions API that different from Cycle.js for receiving these events. You
+must use event handlers for handling events in Cycle-React.
 
-In addition, the properties inside of `events` object from your custom
-element will be converted to event handlers of the rendered element.
+In addition, the Observables inside of the `events` object from your Cycle-React
+components will be converted to event handlers.
 
 Example:
 
 ```js
+// Define event for the component
 let MyElement = Cycle.component('MyElement', function definition() {
   return {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
       // The event observable
-      tickEvent: Rx.Observable.interval(500)
+      onTickEvent: Rx.Observable.interval(500)
     }
   }
 });
-// Cycle-React would also try to
-// emit onTickEvent if ontickEvent was not found
-<MyElement ontickEvent={myEventHandler} />
-// You can still use interactions.get for Cycle-React's components
-interactions.get('.myelement', 'tickEvent').map(...);
+// Subscribing events
+<MyElement onTickEvent={interactions.listener('OnTickEvent')} />
+// Getting observable for the event
+interactions.get('OnTickEvent'); // Observable<T>
 ```
 
 ## Mixins

@@ -21,12 +21,16 @@ Takes a `computer` function which outputs an Observable of React
 elements, and renders that into the DOM element indicated by `container`,
 which can be either a CSS selector or an actual element. At the same time,
 provides the `interactions` input to the `computer` function, which is a
-collection of all possible events happening on all elements which were
-rendered. You must query this collection with
-`interactions.get(selector, eventName)` in order to get an Observable of
-interactions of type `eventName` happening on the element identified by
-`selector`.
-Example: `interactions.get('.mybutton', 'click').map(ev => ...)`
+collection of all events happening on the user-defined event handlers.
+You must query this collection with
+`interactions.get(eventName)` in order to get an Observable of
+interactions of type `eventName`. And create the event handlers with
+`interactions.listener(eventName)`.
+Example:
+```
+interactions.get('MyButtonClick').map(ev => ...);
+<button onClick={interactions.listener('MyButtonClick')} />
+```
 
 #### Arguments:
 

@@ -27,13 +27,13 @@ let Cycle = require('cycle-react');
 let React = require('react');
 
 function computer(interactions) {
-  return interactions.get('.myinput', 'input')
+  return interactions.get('OnNameChanged')
     .map(ev => ev.target.value)
     .startWith('')
     .map(name =>
       <div>
         <label>Name:</label>
-        <input className="myinput" type="text"></input>
+        <input type="text" onChange={interactions.listener('OnNameChanged')} />
         <hr />
         <h1>Hello {name}</h1>
       </div>
@@ -44,8 +44,9 @@ Cycle.applyToDOM('.js-container', computer);
 ```
 
 The input of the `computer` is `interactions`, a collection containing all
-possible user interaction events happening on elements on the DOM, which you
-can query using `interactions.get(selector, eventType)`.
+user interaction events happening on the user-defined event handlers on the DOM,
+which you can query using `interactions.get(eventName)`. And the event handler
+can be defined by `interactions.listener(eventName)`.
 
 The output of the `computer` is `Observable<ReactElement>`
 (a reactive sequence of elements, in other words, view).
@@ -71,8 +72,9 @@ let Rx = Cycle.Rx;
 // "component" returns a native React component which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
 let Counter = Cycle.component('Counter', function (interactions, props) {
-  return props.get('counter')
-    .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
+  return props.get('counter').map(counter =>
+    <h3>Seconds Elapsed: {counter}</h3>
+  );
 });
 
 let Timer = Cycle.component('Timer', function () {
