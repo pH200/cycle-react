@@ -200,9 +200,12 @@ function component(
       return this.state !== nextState;
     },
     componentWillMount: function componentWillMount() {
+      // componentWillMount is called for both client and server
+      // https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
       this._subscribeCycleComponent();
     },
     componentWillUnmount: function componentWillUnmount() {
+      // componentWillMount is not being called for server
       this._unsubscribeCycleComponent();
     },
     componentDidMount: function componentDidMount() {
