@@ -23,23 +23,23 @@
   ],
   "main": "src/cycle.js",
   "dependencies": {
-    "rx": "2.5.2",
+    "rx": "2.5.3",
     "virtual-hyperscript": "^4.6.0"
   },
   "peerDependencies": {
     "react": "0.13.x"
   },
   "devDependencies": {
-    "babel": "^5.2.17",
-    "babelify": "^6.0.2",
-    "browserify": "^10.1.3",
+    "babel": "^5.6.4",
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.4",
     "cheerio": "~0.19.0",
     "jscs": "^1.13.1",
-    "jshint": "^2.7.0",
-    "markdox": "~0.1.8",
-    "mocha": "^2.2.4",
+    "jshint": "^2.8.0",
+    "markdox": "~0.1.9",
+    "mocha": "^2.2.5",
     "testem": "~0.8.3",
-    "uglify-js": "^2.4.21"
+    "uglify-js": "^2.4.23"
   },
   "engines": {
     "node": ">=0.10.0"
