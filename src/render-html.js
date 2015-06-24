@@ -2,15 +2,8 @@
 var React = require('react');
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
-var makeEmptyInteractions = require('./interactions').makeEmptyInteractions;
-
-function makeEmptyPropsObservable() {
-  var empty = Rx.Observable.empty();
-  empty.get = function getProp() {
-    return Rx.Observable.empty();
-  };
-  return empty;
-}
+var makeInteractions = require('./interactions').makeInteractions;
+var makeEmptyPropsObservable = require('./props').makeEmptyPropsObservable;
 
 function renderAsHTML(definitionFn) {
   var computer;
@@ -38,7 +31,7 @@ function renderAsHTML(definitionFn) {
   }
 
   var cycleComponent = digestDefinitionFnOutput(
-    computer(makeEmptyInteractions(), makeEmptyPropsObservable())
+    computer(makeInteractions(), makeEmptyPropsObservable())
   );
   return cycleComponent.vtree$
     .map(function convertReactElementToString(vtree) {

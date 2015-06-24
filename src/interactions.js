@@ -1,92 +1,40 @@
+/* globals process */
 'use strict';
-var Rx = require('rx');
 var createEventSubject = require('./event-subject');
 
-function makeEmptyInteractions() {
-  function getEventSubject() {
-    return createEventSubject();
-  }
-  return {
-    get: function get() {
-      return Rx.Observable.empty();
-    },
-    subject: getEventSubject,
-    getEventSubject: getEventSubject
-  };
-}
-
-function makeInteractions(rootElem$) {
+function makeInteractions() {
   var subjects = {};
+
   function getEventSubject(name) {
     if (name === null || name === (void 0)) {
-      return createEventSubject();
+      throw new Error('Invalid name for the interaction collection.');
     }
     if (!subjects[name]) {
       subjects[name] = createEventSubject();
     }
     return subjects[name];
   }
-  function match(selector, isRoot) {
-    return function filterSelector(e) {
-      if (isRoot) {
-        return true;
-      }
-      var className = selector.replace(/^\./, '');
-      var classRegex = new RegExp('\\b' + className + '\\b');
-      if (classRegex.test(e.target.className)) {
-        return true;
-      }
-      if (e.target.matches) {
-        return e.target.matches(selector);
-      }
-      if (e.target.matchesSelector) {
-        return e.target.matchesSelector(selector);
-      }
-      if (e.target.webkitMatchesSelector) {
-        return e.target.webkitMatchesSelector(selector);
-      }
-      if (e.target.mozMatchesSelector) {
-        return e.target.mozMatchesSelector(selector);
-      }
-      if (e.target.msMatchesSelector) {
-        return e.target.msMatchesSelector(selector);
-      }
-      return false;
-    };
-  }
 
   return {
-    get: function get(selector, eventName, isSingle, isRoot) {
-      if (typeof selector !== 'string') {
-        throw new Error('interactions.get() expects first argument to be a ' +
-          'string as a CSS selector');
+    get: getEventSubject,
+    listener: function listener(name) {
+      var eventSubject = subjects[name];
+      if (!eventSubject && process.env.NODE_ENV !== 'production') {
+        if (typeof console !== 'undefined') {
+          console.warn(
+            'Listening event "' + name + '" before using interactions.get("' +
+            name + '")'
+          );
+        }
       }
-      if (typeof eventName !== 'string') {
-        throw new Error('interactions.get() expects second argument to be a ' +
-          'string representing the event type to listen for.');
+      if (!eventSubject) {
+        eventSubject = getEventSubject(name);
       }
-      return rootElem$
-        .distinctUntilChanged(Rx.helpers.identity, function compareNode(x , y) {
-          return x === y || x.isEqualNode(y);
-        })
-        .flatMapLatest(function flatMapDOMUserEventStream(rootElem) {
-          if (!rootElem) {
-            return Rx.Observable.empty();
-          }
-          var eventObservable = Rx.Observable.fromEvent(rootElem, eventName)
-            .filter(match(selector, isRoot));
-          if (isSingle) {
-            return eventObservable.take(1);
-          }
-          return eventObservable;
-        });
-    },
-    subject: getEventSubject,
-    getEventSubject: getEventSubject
+      return eventSubject.onEvent;
+    }
   };
 }
 
 module.exports = {
-  makeEmptyInteractions: makeEmptyInteractions,
   makeInteractions: makeInteractions
 };

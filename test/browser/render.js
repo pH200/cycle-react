@@ -83,38 +83,14 @@ describe('Rendering', function () {
 
     it('should catch interaction events', function (done) {
       function computer(interactions) {
-        let vtree$ = Rx.Observable.just(h('h3.myelementclass', 'Foobar'));
-        interactions.get('.myelementclass', 'click').subscribe(ev => {
+        interactions.get('click').subscribe(ev => {
           assert.strictEqual(ev.type, 'click');
           assert.strictEqual(ev.target.innerHTML, 'Foobar');
           done();
         });
-        return vtree$;
-      }
-      Cycle.applyToDOM(createRenderTarget(), computer);
-      // Make assertions
-      let myElement = document.querySelector('.myelementclass');
-      assert.notStrictEqual(myElement, null);
-      assert.notStrictEqual(typeof myElement, 'undefined');
-      assert.strictEqual(myElement.tagName, 'H3');
-      assert.doesNotThrow(function () {
-        myElement.click();
-      });
-    });
-
-    it('should catch events by using EventSubject', function (done) {
-      function computer(interactions) {
-        let onClick$ = interactions.getEventSubject('onClick');
-        let vtree$ = Rx.Observable.just(
-          h('h3.myelementclass', {
-            onClick: interactions.getEventSubject('onClick').onEvent
-          }, 'Foobar')
-        );
-        onClick$.subscribe(ev => {
-          assert.strictEqual(ev.type, 'click');
-          assert.strictEqual(ev.target.innerHTML, 'Foobar');
-          done();
-        });
+        let vtree$ = Rx.Observable.just(h('h3.myelementclass', {
+          onClick: interactions.listener('click')
+        }, 'Foobar'));
         return vtree$;
       }
       Cycle.applyToDOM(createRenderTarget(), computer);

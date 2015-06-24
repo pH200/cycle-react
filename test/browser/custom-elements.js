@@ -159,54 +159,19 @@ describe('Custom Elements', function () {
       return {
         view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
         events: {
-          myevent: number$
+          onMyEvent: number$
         }
       };
     });
     // Use the custom element
     let Root = Cycle.component('Root', function (interactions) {
-      let vtree$ = Rx.Observable.just(h('div.toplevel', [
-        h(MyElement, {key: 1})
-      ]));
-      interactions.get('.myelementclass', 'myevent').subscribe(x => {
-        assert.strictEqual(x.detail, 123);
+      interactions.get('myevent').subscribe(x => {
+        assert.strictEqual(x, 123);
         done();
       });
-      return vtree$;
-    });
-    Cycle.applyToDOM(createRenderTarget(), Root);
-    // Make assertions
-    let myElement = document.querySelector('.myelementclass');
-    assert.notStrictEqual(myElement, null);
-    assert.notStrictEqual(typeof myElement, 'undefined');
-    assert.strictEqual(myElement.tagName, 'H3');
-    number$.request(1);
-  });
-
-  it('should catch customized-events by using EventSubject', function (done) {
-    let number$ = Rx.Observable.of(123, 456).controlled();
-    // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function () {
-      return {
-        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
-        events: {
-          myevent: number$
-        }
-      };
-    });
-    // Use the custom element
-    let Root = Cycle.component('Root', function (interactions) {
-      let onmyevent$ = interactions.getEventSubject('onmyevent');
-      let vtree$ = Rx.Observable.just(h('div.toplevel', [
-        h(MyElement, {
-          key: 1,
-          onmyevent: interactions.getEventSubject('onmyevent').onEvent
-        })
-      ]));
-      onmyevent$.subscribe(x => {
-        assert.strictEqual(x.detail, 123);
-        done();
-      });
+      let vtree$ = Rx.Observable.just(h(MyElement, {
+        onMyEvent: interactions.listener('myevent')
+      }));
       return vtree$;
     });
     Cycle.applyToDOM(createRenderTarget(), Root);
@@ -221,15 +186,16 @@ describe('Custom Elements', function () {
   it('should not miss custom events from a list of custom elements', function () {
     // Make custom element
     let Slider = Cycle.component('Slider', function (interactions, props) {
-      let remove$ = interactions.get('.internalslider', 'click')
-        .map(() => true);
+      let remove$ = interactions.get('click').map(() => true);
       let id$ = props.get('id').shareReplay(1);
       let vtree$ = id$
-        .map(id => h('h3.internalslider', String(id)));
+        .map(id => h('h3.internalslider', {
+          onClick: interactions.listener('click')
+        }, String(id)));
       return {
         view: vtree$,
         events: {
-          remove: remove$.withLatestFrom(id$, (r, id) => id)
+          onRemove: remove$.withLatestFrom(id$, (r, id) => id)
         }
       };
     });
@@ -239,9 +205,7 @@ describe('Custom Elements', function () {
       [{id: 23}, {id: 45}]
     ).controlled();
     function computer(interactions) {
-      let eventData$ = interactions
-        .get('.internalslider', 'remove')
-        .map(event => event.detail);
+      let eventData$ = interactions.get('remove');
       return sequence$
         .concat(eventData$)
         .scan((items, x) => {
@@ -253,7 +217,11 @@ describe('Custom Elements', function () {
         })
         .map(items =>
           h('div.allSliders', items.map(
-            item => h(Slider, {id: item.id, className: 'slider'}))
+            item => h(Slider, {
+              id: item.id,
+              className: 'slider',
+              onRemove: interactions.listener('remove')
+            }))
           )
         );
     }
@@ -302,7 +270,7 @@ describe('Custom Elements', function () {
 
     function computer(interactions) {
       let counter = 0;
-      let clickMod$ = interactions.get('.button', 'click')
+      let clickMod$ = interactions.get('click')
         .map(() => `item${++counter}`)
         .map(random => function mod(data) {
           data.push(random);
@@ -312,8 +280,10 @@ describe('Custom Elements', function () {
         .startWith([])
         .scan((data, modifier) => modifier(data))
         .map(data => h('.root', [
-          h('button.button', 'add new item'),
-          h(MyElement, {key: 0, list: data})
+          h('button.button', {
+            onClick: interactions.listener('click')
+          }, 'add new item'),
+          h(MyElement, {list: data})
         ]));
     }
 
@@ -378,23 +348,23 @@ describe('Custom Elements', function () {
           return h('button.myelementclass', 'bar');
         }),
         events: {
-          myevent: number$
+          onMyEvent: number$
         }
       };
     });
     // Use the custom element
     let Root = Cycle.component('Root', function (interactions) {
-      let onmyevent$ = interactions.getEventSubject('onmyevent');
+      let onmyevent$ = interactions.get('myevent');
       let vtree$ = Rx.Observable.just(
         h('div.toplevel', [
           h(MyElement, {
             key: 1,
-            onMyevent: interactions.getEventSubject('onmyevent').onEvent
+            onMyEvent: interactions.listener('myevent')
           })
         ])
       );
       onmyevent$.subscribe(function (x) {
-        assert.strictEqual(x.detail, 123);
+        assert.strictEqual(x, 123);
         done();
       });
       return vtree$;
@@ -451,45 +421,6 @@ describe('Custom Elements', function () {
     Cycle.applyToDOM(createRenderTarget(), MyElement);
     // Make assertions
     vtreeController$.request(1);
-  });
-
-  it('should not dispatch event if noDOMDispatchEvent was set', function (done) {
-    let number$ = Rx.Observable.of(123, 456).controlled();
-    // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function () {
-      return {
-        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
-        events: {
-          myevent: number$
-        }
-      };
-    }, {noDOMDispatchEvent: true});
-    // Use the custom element
-    let Root = Cycle.component('Root', function (interactions) {
-      let vtree$ = Rx.Observable.just(h(MyElement, {
-        onmyevent(ev) {
-          // Assert events
-          assert.strictEqual(ev.type, 'myevent');
-          assert.strictEqual(ev.preventDefault, (void 0));
-          assert.ok(ev.detail === 123 || ev.detail === 456);
-          assert.strictEqual(ev.target.tagName, 'H3');
-          assert.strictEqual(ev.target.innerHTML, 'foobar');
-          if (ev.detail === 456) {
-            done();
-          }
-        }
-      }));
-
-      interactions.get('.myelementclass', 'myevent').subscribe(x => {
-        // Throw error for DOM event
-        done(new Error('Should not dispatch DOM event'));
-      });
-
-      return vtree$;
-    });
-
-    Cycle.applyToDOM(createRenderTarget(), Root);
-    number$.request(2);
   });
 
   it('should dispose vtree$ after destruction', function () {

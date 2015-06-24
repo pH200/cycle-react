@@ -3,76 +3,41 @@
 let assert = require('assert');
 let Rx = require('rx');
 let EventEmitter = require('events').EventEmitter;
-let {
-  makeInteractions, makeEmptyInteractions
-} = require('../../src/interactions');
-
-describe('emptyInteractions', function () {
-  it('should have get() returns empty observable', function () {
-    let interactions = makeEmptyInteractions();
-    assert.doesNotThrow(function () {
-      interactions.get().subscribe(() => {
-        throw new Error('should not onNext');
-      });
-    });
-  });
-
-  it('should have getEventSubject() returns empty observable', function () {
-    let interactions = makeEmptyInteractions();
-    assert.doesNotThrow(function () {
-      interactions.getEventSubject('foo').subscribe(() => {
-        throw new Error('should not onNext');
-      });
-    });
-  });
-
-  it('should have subject alias of getEventSubject', function () {
-    let interactions = makeEmptyInteractions();
-    assert.strictEqual(interactions.subject, interactions.getEventSubject);
-  });
-})
+let {makeInteractions} = require('../../src/interactions');
 
 describe('interactions', function () {
-  it('should get events', function (done) {
-    let rootElem = new EventEmitter();
-    let root$ = Rx.Observable.just(rootElem);
-    let interactions = makeInteractions(root$);
-
-    interactions.get('', 'foo', false, true).subscribe(function (value) {
-      assert.strictEqual(value, 'bar');
-      done();
-    });
-    rootElem.emit('foo', 'bar');
-  });
-
-  it('should provide collection of EventSubjects by getEventSubject', function (done) {
+  it('should provide collection of EventSubjects by get', function (done) {
     let interactions = makeInteractions();
-    interactions.getEventSubject('foo').subscribe(function (value) {
+    interactions.get('foo').subscribe(function (value) {
       assert.strictEqual(value, 'bar');
       done();
     });
-    let proxyHandler = interactions.getEventSubject('foo').onEvent;
+    let proxyHandler = interactions.listener('foo');
     proxyHandler('bar');
-  });
-
-  it('should have subject alias of getEventSubject', function () {
-    let interactions = makeInteractions();
-    assert.strictEqual(interactions.subject, interactions.getEventSubject);
   });
 
   it('should return created EventSubject from the inserted key', function () {
     let interactions = makeInteractions();
     assert.strictEqual(
-      interactions.getEventSubject('foo'),
-      interactions.getEventSubject('foo')
+      interactions.get('foo'),
+      interactions.get('foo')
     );
   });
 
-  it('should create standalone EventSubject by getEventSubject()', function () {
+  it('should throw error when the key is null', function () {
     let interactions = makeInteractions();
-    assert.notStrictEqual(
-      interactions.getEventSubject(),
-      interactions.getEventSubject()
-    );
+    assert.throws(() => interactions.get(), /Invalid name/i);
+    assert.throws(() => interactions.get(null), /Invalid name/i);
+  });
+
+  it('should warn when `listener` is used before `get`', function (done) {
+    let interactions = makeInteractions();
+    let tempConsoleWarn = console.warn;
+    console.warn = function warn(message) {
+      assert.ok(/foo/.test(message));
+      console.warn = tempConsoleWarn;
+      done();
+    };
+    interactions.listener('foo');
   });
 });

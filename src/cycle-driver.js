@@ -4,11 +4,10 @@ var applyToDOM = require('./render-dom');
 var makeInteractions = require('./interactions').makeInteractions;
 
 function makeGet(interactions, rootElem$) {
-  return function get(selector, eventName, isSingle) {
+  return function get(selector) {
     if (selector === ':root') {
       return rootElem$;
     }
-    return interactions.get(selector, eventName, isSingle);
   };
 }
 

@@ -3,94 +3,30 @@ var React = require('react');
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 var makeInteractions = require('./interactions').makeInteractions;
-var createCustomEventWithOption = require('./create-custom-event');
+var makePropsObservable = require('./props').makePropsObservable;
 
-function makeDispatchFunction(elementGetter, eventName, handler, noDispatch) {
+function makeDispatchFunction(eventName, self) {
   return function dispatchCustomEvent(evData) {
-    var element = elementGetter();
-    var event = createCustomEventWithOption(eventName, {
-      detail: evData,
-      bubbles: true,
-      cancelable: true
-    }, element, noDispatch);
-    if (element) {
-      if (handler) {
-        // invoke the event handler from props
-        handler(event);
+    if (self.props) {
+      var eventHandler = self.props[eventName];
+      if (eventHandler) {
+        eventHandler(evData);
       }
-      if (!noDispatch) {
-        // dispatch DOM event by default
-        element.dispatchEvent(event);
-      }
-    } else {
-      console.warn(
-        eventName +
-        ' event dispatched after the element has been destroyed'
-      );
     }
   };
 }
 
-function composingEventObservables(events, handlerGetter, elementGetter, noDispatch) {
+function composingEventObservables(events, self) {
   var eventNames = Object.keys(events);
   var eventObservables = [];
   for (var i = 0; i < eventNames.length; i++) {
     var eventName = eventNames[i];
     var eventObs = events[eventName];
     eventObservables.push(
-      eventObs.doOnNext(
-        makeDispatchFunction(
-          elementGetter,
-          eventName,
-          handlerGetter(eventName),
-          noDispatch
-        )
-      )
+      eventObs.doOnNext(makeDispatchFunction(eventName, self))
     );
   }
   return eventObservables;
-}
-
-function getEventHandlerGetter(self) {
-  return function eventHandlerGetter(eventName) {
-    if (!self.props) {
-      return null;
-    }
-    var eventHandler = self.props['on' + eventName];
-    if (eventHandler) {
-      if (typeof eventHandler === 'function') {
-        return eventHandler;
-      } else {
-        throw new Error('on' + eventName + ' handler must be a function.');
-      }
-    }
-    var caseConvertedName =
-      'on' + eventName.substr(0, 1).toUpperCase() + eventName.substr(1);
-    var caseConvertedHandler = self.props[caseConvertedName];
-    if (caseConvertedHandler) {
-      if (typeof caseConvertedHandler === 'function') {
-        return caseConvertedHandler;
-      } else {
-        throw new Error(caseConvertedName + ' handler must be a function.');
-      }
-    }
-    return null;
-  };
-}
-
-function createGetPropFn(propsSubject$) {
-  return function getProp(propName, comparer) {
-    if (propName === '*') {
-      return propsSubject$;
-    }
-    var prop$ = propsSubject$.map(function mapProp(p) {
-      return p[propName];
-    });
-    if (comparer) {
-      return prop$.distinctUntilChanged(Rx.helpers.identity, comparer);
-    }
-    return prop$.distinctUntilChanged();
-  };
 }
 
 function component(
@@ -110,8 +46,6 @@ function component(
   var rootTagName = options.rootTagName || 'div';
   // The option for passing "this" to definitionFn
   var bindThis = !!options.bindThis;
-  // The option for skipping DOM dispatchEvent
-  var noDOMDispatchEvent = !!options.noDOMDispatchEvent;
 
   var reactClassProto = {
     displayName: displayName,
@@ -119,16 +53,12 @@ function component(
       this.hasMounted = false;
       return {vtree: null};
     },
-    _subscribeCycleComponent: function () {
+    _subscribeCycleComponent: function _subscribeCycleComponent() {
       var self = this;
       this.disposable = new Rx.CompositeDisposable();
-      var propsSubject$ = new Rx.BehaviorSubject(this.props);
-      propsSubject$.get = createGetPropFn(propsSubject$);
+      var propsSubject$ = makePropsObservable(this.props);
       this.propsSubject$ = propsSubject$;
-      this.rootElemSubject$ = new Rx.ReplaySubject(1);
-      var interactions = makeInteractions(
-        this.rootElemSubject$.distinctUntilChanged()
-      );
+      var interactions = makeInteractions();
       var cycleComponent = digestDefinitionFnOutput(
         bindThis ?
         definitionFn(interactions, this.propsSubject$, this) :
@@ -144,15 +74,11 @@ function component(
       var subscription = observer ?
         vtreeDoSet$.subscribe(observer) : vtreeDoSet$.subscribe();
       this.disposable.add(this.propsSubject$);
-      this.disposable.add(this.rootElemSubject$);
       this.disposable.add(subscription);
     },
-    _unsubscribeCycleComponent: function () {
+    _unsubscribeCycleComponent: function _unsubscribeCycleComponent() {
       if (this.propsSubject$) {
         this.propsSubject$.onCompleted();
-      }
-      if (this.rootElemSubject$) {
-        this.rootElemSubject$.onCompleted();
       }
       if (this.cycleComponentDispose) {
         var dispose = this.cycleComponentDispose;
@@ -166,15 +92,11 @@ function component(
         this.disposable.dispose();
       }
     },
-    _subscribeCycleEvents: function () {
+    _subscribeCycleEvents: function _subscribeCycleEvents() {
       var self = this;
       var eventObservables = composingEventObservables(
         this.cycleComponent.customEvents,
-        getEventHandlerGetter(self),
-        function getCurrentElement() {
-          return React.findDOMNode(self);
-        },
-        noDOMDispatchEvent
+        self
       );
       if (eventObservables.length > 0) {
         var eventSubscription;
@@ -187,13 +109,6 @@ function component(
         }
         this.disposable.add(eventSubscription);
       }
-      // Notify new rootElem
-      var node = React.findDOMNode(this);
-      this.rootElemSubject$.onNext(node);
-      if (this.onMount) {
-        this.onMount(node);
-      }
-      this.hasMounted = true;
     },
     shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
       // Only care about the state since the props have been observed.
@@ -210,12 +125,10 @@ function component(
     },
     componentDidMount: function componentDidMount() {
       this._subscribeCycleEvents();
-    },
-    componentDidUpdate: function componentDidUpdate() {
-      // This action should be fast since React will cache the result of findDOMNode
-      // facebook/react/src/renderers/dom/client/ReactMount.js#getNodeFromInstance
-      var node = React.findDOMNode(this);
-      this.rootElemSubject$.onNext(node);
+      if (this.onMount) {
+        this.onMount(this);
+      }
+      this.hasMounted = true;
     },
     componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
       this.propsSubject$.onNext(nextProps);
