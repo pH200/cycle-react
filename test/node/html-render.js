@@ -3,11 +3,13 @@
 let assert = require('assert');
 let cheerio = require('cheerio');
 let Cycle = require('../../src/cycle');
-let {Rx, h} = Cycle;
+let {Rx, React} = Cycle;
 
 describe('renderAsHTML()', function () {
   it('should output HTML when given a simple vtree stream', function (done) {
-    let vtree$ = Rx.Observable.just(h('div.test-element', ['Foobar']));
+    let vtree$ = Rx.Observable.just(
+      <div className="test-element">Foobar</div>
+    );
     let html$ = Cycle.renderAsHTML(vtree$);
     html$.subscribe(function (html) {
       let $ = cheerio.load(html);
@@ -22,7 +24,9 @@ describe('renderAsHTML()', function () {
     var log = 0;
     let MyElement = Cycle.component('MyElement', function () {
       return {
-        view: Rx.Observable.just(h('div.test-element', ['Foobar'])),
+        view: Rx.Observable.just(
+          <div className="test-element">Foobar</div>
+        ),
         events: {
           myevent: Rx.Observable.just(123).doOnNext(n => log = n)
         }
@@ -41,10 +45,10 @@ describe('renderAsHTML()', function () {
 
   it('should render a simple nested custom element as HTML', function (done) {
     let MyElement = Cycle.component('MyElement', function () {
-      return Rx.Observable.just(h('h3.myelementclass'));
+      return Rx.Observable.just(<h3 className="myelementclass" />);
     });
     let vtree$ = Rx.Observable.just(
-      h('div.test-element', null, h(MyElement))
+      <div className="test-element"><MyElement /></div>
     );
     let html$ = Cycle.renderAsHTML(vtree$);
     html$.subscribe(function (html) {
@@ -58,16 +62,19 @@ describe('renderAsHTML()', function () {
 
   it('should render double nested custom elements as HTML', function (done) {
     let MyElement = Cycle.component('MyElement', function () {
-      return Rx.Observable.just(h('h3.myelementclass'));
+      return Rx.Observable.just(<h3 className="myelementclass" />);
     });
     let NiceElement = Cycle.component('NiceElement', function () {
-      return Rx.Observable.just(h('div.a-nice-element', null, [
-        'foobar', h(MyElement)
-      ]));
+      return Rx.Observable.just(
+        <div className="a-nice-element">
+          foobar
+          <MyElement />
+        </div>
+      );
     });
-    let vtree$ = Rx.Observable.just(h(
-      'div.test-element', null, h(NiceElement)
-    ));
+    let vtree$ = Rx.Observable.just(
+      <div className="test-element"><NiceElement /></div>
+    );
     let html$ = Cycle.renderAsHTML(vtree$);
     html$.subscribe(function (html) {
       let $ = cheerio.load(html);
@@ -82,13 +89,14 @@ describe('renderAsHTML()', function () {
 
   it('should render a nested custom element with props as HTML', function (done) {
     let MyElement = Cycle.component('MyElement', function (_, props) {
-      return props.get('foobar')
-        .map(foobar => h('h3.myelementclass', null, String(foobar).toUpperCase()))
+      return props.get('foobar').map(foobar =>
+        <h3 className="myelementclass">{String(foobar).toUpperCase()}</h3>
+      );
     });
     let vtree$ = Rx.Observable.just(
-      h('div.test-element', [
-        h(MyElement, {foobar: 'yes'})
-      ])
+      <div className="test-element">
+        <MyElement foobar="yes" />
+      </div>
     );
     let html$ = Cycle.renderAsHTML(vtree$);
     html$.subscribe(function (html) {

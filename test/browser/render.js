@@ -3,7 +3,7 @@
 let assert = require('assert');
 let Cycle = require('../../src/cycle');
 let Fixture89 = require('./fixtures/issue-89');
-let {Rx, h} = Cycle;
+let {Rx, React} = Cycle;
 
 function createRenderTarget() {
   let element = document.createElement('div');
@@ -58,11 +58,13 @@ describe('Rendering', function () {
     });
 
     it('should convert a simple virtual-dom <select> to DOM element', function () {
-      let vtree$ = Rx.Observable.just(h('select.my-class', [
-        h('option', {value: 'foo'}, 'Foo'),
-        h('option', {value: 'bar'}, 'Bar'),
-        h('option', {value: 'baz'}, 'Baz')
-      ]));
+      let vtree$ = Rx.Observable.just(
+        <select className="my-class">
+          <option value="foo">Foo</option>
+          <option value="bar">Bar</option>
+          <option value="baz">Baz</option>
+        </select>
+      );
       Cycle.applyToDOM(createRenderTarget(), () => vtree$);
       let selectEl = document.querySelector('.my-class');
       assert.notStrictEqual(selectEl, null);
@@ -72,7 +74,7 @@ describe('Rendering', function () {
 
     it('should accept a ReactClass as definitionFn', function () {
       let MyElement = Cycle.component('MyElement', function () {
-        return Rx.Observable.just(h('h3.myelementclass'));
+        return Rx.Observable.just(<h3 className="myelementclass" />);
       });
       Cycle.applyToDOM(createRenderTarget(), MyElement);
       let myelement = document.querySelector('.myelementclass');
@@ -88,9 +90,12 @@ describe('Rendering', function () {
           assert.strictEqual(ev.target.innerHTML, 'Foobar');
           done();
         });
-        let vtree$ = Rx.Observable.just(h('h3.myelementclass', {
-          onClick: interactions.listener('click')
-        }, 'Foobar'));
+        let vtree$ = Rx.Observable.just(
+          <h3 className="myelementclass"
+              onClick={interactions.listener('click')}>
+            Foobar
+          </h3>
+        );
         return vtree$;
       }
       Cycle.applyToDOM(createRenderTarget(), computer);
@@ -106,7 +111,7 @@ describe('Rendering', function () {
 
     it('should not set props.className to the root element', function () {
       let MyElement = Cycle.component('MyElement', Fixture89.myelement);
-      let vtree$ = Rx.Observable.just(h(MyElement, {className: 'ERR'}));
+      let vtree$ = Rx.Observable.just(<MyElement className="ERR" />);
       Cycle.applyToDOM(createRenderTarget(), () => vtree$);
       // Make assertions
       let myElement = document.querySelector('.myelementclass');

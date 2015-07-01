@@ -2,7 +2,7 @@
 /* global describe, it, beforeEach */
 let assert = require('assert');
 let Cycle = require('../../src/cycle');
-let {Rx, h} = Cycle;
+let {Rx, React} = Cycle;
 
 function createRenderTarget() {
   let element = document.createElement('div');
@@ -24,10 +24,10 @@ describe('Custom Elements', function () {
   it('should recognize and create simple element that is registered', function () {
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function () {
-      return Rx.Observable.just(h('h3.myelementclass'));
+      return Rx.Observable.just(<h3 className="myelementclass" />);
     });
     // Use the custom element
-    let vtree$ = Rx.Observable.just(h('div.toplevel', [h(MyElement, {key: 1})]));
+    let vtree$ = Rx.Observable.just(<MyElement />);
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
@@ -44,10 +44,10 @@ describe('Custom Elements', function () {
         props.get('color'),
         number$,
         function (color, number) {
-          return h('h3.stateful-element',
-            {style: {'color': color}},
-            String(number)
-          );
+          let style = {color: color};
+          return <h3 className="stateful-element" style={style}>
+            {String(number)}
+          </h3>;
         }
       );
     });
@@ -55,11 +55,7 @@ describe('Custom Elements', function () {
     function definitionFn() {
       return Rx.Observable.just('#00FF00')
         .startWith('#FF0000')
-        .map(color =>
-          h('div', [
-            h(MyElement, {key: 1, 'color': color})
-          ])
-        );
+        .map(color => <MyElement color={color} />);
     }
     Cycle.applyToDOM(createRenderTarget(), definitionFn);
     number$.request(8);
@@ -74,22 +70,20 @@ describe('Custom Elements', function () {
 
   it('should have Observable properties object as props.get(\'*\')', function () {
     // Make custom element
-    let MyElement = Cycle.component('myElement', function (interactions, props) {
+    let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return props.get('*').map(propsObj => {
         assert.strictEqual(typeof propsObj, 'object');
         assert.notStrictEqual(propsObj, null);
         assert.strictEqual(propsObj.color, '#FF0000');
         assert.strictEqual(propsObj.content, 'Hello world');
-        return h('h3.inner-element',
-          {style: {color: propsObj.color}},
-          String(propsObj.content)
-        );
+        let style = {color: propsObj.color};
+        return <h3 className="inner-element" style={style}>
+          {String(propsObj.content)}
+        </h3>;
       });
     });
     let vtree$ = Rx.Observable.just(
-      h('div', [
-        h(MyElement, {color: '#FF0000', content: 'Hello world'})
-      ])
+      <MyElement color="#FF0000" content="Hello world" />
     );
     let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -105,17 +99,18 @@ describe('Custom Elements', function () {
   it('should recognize and create two unrelated elements', function () {
     // Make the first custom element
     let MyElement1 = Cycle.component('MyElement1', function () {
-      return Rx.Observable.just(h('h1.myelement1class'));
+      return Rx.Observable.just(<h1 className="myelement1class" />);
     });
     // Make the second custom element
     let MyElement2 = Cycle.component('MyElement2', function () {
-      return Rx.Observable.just(h('h2.myelement2class'));
+      return Rx.Observable.just(<h2 className="myelement2class" />);
     });
     // Use the custom elements
     let vtree$ = Rx.Observable.just(
-      h('div', [
-        h(MyElement1), h(MyElement2)
-      ])
+      <div>
+        <MyElement1 />
+        <MyElement2 />
+      </div>
     );
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -132,18 +127,18 @@ describe('Custom Elements', function () {
   it('should recognize and create a nested custom elements', function () {
     // Make the inner custom element
     let Inner = Cycle.component('Inner', function () {
-      return Rx.Observable.just(h('h3.innerClass'));
+      return Rx.Observable.just(<h3 className="innerClass" />);
     });
     // Make the outer custom element
     let Outer = Cycle.component('Outer', function () {
       return Rx.Observable.just(
-        h('div.outerClass', [
-          h(Inner, {key: 1})
-        ])
+        <div className="outerClass">
+          <Inner />
+        </div>
       );
     });
     // Use the custom elements
-    let vtree$ = Rx.Observable.just(h('div', [h(Outer, {key: 2})]));
+    let vtree$ = Rx.Observable.just(<Outer />);
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let innerElement = document.querySelector('.innerClass');
@@ -157,7 +152,7 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function () {
       return {
-        view: Rx.Observable.just(h('h3.myelementclass', 'foobar')),
+        view: Rx.Observable.just(<h3 className="myelementclass">foobar</h3>),
         events: {
           onMyEvent: number$
         }
@@ -169,9 +164,9 @@ describe('Custom Elements', function () {
         assert.strictEqual(x, 123);
         done();
       });
-      let vtree$ = Rx.Observable.just(h(MyElement, {
-        onMyEvent: interactions.listener('myevent')
-      }));
+      let vtree$ = Rx.Observable.just(
+        <MyElement onMyEvent={interactions.listener('myevent')} />
+      );
       return vtree$;
     });
     Cycle.applyToDOM(createRenderTarget(), Root);
@@ -188,10 +183,12 @@ describe('Custom Elements', function () {
     let Slider = Cycle.component('Slider', function (interactions, props) {
       let remove$ = interactions.get('click').map(() => true);
       let id$ = props.get('id').shareReplay(1);
-      let vtree$ = id$
-        .map(id => h('h3.internalslider', {
-          onClick: interactions.listener('click')
-        }, String(id)));
+      let vtree$ = id$.map(id =>
+        <h3 className="internalslider"
+            onClick={interactions.listener('click')}>
+          {String(id)}
+        </h3>
+      );
       return {
         view: vtree$,
         events: {
@@ -216,13 +213,14 @@ describe('Custom Elements', function () {
           }
         })
         .map(items =>
-          h('div.allSliders', items.map(
-            item => h(Slider, {
-              id: item.id,
-              className: 'slider',
-              onRemove: interactions.listener('remove')
-            }))
-          )
+          <div className="allSliders">
+            {items.map(item =>
+              <Slider id={item.id}
+                      key={item.id}
+                      className="slider"
+                      onRemove={interactions.listener('remove')} />
+            )}
+          </div>
         );
     }
 
@@ -242,15 +240,16 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let SimpleWrapper = Cycle.component('SimpleWrapper', function (interactions, props) {
       return props.get('children').map(children => {
-        return h('div.wrapper', children);
+        return <div className="wrapper">{children}</div>;
       });
     });
     // Use the custom element
-    let vtree$ = Rx.Observable.just(h('div.toplevel', [
-      h(SimpleWrapper, [
-        h('h1', 'Hello'), h('h2', 'World')
-      ])
-    ]));
+    let vtree$ = Rx.Observable.just(
+      <SimpleWrapper>
+        <h1>Hello</h1>
+        <h2>World</h2>
+      </SimpleWrapper>
+    );
     let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let wrapper = document.querySelector('.wrapper');
@@ -262,9 +261,11 @@ describe('Custom Elements', function () {
   it('should recognize changes on a mutable collection given as props', function () {
     let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return props.get('list', () => false).map(list =>
-        h('div', [
-          h('ol', list.map(value => h('li.test-item', null, value)))
-        ])
+        <ol>
+          {list.map(value =>
+            <li key={value} className="test-item">{value}</li>
+          )}
+        </ol>
       );
     });
 
@@ -279,12 +280,15 @@ describe('Custom Elements', function () {
       return clickMod$
         .startWith([])
         .scan((data, modifier) => modifier(data))
-        .map(data => h('.root', [
-          h('button.button', {
-            onClick: interactions.listener('click')
-          }, 'add new item'),
-          h(MyElement, {list: data})
-        ]));
+        .map(data =>
+          <div className="root">
+            <button className="button"
+                    onClick={interactions.listener('click')}>
+              add new item
+            </button>
+            <MyElement list={data} />
+          </div>
+        );
     }
 
     Cycle.applyToDOM(createRenderTarget(), computer);
@@ -300,15 +304,17 @@ describe('Custom Elements', function () {
   it('should distinct property changes for props.get', function () {
     let MyElement = Cycle.component('MyElement', function (interactions, props) {
       return props.get('list').map(list =>
-        h('div', [
-          h('ol', list.map(value => h('li.test-item', null, value)))
-        ])
+        <ol>
+          {list.map(value =>
+            <li key={value} className="test-item">{value}</li>
+          )}
+        </ol>
       );
     });
 
     function computer(interactions) {
       let counter = 0;
-      let clickMod$ = interactions.get('.button', 'click')
+      let clickMod$ = interactions.get('click')
         .map(() => `item${++counter}`)
         .map(random => function mod(data) {
           data.push(random);
@@ -317,10 +323,15 @@ describe('Custom Elements', function () {
       return clickMod$
         .startWith([])
         .scan((data, modifier) => modifier(data))
-        .map(data => h('.root', [
-          h('button.button', 'add new item'),
-          h(MyElement, {key: 0, list: data})
-        ]));
+        .map(data =>
+          <div className="root">
+            <button className="button"
+                    onClick={interactions.listener('click')}>
+              add new item
+            </button>
+            <MyElement list={data} />
+          </div>
+        );
     }
 
     Cycle.applyToDOM(createRenderTarget(), computer);
@@ -331,8 +342,6 @@ describe('Custom Elements', function () {
     assert.strictEqual(items.length, 0);
   });
 
-  // TODO: Test interactions when we found a better way to catch
-  // all events by selector
   it('should emit events even when dynamically evolving', function (done) {
     let number$ = Rx.Observable.of(123, 456).controlled();
     let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
@@ -343,9 +352,9 @@ describe('Custom Elements', function () {
       return {
         view: customElementSwitch$.map(number => {
           if (number === 0) {
-            return h('h3.myelementclass', 'foo');
+            return <h3 className="myelementclass">foo</h3>;
           }
-          return h('button.myelementclass', 'bar');
+          return <button className="myelementclass">bar</button>;
         }),
         events: {
           onMyEvent: number$
@@ -356,12 +365,7 @@ describe('Custom Elements', function () {
     let Root = Cycle.component('Root', function (interactions) {
       let onmyevent$ = interactions.get('myevent');
       let vtree$ = Rx.Observable.just(
-        h('div.toplevel', [
-          h(MyElement, {
-            key: 1,
-            onMyEvent: interactions.listener('myevent')
-          })
-        ])
+        <MyElement onMyEvent={interactions.listener('myevent')} />
       );
       onmyevent$.subscribe(function (x) {
         assert.strictEqual(x, 123);
@@ -386,13 +390,13 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.component('MyElement', function () {
       return vtreeController$.map(control => {
         if (control === 0) {
-          return h('h3.myelementclass');
+          return <h3 className="myelementclass" />
         }
         throw new Error('The error');
       });
     });
     // Use the custom element
-    let vtree$ = Rx.Observable.just(h('div.toplevel', [h(MyElement, {key: 1})]));
+    let vtree$ = Rx.Observable.just(<MyElement />);
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     vtreeController$.request(1);
@@ -416,7 +420,10 @@ describe('Custom Elements', function () {
         assert.strictEqual(editField.tagName, 'H3');
         done();
       })
-      return Rx.Observable.just(() => h('h3.myelementclass', {ref: 'theRef'}));
+      return Rx.Observable.just(() =>
+        <h3 className="myelementclass"
+            ref="theRef" />
+      );
     }, {bindThis: true});
     Cycle.applyToDOM(createRenderTarget(), MyElement);
     // Make assertions
@@ -431,13 +438,13 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.component('MyElement', function () {
       return number$
         .do(i => log.push(i))
-        .map(i => h('h3.myelementclass', String(i)));
+        .map(i => <h3 className="myelementclass">{i}</h3>);
     });
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
       return theSwitch === 0 ?
-        h('div.toplevel', [h(MyElement, {key: 1})]) :
-        h('div.toplevel', []);
+        <MyElement /> :
+        <div />;
     })
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -465,7 +472,7 @@ describe('Custom Elements', function () {
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function () {
       return {
-        view: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(<h3 className="myelementclass" />),
         events: {
           myevent$: number$.do(i => log.push(i))
         }
@@ -474,8 +481,8 @@ describe('Custom Elements', function () {
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
       return theSwitch === 0 ?
-        h('div.toplevel', [h(MyElement, {key: 1})]) :
-        h('div.toplevel', []);
+        <MyElement /> :
+        <div />;
     })
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -513,15 +520,15 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.component('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        view: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(<h3 className="myelementclass" />),
         dispose: subscription
       };
     });
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
       return theSwitch === 0 ?
-        h('div.toplevel', [h(MyElement, {key: 1})]) :
-        h('div.toplevel', []);
+        <MyElement /> :
+        <div />;
     })
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -545,7 +552,7 @@ describe('Custom Elements', function () {
     let MyElement = Cycle.component('MyElement', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return {
-        view: Rx.Observable.just(h('h3.myelementclass')),
+        view: Rx.Observable.just(<h3 className="myelementclass" />),
         dispose: () => {
           log2 = 'bar';
           subscription.dispose();
@@ -555,8 +562,8 @@ describe('Custom Elements', function () {
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
       return theSwitch === 0 ?
-        h('div.toplevel', [h(MyElement, {key: 1})]) :
-        h('div.toplevel', []);
+        <MyElement /> :
+        <div />;
     })
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
@@ -581,14 +588,14 @@ describe('Custom Elements', function () {
       let subscription = number$.subscribe(i => log.push(i));
       return Rx.Observable.using(
         () => subscription,
-        () => number$.map(() => h('h3.myelementclass'))
+        () => number$.map(() => <h3 className="myelementclass" />)
       );
     });
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
       return theSwitch === 0 ?
-        h('div.toplevel', [h(MyElement, {key: 1})]) :
-        h('div.toplevel', []);
+        <MyElement /> :
+        <div />;
     })
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions

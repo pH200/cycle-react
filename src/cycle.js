@@ -5,7 +5,6 @@ var component = require('./create-react-class');
 var makeDOMDriver = require('./cycle-driver');
 var React = require('react');
 var Rx = require('rx');
-var h = require('./h');
 
 var Cycle = {
   /**
@@ -131,16 +130,7 @@ var Cycle = {
    * A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
    * @name Rx
    */
-  Rx: Rx,
-
-  /**
-   * This is a helper for creating VTrees in Views. The API is identical to
-   * [virtual-hyperscript](
-   * https://github.com/Matt-Esch/virtual-dom/tree/master/virtual-hyperscript)
-   * but returns React element tree instead.
-   * @name h
-   */
-  h: h
+  Rx: Rx
 };
 
 module.exports = Cycle;

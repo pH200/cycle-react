@@ -9,7 +9,5 @@ React.render(
 // or
 // Cycle.applyToDOM(
 //   '.app-container',
-//   () => Cycle.Rx.Observable.just(
-//     Cycle.h(App, {context: window.appContext})
-//   )
+//   () => Rx.Observable.just(<App context={window.appContext} />)
 // );

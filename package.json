@@ -23,8 +23,7 @@
   ],
   "main": "src/cycle.js",
   "dependencies": {
-    "rx": "2.5.3",
-    "virtual-hyperscript": "^4.6.0"
+    "rx": "2.5.3"
   },
   "peerDependencies": {
     "react": "0.13.x"

@@ -24,9 +24,5 @@ describe('Cycle', function () {
     it('should have a shortcut to React', function () {
       assert.strictEqual(typeof Cycle.React, 'object');
     });
-
-    it('should have a shortcut to h', function () {
-      assert.strictEqual(typeof Cycle.h, 'function');
-    });
   });
 });

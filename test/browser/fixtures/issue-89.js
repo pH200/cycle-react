@@ -1,12 +1,12 @@
 'use strict';
 let Cycle = require('../../../src/cycle');
-let {Rx, h} = Cycle;
+let {Rx, React} = Cycle;
 
 function myelement(interactions, props) {
   return props
     .map(p => p.content)
     .distinctUntilChanged()
-    .map(content => h('h3.myelementclass', content));
+    .map(content => <h3 className="myelementclass">{content}</h3>);
 }
 
 function makeModelNumber$() {
@@ -15,15 +15,15 @@ function makeModelNumber$() {
 
 function viewWithContainerFn(number$, MyElement) {
   return number$.map(number =>
-    h('div', [
-      h(MyElement, {content: String(number)})
-    ])
+    <div>
+      <MyElement content={String(number)} />
+    </div>
   );
 }
 
 function viewWithoutContainerFn(number$, MyElement) {
   return number$.map(number =>
-    h(MyElement, {content: String(number)})
+    <MyElement content={String(number)} />
   );
 }
 
