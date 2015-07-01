@@ -8,8 +8,10 @@ could be helpful.
 
 ## Event handler
 
-DOM `dispatchEvent` and selector API is used for the original Cycle.js' DOM
-driver. However, React components use event handler(from props) instead of
+If you have used Cycle.js (not Cycle-React), you must have known that DOM
+`dispatchEvent` and the selector API are used for dealing with interactions
+for the [Cycle Web driver](http://cycle.js.org/basic-examples.html).
+However, React components use event handler(from props) instead of
 DOM events for child-parent communications. As a result, Cycle-React provides
 interactions API that different from Cycle.js for receiving these events. You
 must use event handlers for handling events in Cycle-React.
