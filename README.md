@@ -12,7 +12,7 @@ In addition, Cycle-React is immutable and uses
 internally by default.
 
 Additionally, Cycle-React is also a React-style implementation of a beautiful
-framework called [Cycle.js](https://github.com/staltz/cycle).
+framework called [Cycle.js](https://github.com/cyclejs/cycle-core).
 
 ## Installing
 
@@ -94,13 +94,13 @@ Cycle.applyToDOM('.js-container', Timer);
 
 Cycle-React is a React-style implementation of Cycle.js, so we have the same
 concept of handling user interactions. More information of this concept can be
-found at: https://github.com/staltz/cycle
+found at: http://cycle.js.org/
 
 ## Cycle.js Driver
 
-Starting from
-[Cycle.js v0.23](https://github.com/staltz/cycle/releases/tag/v0.23.0),
-the driver architecture has been introduced.
+The original Cycle.js has the
+[driver architecture](http://cycle.js.org/drivers.html) starting from
+[v0.23](https://github.com/cyclejs/cycle-core/releases/tag/v0.23.0).
 Cycle-React provides a DOM driver(powered by React, of course) for Cycle.js.
 
 Details can be found at
@@ -135,11 +135,9 @@ npm run dist
 * Ask "_how do I...?_" questions in Cycle-React's Gitter: <br/>
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 * Propose and discuss significant changes as a GitHub issues
-* In addition, more resources can be found at
-[Cycle.js](https://github.com/staltz/cycle)' page
+* In addition, more resources can be found at the official website of
+[Cycle.js](http://cycle.js.org/)
 
-## Disclaimer
+## License
 
-### Work in progress
-
-Just like Cycle.js, changes to API will occur before 1.0.
+[The MIT License](/LICENSE)
