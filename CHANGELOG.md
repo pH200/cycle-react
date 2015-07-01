@@ -1,5 +1,105 @@
 # Changelog
 
+## 1.0.0-beta2
+
+Add feature: `props.getAll()` returns the Observable of the whole properties object
+[#10]
+
+Alternatively, you can use `props.get('*')` or simply `props` for the exact same effect
+
+Breaking change: The `h` hyperscript helper has been removed [#11]
+
+Breaking change: Interactions API no longer uses selector for querying events
+[#8, #12]
+
+The selector API cannot handle both Cycle-React components and other React
+components that use event handlers. We want to keep the compatibility with
+the original React while not confusing developers. Therefore, the selector API
+has been removed in favor of event handler API.
+
+The migration guide can be found below.
+
+Breaking change: `on` prefix is no longer appended to event handlers for
+Cycle-React components
+
+Breaking change: Event detail is no longer wrapped by CustomEvent
+
+Breaking change: The option "noDOMDispatchEvent" has been removed since
+Cycle-React no longer dispatches events from DOM right now
+
+### BEFORE
+
+```js
+// Component:
+let MyComponent = Cycle.component('MyComponent', function (interactions, props) {
+  let vtree$ = interactions.get('.myinput', 'change')
+    .map(ev => ev.target.value)
+    .startWith('')
+    .map(name =>
+      <div>
+        <input className="myinput" type="text" />
+        <h1>Hello {name}</h1>
+      </div>
+    );
+  return {
+    view: vtree$,
+    events: {
+      myComponentTick: Rx.Observable.interval(1000)
+    }
+  };
+});
+// Intentions:
+interactions.subject('tick').map(ev => ev.detail);
+// View:
+<MyComponent onMyComponentTick={interactions.subject('tick').onEvent} />
+```
+
+### AFTER
+
+```js
+// Component:
+let MyComponent = Cycle.component('MyComponent', function (interactions, props) {
+  // You must use `get` to query events
+  // and use `listener` to create event handlers.
+  let vtree$ = interactions.get('OnMyInputChange')
+    .map(ev => ev.target.value)
+    .startWith('')
+    .map(name =>
+      <div>
+        <input className="myinput" type="text"
+               onChange={interactions.listener('OnMyInputChange')} />
+        <h1>Hello {name}</h1>
+      </div>
+    );
+  return {
+    view: vtree$,
+    events: {
+      // The event handler is no longer auto-prefixed by "on"
+      onMyComponentTick: Rx.Observable.interval(1000)
+    }
+  };
+});
+// Intentions:
+// Event arguments from Cycle-React components are no longer
+// wrapped by CustomEvent.
+interactions.subject('tick').map(ev => ev);
+// View:
+// Use interactions.listener(name) to create event handler
+<MyComponent onMyComponentTick={interactions.listener('tick')} />
+```
+
+### Migration
+
+1. Append the "on" prefix to every event observables inside events object
+2. Rewrite the code that used `interactions.get(selector, eventType)` by using
+`interactions.get(eventName)` and `interactions.listener(eventName)` like the
+example above
+3. Replace `interactions.subject(name).onEvent` with `interactions.listener(name)`
+4. Replace
+`interactions.subject(name)` and `interactions.getEventSubject(name)`
+with `interactions.get(name)`
+5. Replace `ev.detail` with `ev`
+
 ## 0.27.0
 
 Breaking change: Rename "createReactClass" to "component"
