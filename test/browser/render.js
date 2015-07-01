@@ -109,6 +109,30 @@ describe('Rendering', function () {
       });
     });
 
+    it('should catch events from the inner span', function (done) {
+      function computer(interactions) {
+        interactions.get('spanClick').subscribe(function (ev) {
+          assert.ok(/Wrapped by span/.test(ev.target.innerText));
+          done();
+        });
+        return Rx.Observable.just(
+          <div className="wrapperDiv"
+               onClick={interactions.listener('spanClick')}>
+            Wrapped by span
+            <div className="innerDiv">Wrapped by div</div>
+          </div>
+        );
+      }
+      Cycle.applyToDOM(createRenderTarget(), computer);
+      let span = document.querySelector('.wrapperDiv > *:first-child');
+      assert.notStrictEqual(span, null);
+      assert.notStrictEqual(typeof span, 'undefined');
+      assert.strictEqual(span.tagName, 'SPAN');
+      assert.doesNotThrow(function () {
+        span.click();
+      });
+    })
+
     it('should not set props.className to the root element', function () {
       let MyElement = Cycle.component('MyElement', Fixture89.myelement);
       let vtree$ = Rx.Observable.just(<MyElement className="ERR" />);
