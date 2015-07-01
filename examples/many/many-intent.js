@@ -1,22 +1,22 @@
-var Cycle = require('cycle-react');
-var Rx = Cycle.Rx;
+const Cycle = require('cycle-react');
+const Rx = Cycle.Rx;
 
 function manyIntent(interactions) {
-  var addOneBtnClick$ = interactions.get('AddOne');
-  var addManyBtnClick$ = interactions.get('AddMany');
-  var addItem$ = Rx.Observable.merge(
+  const addOneBtnClick$ = interactions.get('AddOne');
+  const addManyBtnClick$ = interactions.get('AddMany');
+  const addItem$ = Rx.Observable.merge(
     addOneBtnClick$.map(() => 1),
     addManyBtnClick$.map(() => 1000)
   );
-  var changeColor$ = interactions.get('ItemChangeColor');
-  var changeWidth$ = interactions.get('ItemChangeWidth');
-  var removeItem$ = interactions.get('ItemDestroy');
+  const changeColor$ = interactions.get('ItemChangeColor');
+  const changeWidth$ = interactions.get('ItemChangeWidth');
+  const removeItem$ = interactions.get('ItemDestroy');
 
   return {
-    addItem$: addItem$,
-    changeColor$: changeColor$,
-    changeWidth$: changeWidth$,
-    removeItem$: removeItem$
+    addItem$,
+    changeColor$,
+    changeWidth$,
+    removeItem$
   };
 }
 

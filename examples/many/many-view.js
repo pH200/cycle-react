@@ -1,39 +1,41 @@
-var Cycle = require('cycle-react');
-var h = Cycle.h;
-var ManyItem = require('./many-component');
+const Cycle = require('cycle-react');
+const React = require('react');
+const PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+const ManyItem = require('./many-component');
 
 function manyView(items$, interactions) {
-  function vrenderTopButtons() {
-    return h('div.topButtons', [
-      h('button.add-one-btn', {
-        onClick: interactions.listener('AddOne')
-      }, 'Add New Item'),
-      h('button.add-many-btn', {
-        onClick: interactions.listener('AddMany')
-      }, 'Add Many Items'),
-    ]);
+  const TopButtons = React.createClass({
+    mixins: [PureRenderMixin],
+    render() {
+      return <div>
+        <button className="add-one-btn"
+                onClick={interactions.listener('AddOne')}>
+          Add New Item
+        </button>
+        <button className="add-many-btn"
+                onClick={interactions.listener('AddMany')}>
+          Add Many Items
+        </button>
+      </div>;
+    }
+  });
+
+  function vrenderItem(item) {
+    return <ManyItem className="item" key={item.id}
+                     itemid={item.id}
+                     color={item.color}
+                     width={item.width}
+                     onChangeColor={interactions.listener('ItemChangeColor')}
+                     onChangeWidth={interactions.listener('ItemChangeWidth')}
+                     onDestroy={interactions.listener('ItemDestroy')} />;
   }
 
-  function vrenderItem(itemData) {
-    return h(ManyItem, {
-      className: 'item',
-      itemid: itemData.id,
-      color:  itemData.color,
-      width:  itemData.width,
-      key: itemData.id,
-      onChangeColor: interactions.listener('ItemChangeColor'),
-      onChangeWidth: interactions.listener('ItemChangeWidth'),
-      onDestroy: interactions.listener('ItemDestroy')
-    });
-  }
-
-  return items$
-    .map(function (itemsData) {
-      return h('div.everything', {}, [
-        vrenderTopButtons(),
-        itemsData.map(vrenderItem)
-      ]);
-    });
+  return items$.map(function renderElements(itemsData) {
+    return <div>
+      <TopButtons />
+      {itemsData.map(vrenderItem)}
+    </div>;
+  });
 }
 
 module.exports = manyView;

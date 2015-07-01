@@ -1,22 +1,16 @@
-var Cycle = require('cycle-react');
-var React = Cycle.React;
-var Rx = Cycle.Rx;
-var h = Cycle.h;
+const Cycle = require('cycle-react');
+const React = require('react');
+const Rx = Cycle.Rx;
 
 // "component" returns native react class which can be used normally
 // by "React.createElement" and "Cycle.applyToDOM".
-var CounterText = Cycle.component('CounterText',
-  function (interactions, props) {
-    return props.get('counter').map(function (counter) {
-      return h('h3', 'Seconds Elapsed: '+ counter);
-    });
-  }
-);
+const Counter = Cycle.component('Counter', function (interactions, props) {
+  return props.get('counter')
+    .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
+});
 
-var Timer = Cycle.component('Timer', function () {
-  return Rx.Observable.interval(1000).map(function (i) {
-    return h(CounterText, {counter: i});
-  });
+const Timer = Cycle.component('Timer', function () {
+  return Rx.Observable.interval(1000).map(i => <Counter counter={i} />);
 });
 
 Cycle.applyToDOM('.js-container', Timer);

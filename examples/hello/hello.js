@@ -1,23 +1,19 @@
-var Cycle = require('cycle-react');
-var h = Cycle.h;
+const Cycle = require('cycle-react');
+const React = require('react');
 
 function computer(interactions) {
   return interactions.get('OnInputChange')
-    .map(function (ev) {
-      return ev.target.value;
-    })
+    .map((ev) => ev.target.value)
     .startWith('')
-    .map(function (name) {
-      return h('div', [
-        h('label', 'Name:'),
-        h('input.myinput', {
-          type: 'text',
-          onChange: interactions.listener('OnInputChange')
-        }),
-        h('hr'),
-        h('h1', 'Hello ' + name)
-      ]);
-    });
+    .map((name) => (
+      <div>
+        <label>Name:</label>
+        <input type="text"
+               onChange={interactions.listener('OnInputChange')} />
+        <hr />
+        <h1>Hello {name}</h1>
+      </div>
+    ));
 }
 
 Cycle.applyToDOM('.js-container', computer);

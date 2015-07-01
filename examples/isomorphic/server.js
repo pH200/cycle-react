@@ -1,9 +1,10 @@
 'use strict';
 let Cycle = require('../../src/cycle');
+let React = require('react');
 let express = require('express');
 let browserify = require('browserify');
 let serialize = require('serialize-javascript');
-let {Rx, h} = Cycle;
+let {Rx} = Cycle;
 let {App} = require('./app');
 
 function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
@@ -58,7 +59,7 @@ server.use(function (req, res) {
 
   let context = {route: req.url};
   let html$ = Cycle.renderAsHTML(
-    Rx.Observable.just(h(App, {context: context}))
+    Rx.Observable.just(React.createElement(App, {context: context}))
   ).combineLatest(
     Rx.Observable.just(context),
     clientBundle$,

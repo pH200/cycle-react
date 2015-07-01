@@ -1,39 +1,29 @@
 'use strict';
 let Cycle = require('../../src/cycle');
-let {h} = Cycle;
+let React = require('react');
 
 function renderMenu(onRouteClick) {
-  return h('ul', [
-    h('li', [
-      h('a', {
-        href: '/',
-        onClick: onRouteClick
-      }, 'Home')
-    ]),
-    h('li', [
-      h('a.link', {
-        href: '/about',
-        onClick: onRouteClick
-      }, 'About')
-    ])
-  ]);
+  return <ul>
+    <li><a href="/" onClick={onRouteClick}>Home</a></li>
+    <li><a href="/about" onClick={onRouteClick}>About</a></li>
+  </ul>;
 }
 
 function renderHomePage(onRouteClick) {
-  return h('section.home', [
-    h('h1', 'The homepage'),
-    h('p', 'Welcome to our spectacular web page with literally nothing special here.'),
-    renderMenu(onRouteClick)
-  ]);
+  return <section className="home">
+    <h1>The homepage</h1>
+    <p>Welcome to our spectacular web page with literally nothing special here.</p>
+    {renderMenu(onRouteClick)}
+  </section>;
 }
 
 function renderAboutPage(onRouteClick) {
-  return h('section.about', [
-    h('h1', 'Read more about us'),
-    h('p', 'This is the page where we describe ourselves.'),
-    h('p', 'In reality, I have no idea what I\'m doing.'),
-    renderMenu(onRouteClick)
-  ]);
+  return <section className="about">
+    <h1>Read more about us</h1>
+    <p>This is the page where we describe ourselves.</p>
+    <p>In reality, I have no idea what I'm doing.</p> {/*'close quote*/}
+    {renderMenu(onRouteClick)}
+  </section>;
 }
 
 let App = Cycle.component('App', function (interactions, props) {
@@ -56,7 +46,7 @@ let App = Cycle.component('App', function (interactions, props) {
       switch (route) {
         case '/': return renderHomePage(onRouteClick);
         case '/about': return renderAboutPage(onRouteClick);
-        default: return h('div', `Unknown page ${route}`);
+        default: return <div>Unknown page {route}</div>
       }
     });
 });

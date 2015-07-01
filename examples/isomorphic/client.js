@@ -1,6 +1,6 @@
 'use strict';
 let Cycle = require('../../src/cycle');
-let React = Cycle.React;
+let React = require('react');
 let {App} = require('./app');
 
 React.render(
