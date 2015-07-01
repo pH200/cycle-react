@@ -112,7 +112,7 @@ describe('Rendering', function () {
     it('should catch events from the inner span', function (done) {
       function computer(interactions) {
         interactions.get('spanClick').subscribe(function (ev) {
-          assert.ok(/Wrapped by span/.test(ev.target.innerText));
+          assert.ok(/Wrapped by span/.test(ev.target.textContent));
           done();
         });
         return Rx.Observable.just(

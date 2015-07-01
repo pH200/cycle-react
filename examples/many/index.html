@@ -30,7 +30,7 @@
         var diff = t1 - t0;
         console.log("Call to doSomething took " + diff + " milliseconds.")
         var benchmarkResult = document.querySelector('.benchmark-result');
-        benchmarkResult.innerText = Math.round(diff) + 'ms';
+        benchmarkResult.textContent = Math.round(diff) + 'ms';
       }
       var perfBtn = document.querySelector('.perf-btn');
       perfBtn.onclick = run;
