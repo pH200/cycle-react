@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach */
 let assert = require('assert');
-let run = require('./lib/run');
+let {run} = require('@cycle/core');
 let Cycle = require('../../src/cycle');
 let {Rx, React} = Cycle;
 
