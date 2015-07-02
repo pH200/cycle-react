@@ -5,19 +5,24 @@
 Add feature: `props.getAll()` returns the Observable of the whole properties object
 [#10]
 
-Alternatively, you can use `props.get('*')` or simply `props` for the exact same effect
+> Alternatively, you can use `props.get('*')` or simply `props` for the exact same effect.
+
+Breaking change: `props.get(propertyName)` no longer does deep-equal comparison
+for the target property
+
+> Use `props.get('*')` or `props` if you have changes inside a nested object.
 
 Breaking change: The `h` hyperscript helper has been removed [#11]
 
 Breaking change: Interactions API no longer uses selector for querying events
 [#8, #12]
 
-The selector API cannot handle both Cycle-React components and other React
+> The selector API cannot handle both Cycle-React components and other React
 components that use event handlers. We want to keep the compatibility with
 the original React while not confusing developers. Therefore, the selector API
 has been removed in favor of event handler API.
 
-The migration guide can be found below.
+> The migration guide can be found below.
 
 Breaking change: `on` prefix is no longer appended to event handlers for
 Cycle-React components
