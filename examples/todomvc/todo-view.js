@@ -28,17 +28,17 @@ module.exports = function view(todos$, interactions) {
   });
 
   const MainSection = Cycle.component('MainSection', function (_, props) {
-    return props.get('todosData').map(todosData => {
-      let allCompleted = todosData.list.reduce((x, y) => x && y.completed, true);
-      let style = {display: todosData.list.size ? '' : 'none'};
+    return props.distinctUntilChanged().map(({list, filterFn}) => {
+      let allCompleted = list.reduce((x, y) => x && y.completed, true);
+      let style = {display: list.size ? '' : 'none'};
       return <section id="main" style={style}>
         <input id="toggle-all"
                type="checkbox"
                checked={allCompleted}
                onChange={interactions.listener('onToggleAll')} />
         <ul id="todo-list">
-          {todosData.list
-            .filter(todosData.filterFn)
+          {list
+            .filter(filterFn)
             .map(item =>
               <TodoItem key={item.get('id')}
                         todoid={item.get('id')}
@@ -66,11 +66,10 @@ module.exports = function view(todos$, interactions) {
   });
 
   const Footer = Cycle.component('Footer', function (_, props) {
-    return props.get('todosData').map(todosData => {
-      let amountCompleted = todosData.list
-        .count(todoData => todoData.get('completed'));
-      let amountActive = todosData.list.size - amountCompleted;
-      let style = {display: todosData.list.size ? '' : 'none'};
+    return props.distinctUntilChanged().map(({list, filter}) => {
+      let amountCompleted = list.count(item => item.get('completed'));
+      let amountActive = list.size - amountCompleted;
+      let style = {display: list.size ? '' : 'none'};
 
       return <footer id="footer" style={style}>
         <span id="todo-count">
@@ -78,19 +77,19 @@ module.exports = function view(todos$, interactions) {
         </span>
         <ul id="filters">
           <li>
-            <a className={todosData.filter === '' ? 'selected' : ''}
+            <a className={filter === '' ? 'selected' : ''}
                href="#/">
               All
             </a>
           </li>
           <li>
-            <a className={todosData.filter === 'active' ? 'selected' : ''}
+            <a className={filter === 'active' ? 'selected' : ''}
                href="#/active">
               Active
             </a>
           </li>
           <li>
-            <a className={todosData.filter === 'completed' ? 'selected' : ''}
+            <a className={filter === 'completed' ? 'selected' : ''}
                href="#/completed">
               Completed
             </a>
@@ -105,8 +104,8 @@ module.exports = function view(todos$, interactions) {
   return todos$.map(todos =>
     <div>
       <Header input={todos.input} />
-      <MainSection todosData={todos} />
-      <Footer todosData={todos} />
+      <MainSection list={todos.list} filterFn={todos.filterFn} />
+      <Footer list={todos.list} filter={todos.filter} />
     </div>
   );
 };
