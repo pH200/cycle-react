@@ -451,12 +451,12 @@ describe('Component', function () {
     );
   });
 
-  it('should accept vtree as function if bindThis was set', function (done) {
+  it('should accept vtree as function and "ref" if "bindThis" was set', function (done) {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
       vtreeController$.subscribe(() => {
-        let editField = Cycle.React.findDOMNode(self.refs.theRef);
+        let editField = React.findDOMNode(self.refs.theRef);
         assert.notStrictEqual(editField, null);
         assert.strictEqual(editField.tagName, 'H3');
         done();
