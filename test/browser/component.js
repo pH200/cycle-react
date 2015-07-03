@@ -11,7 +11,7 @@ function createRenderTarget() {
   return element;
 }
 
-describe('Custom Elements', function () {
+describe('Component', function () {
   beforeEach(function () {
     let testDivs = Array.prototype.slice.call(document.querySelectorAll('.cycletest'));
     testDivs.forEach(function (x) {

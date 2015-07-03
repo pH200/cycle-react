@@ -1,5 +1,5 @@
 'use strict';
 require('../common/cycle.js');
-require('./custom-elements.js');
+require('./component.js');
 require('./render.js');
 require('./driver.js');
