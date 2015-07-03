@@ -17,10 +17,6 @@ function determineFilter(todosData, route) {
   });
 }
 
-function mapOrder(item) {
-  return item.get('order');
-}
-
 function makeModification$(intent) {
   let changeInputMod$ = intent.changeInput$.map((content) => (todosData) => {
     return todosData.set('input', content);
@@ -31,26 +27,28 @@ function makeModification$(intent) {
   });
 
   let insertTodoMod$ = intent.insertTodo$.map((todoTitle) => (todosData) => {
-    let maxOrderItem = todosData.get('list').maxBy(mapOrder);
-    let order = maxOrderItem ? (maxOrderItem.get('order') + 1) : 0;
     return todosData.withMutations(m => {
-      let id = cuid();
-      m.setIn(['list', id], Map({
-        id: id,
+      m.update('list', list => list.push(Map({
+        id: cuid(),
         title: todoTitle,
-        completed: false,
-        order: order
-      }));
+        completed: false
+      })));
       m.set('input', '');
     });
   });
 
   let editTodoMod$ = intent.editTodo$.map((evdata) => (todosData) => {
-    return todosData.setIn(['list', evdata.id, 'title'], evdata.content);
+    return todosData.update('list', list => {
+      let index = list.findIndex(item => item.get('id') === evdata.id);
+      return list.setIn([index, 'title'], evdata.content);
+    });
   });
 
   let toggleTodoMod$ = intent.toggleTodo$.map((todoid) => (todosData) => {
-    return todosData.updateIn(['list', todoid, 'completed'], completed => !completed);
+    return todosData.update('list', list => {
+      let index = list.findIndex(item => item.get('id') === todoid);
+      return list.updateIn([index, 'completed'], completed => !completed);
+    });
   });
 
   let toggleAllMod$ = intent.toggleAll$.map(() => (todosData) => {
@@ -58,18 +56,19 @@ function makeModification$(intent) {
       .every(item => item.get('completed'));
     return todosData.update(
       'list',
-      list => list.map(item => item.set('completed', !allAreCompleted)).toMap()
+      list => list.map(item => item.set('completed', !allAreCompleted)).toList()
     );
   });
 
   let deleteTodoMod$ = intent.deleteTodo$.map((todoid) => (todosData) => {
-    return todosData.deleteIn(['list', todoid]);
+    let index = todosData.get('list').findIndex(item => item.get('id') === todoid);
+    return todosData.deleteIn(['list', index]);
   });
 
   let deleteCompletedsMod$ = intent.deleteCompleteds$.map(() => (todosData) => {
     return todosData.update(
       'list',
-      list => list.filter(item => !item.get('completed')).toMap()
+      list => list.filter(item => !item.get('completed')).toList()
     );
   });
 
@@ -86,10 +85,7 @@ function todoModel(intent, source) {
   return source.concat(modification$)
     .scan((todosData, modFn) => modFn(todosData))
     .combineLatest(route$, determineFilter)
-    .map(todosData => {
-      let data = todosData.toObject();
-      return data;
-    })
+    .map(todosData => todosData.toObject())
     .shareReplay(1);
 }
 

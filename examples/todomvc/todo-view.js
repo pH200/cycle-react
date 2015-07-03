@@ -28,10 +28,6 @@ module.exports = function view(todos$, interactions) {
   });
 
   const MainSection = Cycle.component('MainSection', function (_, props) {
-    function mapOrder(item) {
-      return item.get('order');
-    }
-
     return props.get('todosData').map(todosData => {
       let allCompleted = todosData.list.reduce((x, y) => x && y.completed, true);
       let style = {display: todosData.list.size ? '' : 'none'};
@@ -43,7 +39,6 @@ module.exports = function view(todos$, interactions) {
         <ul id="todo-list">
           {todosData.list
             .filter(todosData.filterFn)
-            .sortBy(mapOrder)
             .map(item =>
               <TodoItem key={item.get('id')}
                         todoid={item.get('id')}
