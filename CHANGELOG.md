@@ -1,16 +1,19 @@
 # Changelog
 
-## 1.0.0-beta2
+## 1.0.0-beta3
 
 Add feature: `props.getAll()` returns the Observable of the whole properties object
 [#10]
 
 > Alternatively, you can use `props.get('*')` or simply `props` for the exact same effect.
 
-Breaking change: `props.get(propertyName)` no longer does deep-equal comparison
-for the target property
+Breaking change: `props.get(propertyName)` uses (x === y) comparison instead of
+deep-equal comparison for the target property
 
 > Use `props.get('*')` or `props` if you have changes inside a nested object.
+
+> Alternatively, you can provide the customized comparer by
+`props.get(name, (x, y) => {})`
 
 Breaking change: The `h` hyperscript helper has been removed [#11]
 
