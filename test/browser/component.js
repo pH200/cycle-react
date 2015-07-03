@@ -384,6 +384,47 @@ describe('Component', function () {
     number$.request(1);
   });
 
+  it('should emit events for dynamic event handlers', function (done) {
+    let number$ = Rx.Observable.of(123, 456).controlled();
+    let customElementSwitch$ = Rx.Observable.range(0, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.component('MyElement', function () {
+      return {
+        view: Rx.Observable.just(<h3 className="myelementclass">foo</h3>),
+        events: {
+          onMyEvent: number$
+        }
+      };
+    });
+    // Use the custom element
+    let Root = Cycle.component('Root', function (interactions) {
+      let onmyevent$ = interactions.get('myevent');
+      let vtree$ = customElementSwitch$.map(number => {
+        if (number === 0) {
+          return <MyElement />;
+        }
+        return <MyElement onMyEvent={interactions.listener('myevent')} />;
+      });
+      onmyevent$.subscribe(function (x) {
+        assert.strictEqual(x, 456);
+        done();
+      });
+      return vtree$;
+    });
+    customElementSwitch$.request(1);
+    Cycle.applyToDOM(createRenderTarget(), Root);
+    // Make assertions
+    number$.request(1);
+    let myElement = document.querySelector('.myelementclass');
+    assert.notStrictEqual(myElement, null);
+    assert.notStrictEqual(typeof myElement, 'undefined');
+    assert.strictEqual(myElement.tagName, 'H3');
+    // pop event handler
+    customElementSwitch$.request(1);
+    // emit event
+    number$.request(1);
+  });
+
   it('should not silently catch exceptions inside of custom elements', function () {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
