@@ -7,11 +7,11 @@
     <title>Many elements Example</title>
   </head>
   <body>
-    <div class="benchmark">
+    <!-- <div class="benchmark">
       <button class="perf-btn">Benchmark</button>
       <div class="benchmark-result"></div>
       <p>Performance may vary when NODE_ENV=production is used for React</p>
-    </div>
+    </div> -->
     <div class="js-container"></div>
     <hr />
     <p>
@@ -33,7 +33,9 @@
         benchmarkResult.textContent = Math.round(diff) + 'ms';
       }
       var perfBtn = document.querySelector('.perf-btn');
-      perfBtn.onclick = run;
+      if (perfBtn) {
+        perfBtn.onclick = run;
+      }
     }
     initPerfButton();
     </script>

@@ -1,27 +1,25 @@
 const Cycle = require('cycle-react');
+const Rx = Cycle.Rx;
 const React = require('react');
-const PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 const ManyItem = require('./many-component');
 
 function manyView(items$, interactions) {
-  const TopButtons = React.createClass({
-    mixins: [PureRenderMixin],
-    render() {
-      return <div>
-        <button className="add-one-btn"
-                onClick={interactions.listener('AddOne')}>
-          Add New Item
-        </button>
-        <button className="add-many-btn"
-                onClick={interactions.listener('AddMany')}>
-          Add Many Items
-        </button>
-      </div>;
-    }
-  });
+  const TopButtons = Cycle.component('TopButtons', () => Rx.Observable.just(
+    <div>
+      <button className="add-one-btn"
+              onClick={interactions.listener('AddOne')}>
+        Add New Item
+      </button>
+      <button className="add-many-btn"
+              onClick={interactions.listener('AddMany')}>
+        Add Many Items
+      </button>
+    </div>
+  ));
 
-  function vrenderItem(item) {
-    return <ManyItem className="item" key={item.id}
+  function renderItem(item) {
+    return <ManyItem className="item"
+                     key={item.id}
                      itemid={item.id}
                      color={item.color}
                      width={item.width}
@@ -33,7 +31,7 @@ function manyView(items$, interactions) {
   return items$.map(function renderElements(itemsData) {
     return <div>
       <TopButtons />
-      {itemsData.map(vrenderItem)}
+      {itemsData.map(renderItem)}
     </div>;
   });
 }
