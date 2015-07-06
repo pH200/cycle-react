@@ -4,9 +4,11 @@ let Rx = Cycle.Rx;
 let ESC_KEY = 27;
 
 let TodoItem = Cycle.component('TodoItem', function (interactions, props) {
-  function onSubmitHandler(e){
+  function onSubmitHandler(e) {
     e.preventDefault();
+    /*eslint-disable dot-notation */
     interactions.listener('onSubmit')(e.target.elements['contentedit'].value);
+    /*eslint-enable dot-notation */
   }
 
   let id$ = props.get('todoid').shareReplay(1);

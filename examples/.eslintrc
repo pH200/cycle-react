@@ -1,0 +1,15 @@
+{
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "strict": 0,
+    "no-unused-vars": 0,
+    "max-nested-callbacks": 0,
+    "global-strict": 0,
+    "func-names": 0,
+    "new-cap": 0
+  }
+}

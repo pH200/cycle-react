@@ -7,7 +7,9 @@ module.exports = function view(todos$, interactions) {
   const Header = Cycle.component('Header', function (_, props) {
     function onSubmitHandler(e) {
       e.preventDefault();
+      /*eslint-disable dot-notation */
       interactions.listener('onInputSubmit')(e.target.elements['newTodo'].value);
+      /*eslint-enable dot-notation */
     }
     return props.get('input').map(input =>
       <header id="header">
@@ -62,7 +64,7 @@ module.exports = function view(todos$, interactions) {
         </button>;
       }
       return <div />;
-    })
+    });
   });
 
   const Footer = Cycle.component('Footer', function (_, props) {

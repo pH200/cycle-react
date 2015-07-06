@@ -32,7 +32,7 @@ function composingEventObservables(events, self) {
 function component(
   displayName,
   definitionFn,
-  options,
+  componentOptions,
   observer,
   eventObserver) {
   if (typeof displayName !== 'string') {
@@ -41,7 +41,7 @@ function component(
   if (typeof definitionFn !== 'function') {
     throw new Error('Invalid definitionFn');
   }
-  options = options || {};
+  var options = componentOptions || {};
   // The option for the default root element type.
   var rootTagName = options.rootTagName || 'div';
   // The option for passing "this" to definitionFn

@@ -1,4 +1,4 @@
-/* jshint browser:true */
+/* eslint-env browser */
 'use strict';
 var React = require('react');
 var component = require('./create-react-class');
@@ -6,7 +6,7 @@ var component = require('./create-react-class');
 function isElement(obj) {
   return (
     typeof HTMLElement === 'object' ?
-    obj instanceof HTMLElement || obj instanceof DocumentFragment : //DOM2
+    obj instanceof HTMLElement :
     obj && typeof obj === 'object' && obj !== null &&
     (obj.nodeType === 1 || obj.nodeType === 11) &&
     typeof obj.nodeName === 'string'

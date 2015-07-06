@@ -44,18 +44,17 @@ let App = Cycle.component('App', function (interactions, props) {
       return state;
     });
 
-  return ongoingContext$
-    .map(({route}) => {
-      if (typeof window !== 'undefined') {
-        window.history.pushState(null, '', route);
-      }
-      let onRouteClick = interactions.listener('RouteClick');
-      switch (route) {
-        case '/': return <HomePage routeClickHandler={onRouteClick} />
-        case '/about': return <AboutPage routeClickHandler={onRouteClick} />
-        default: return <div>Unknown page {route}</div>
-      }
-    });
+  return ongoingContext$.map(({route}) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', route);
+    }
+    let onRouteClick = interactions.listener('RouteClick');
+    switch (route) {
+      case '/': return <HomePage routeClickHandler={onRouteClick} />;
+      case '/about': return <AboutPage routeClickHandler={onRouteClick} />;
+      default: return <div>Unknown page {route}</div>;
+    }
+  });
 });
 
 module.exports = {
