@@ -130,7 +130,7 @@ describe('Cycle.applyToDOM', function () {
     assert.doesNotThrow(function () {
       span.click();
     });
-  })
+  });
 
   it('should not set props.className to the root element', function () {
     let MyElement = Cycle.component('MyElement', Fixture89.myelement);

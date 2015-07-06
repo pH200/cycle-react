@@ -30,7 +30,7 @@ describe('renderAsHTML()', function () {
         events: {
           myevent: Rx.Observable.just(123).doOnNext(n => log = n)
         }
-      }
+      };
     });
     let html$ = Cycle.renderAsHTML(MyElement);
     html$.subscribe(function (html) {

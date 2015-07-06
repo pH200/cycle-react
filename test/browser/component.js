@@ -95,7 +95,6 @@ describe('Component', function () {
     assert.strictEqual(myElement.style.color, 'rgb(255, 0, 0)');
   });
 
-
   it('should recognize and create two unrelated elements', function () {
     // Make the first custom element
     let MyElement1 = Cycle.component('MyElement1', function () {
@@ -431,7 +430,7 @@ describe('Component', function () {
     let MyElement = Cycle.component('MyElement', function () {
       return vtreeController$.map(control => {
         if (control === 0) {
-          return <h3 className="myelementclass" />
+          return <h3 className="myelementclass" />;
         }
         throw new Error('The error');
       });
@@ -460,7 +459,7 @@ describe('Component', function () {
         assert.notStrictEqual(editField, null);
         assert.strictEqual(editField.tagName, 'H3');
         done();
-      })
+      });
       return Rx.Observable.just(() =>
         <h3 className="myelementclass"
             ref="theRef" />
@@ -486,7 +485,7 @@ describe('Component', function () {
       return theSwitch === 0 ?
         <MyElement /> :
         <div />;
-    })
+    });
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
@@ -515,16 +514,20 @@ describe('Component', function () {
       return {
         view: Rx.Observable.just(<h3 className="myelementclass" />),
         events: {
-          myevent$: number$.do(i => log.push(i))
+          onMyEvent: number$.do(i => log.push(i))
         }
       };
     });
     // Use the custom element
     let vtree$ = customElementSwitch$.map(theSwitch => {
+      function onMyEventHandler(ev) {
+        assert.ok(ev === 1 || ev === 2);
+        assert.notStrictEqual(ev, 3);
+      }
       return theSwitch === 0 ?
-        <MyElement /> :
+        <MyElement onMyEvent={onMyEventHandler} /> :
         <div />;
-    })
+    });
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
@@ -532,12 +535,6 @@ describe('Component', function () {
     assert.notStrictEqual(myElement, null);
     assert.notStrictEqual(typeof myElement, 'undefined');
     assert.strictEqual(myElement.tagName, 'H3');
-
-    Rx.Observable.fromEvent(myElement, 'myevent')
-      .take(3)
-      .subscribe(function (ev){
-        assert.notStrictEqual(ev.detail, 3);
-      });
 
     // Trigger the event
     number$.request(1);
@@ -570,7 +567,7 @@ describe('Component', function () {
       return theSwitch === 0 ?
         <MyElement /> :
         <div />;
-    })
+    });
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
@@ -605,7 +602,7 @@ describe('Component', function () {
       return theSwitch === 0 ?
         <MyElement /> :
         <div />;
-    })
+    });
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
@@ -637,7 +634,7 @@ describe('Component', function () {
       return theSwitch === 0 ?
         <MyElement /> :
         <div />;
-    })
+    });
     Cycle.applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);

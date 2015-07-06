@@ -49,7 +49,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "lint": "eslint src examples",
+    "lint": "eslint src examples test",
     "test-common": "mocha --compilers js:babel/register test/common",
     "pretest-onlynode": "mkdir -p test/node",
     "test-onlynode": "mocha --compilers js:babel/register test/node",
