@@ -5,13 +5,14 @@ let express = require('express');
 let browserify = require('browserify');
 let serialize = require('serialize-javascript');
 let {Rx} = Cycle;
+let fromStream = require('../lib/rx-fromstream');
 let {App} = require('./app');
 
 function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   return `<!doctype html>
   <html>
   <head>
-    <title>Cycle Isomorphism Example</title>
+    <title>Cycle-React Isomorphism Example</title>
   </head>
   <body>
     <div class="app-container">
@@ -24,24 +25,18 @@ function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   `;
 }
 
-let clientBundle$ = Rx.Observable.create(observer => {
-  console.log('Compiling client bundle...');
-  let bundleStream = browserify()
-    .transform('babelify')
-    .transform({global: true}, 'uglifyify')
-    .add('./client.js')
-    .bundle();
-  bundleStream.on('data', function (data) {
-    observer.onNext(data);
-  });
-  bundleStream.on('error', function (err) {
-    observer.onError(err);
-  });
-  bundleStream.on('end', function () {
-    observer.onCompleted();
-    console.log('Client bundle successfully compiled.');
-  });
-}).reduce((acc, x) => acc + x).shareReplay(1);
+let clientBundle$ = Rx.Observable.just('./client.js')
+  .tap(js => console.log('Compiling client bundle ' + js))
+  .flatMap(js => {
+    let bundleStream = browserify()
+      .transform('babelify')
+      .transform({global: true}, 'uglifyify')
+      .add(js)
+      .bundle();
+    return fromStream(bundleStream).reduce((acc, x) => acc + x);
+  })
+  .tap(() => console.log('Client bundle successfully compiled.'))
+  .shareReplay(1);
 // pre-compile bundle
 // clientBundle$.subscribe();
 
