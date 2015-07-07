@@ -15,6 +15,11 @@ deep-equal comparison for the target property
 > Alternatively, you can provide the customized comparer by
 `props.get(name, (x, y) => {})`
 
+Breaking change: `renderAsHTML` has been removed
+
+> Use `React.renderToString` with `Cycle.component` instead.
+> Examples can be found at `test/node/html-render.js` and `examples/isomorphic`.
+
 Breaking change: The `h` hyperscript helper has been removed [#11]
 
 Breaking change: Interactions API no longer uses selector for querying events

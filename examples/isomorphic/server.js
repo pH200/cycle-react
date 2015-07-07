@@ -15,9 +15,7 @@ function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
     <title>Cycle-React Isomorphism Example</title>
   </head>
   <body>
-    <div class="app-container">
-      ${vtree}
-    </div>
+    <div class="app-container">${vtree}</div>
     <script>window.appContext = ${serialize(context)};</script>
     <script>${clientBundle}</script>
   </body>
@@ -53,9 +51,11 @@ server.use(function (req, res) {
   console.log(`req: ${req.method} ${req.url}`);
 
   let context = {route: req.url};
-  let html$ = Cycle.renderAsHTML(
-    Rx.Observable.just(React.createElement(App, {context: context}))
-  ).combineLatest(
+  let componentHtml = React.renderToString(
+    React.createElement(App, {context: context})
+  );
+  let html$ = Rx.Observable.combineLatest(
+    Rx.Observable.just(componentHtml),
     Rx.Observable.just(context),
     clientBundle$,
     wrapVTreeWithHTMLBoilerplate

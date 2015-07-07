@@ -9,10 +9,6 @@ describe('Cycle', function () {
       assert.strictEqual(typeof Cycle.applyToDOM, 'function');
     });
 
-    it('should have `renderAsHTML`', function () {
-      assert.strictEqual(typeof Cycle.renderAsHTML, 'function');
-    });
-
     it('should have `component`', function () {
       assert.strictEqual(typeof Cycle.component, 'function');
     });

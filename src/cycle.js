@@ -1,6 +1,5 @@
 'use strict';
 var applyToDOM = require('./render-dom');
-var renderAsHTML = require('./render-html');
 var component = require('./create-react-class');
 var makeDOMDriver = require('./cycle-driver');
 var React = require('react');
@@ -37,19 +36,6 @@ var Cycle = {
    * and outputs an Observable of React elements.
    */
   applyToDOM: applyToDOM,
-
-  /**
-   * Converts a given Observable of React elements (`vtree$`) into an
-   * Observable of corresponding HTML strings (`html$`). The provided `vtree$`
-   * must complete (must call onCompleted on its observers) in finite time,
-   * otherwise the output `html$` will never emit an HTML string.
-   *
-   * @param {Rx.Observable} vtree$ Observable of React elements.
-   * @return {Rx.Observable} an Observable emitting a string as the HTML
-   * renderization of the React element.
-   * @function renderAsHTML
-   */
-  renderAsHTML: renderAsHTML,
 
   /**
    * Takes a `DefinitionFn` function which outputs an Observable of React

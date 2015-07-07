@@ -1,7 +1,6 @@
 # Cycle-React API
 
 - [`applyToDOM`](#applyToDOM)
-- [`renderAsHTML`](#renderAsHTML)
 - [`component`](#component)
 - [`makeDOMDriver`](#makeDOMDriver)
 - [`React`](#React)
@@ -28,23 +27,6 @@ interactions.get('MyButtonClick').map(ev => ...);
 
 - `container :: String|HTMLElement` the DOM selector for the element (or the element itself) to contain the rendering of the VTrees.
 - `computer :: Function` a function that takes `interactions` as input and outputs an Observable of React elements.
-
-- - -
-
-### <a id="renderAsHTML"></a> `renderAsHTML(vtree$)`
-
-Converts a given Observable of React elements (`vtree$`) into an
-Observable of corresponding HTML strings (`html$`). The provided `vtree$`
-must complete (must call onCompleted on its observers) in finite time,
-otherwise the output `html$` will never emit an HTML string.
-
-#### Arguments:
-
-- `vtree$ :: RxObservable` Observable of React elements.
-
-#### Return:
-
-*(Rx.Observable)* an Observable emitting a string as the HTML renderization of the React element.
 
 - - -
 
