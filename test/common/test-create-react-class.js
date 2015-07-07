@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it */
 let assert = require('assert');
-let Cycle = require('../../src/cycle');
+let Cycle = require('../../');
 let Rx = Cycle.Rx;
 
 describe('component', function () {

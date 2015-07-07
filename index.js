@@ -1,7 +1,7 @@
 'use strict';
-var applyToDOM = require('./render-dom');
-var component = require('./create-react-class');
-var makeDOMDriver = require('./cycle-driver');
+var applyToDOM = require('./src/render-dom');
+var component = require('./src/create-react-class');
+var makeDOMDriver = require('./src/cycle-driver');
 var React = require('react');
 var Rx = require('rx');
 

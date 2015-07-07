@@ -1,6 +1,6 @@
 'use strict';
-let Cycle = require('../../../src/cycle');
-let {Rx, React} = Cycle;
+let Rx = require('rx');
+let React = require('react');
 
 function myelement(interactions, props) {
   return props

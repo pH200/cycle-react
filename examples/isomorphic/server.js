@@ -1,5 +1,5 @@
 'use strict';
-let Cycle = require('../../src/cycle');
+let Cycle = require('../../');
 let React = require('react');
 let express = require('express');
 let browserify = require('browserify');

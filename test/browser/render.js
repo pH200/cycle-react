@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach */
 let assert = require('assert');
-let Cycle = require('../../src/cycle');
+let Cycle = require('../../');
 let Fixture89 = require('./fixtures/issue-89');
 let {Rx, React} = Cycle;
 

@@ -1,5 +1,5 @@
 'use strict';
-let Cycle = require('../../src/cycle');
+let Cycle = require('../../');
 let React = require('react');
 
 let Menu = Cycle.component('Menu', function (_, props) {

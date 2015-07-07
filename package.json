@@ -21,7 +21,7 @@
     "frontend",
     "functional"
   ],
-  "main": "src/cycle.js",
+  "main": "index.js",
   "dependencies": {
     "rx": "2.5.3"
   },
@@ -56,7 +56,7 @@
     "test-browser": "testem",
     "test": "npm run lint && npm run test-node && npm run test-browser -- ci -l PhantomJS",
     "travis-test": "testem launchers && npm run lint && npm run test-node && testem ci -s Chromium",
-    "browserify": "NODE_ENV=production browserify src/cycle.js --standalone Cycle -o dist/cycle-react.js",
+    "browserify": "NODE_ENV=production browserify index.js --standalone Cycle -o dist/cycle-react.js",
     "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
     "examples": "node examples/server.js"
