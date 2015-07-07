@@ -93,20 +93,36 @@ Cycle.applyToDOM('.js-container', Timer);
 ## Learn more
 
 Cycle-React is a React-style implementation of Cycle.js, so we have the same
-concept of handling user interactions. More information of this concept can be
-found at: http://cycle.js.org/
+concept of handling user interactions. Learn more on:
+http://cycle.js.org/dialogue.html
+
+In addition, we're working on the documentation site for Cycle-React with more
+useful examples, too. Stay tuned!
 
 ## Cycle.js Driver
 
-The original Cycle.js has the
-[driver architecture](http://cycle.js.org/drivers.html) starting from
-[v0.23](https://github.com/cyclejs/cycle-core/releases/tag/v0.23.0).
-Cycle-React provides a DOM driver(powered by React, of course) for Cycle.js.
+Cycle.js (not Cycle-React) has the
+[driver architecture](http://cycle.js.org/drivers.html) to externalize the
+side-effects. Cycle Web, for example, is a driver externalizes DOM environment.
+And Cycle-React provides a DOM driver (powered by React, of course)
+for Cycle.js, too.
 
 Details can be found at
 ["Using Cycle-React's DOM driver for Cycle.js"](/docs/cycle-js-driver.md).
 
 ## FAQ
+
+### Can I use Cycle-React with Flux (e.g. [redux](https://github.com/gaearon/redux))
+
+Absolutely. Since Cycle-React's `component` creates native React components,
+there's nothing stopping you from using Flux architecture.
+
+**HOWEVER**, we don't really recommend to use Flux when you already had Rx or
+other event stream libraries at your disposal. Instead, we recommend the MVI
+architecture which also achieves unidirectional data flow. See
+["Reactive MVC and the Virtual DOM"](http://futurice.com/blog/reactive-mvc-and-the-virtual-dom)
+and ["Good bye Flux, welcome Bacon/Rx?"](https://medium.com/@milankinen/good-bye-flux-welcome-bacon-rx-23c71abfb1a7)
+for more details.
 
 ### Can I use Cycle-React with [react-hot-loader](https://github.com/gaearon/react-hot-loader)?
 
@@ -116,7 +132,7 @@ Yes. And no extra configuration needed.
 
 ### Can I use Cycle-React with other React components and libraries?
 
-Yes. You can even use Cycle-React with your current React apps. Because
+Yes. You can also integrate Cycle-React with your current React apps. Because
 `component` creates the native React component for you.
 
 Examples for integrating Cycle-React with other libraries are work in progress.
@@ -133,8 +149,6 @@ for guidelines.
 * Ask "_how do I...?_" questions in Cycle-React's Gitter: <br/>
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 * Propose and discuss significant changes as a GitHub issues
-* In addition, more resources can be found at the official website of
-[Cycle.js](http://cycle.js.org/)
 
 ## License
 

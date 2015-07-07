@@ -39,7 +39,6 @@
     "eslint": "^0.24.0",
     "express": "^4.13.0",
     "immutable": "^3.7.4",
-    "markdox": "~0.1.9",
     "mocha": "^2.2.5",
     "react": "^0.13.3",
     "testem": "~0.8.3",
@@ -60,7 +59,6 @@
     "browserify": "NODE_ENV=production browserify src/cycle.js --standalone Cycle -o dist/cycle-react.js",
     "uglify": "uglifyjs dist/cycle-react.js -o dist/cycle-react.min.js",
     "dist": "mkdir -p dist && npm run browserify && npm run uglify",
-    "docs": "node ./scripts/make-api-docs.js",
     "examples": "node examples/server.js"
   }
 }

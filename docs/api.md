@@ -1,19 +1,11 @@
-
-# `Cycle` object API
+# Cycle-React API
 
 - [`applyToDOM`](#applyToDOM)
-
 - [`renderAsHTML`](#renderAsHTML)
-
 - [`component`](#component)
-
 - [`makeDOMDriver`](#makeDOMDriver)
-
 - [`React`](#React)
-
 - [`Rx`](#Rx)
-
-- [`h`](#h)
 
 ### <a id="applyToDOM"></a> `applyToDOM(container, computer)`
 
@@ -147,13 +139,3 @@ A shortcut to the root object of React.
 A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
 
 - - -
-
-### <a id="h"></a> `h`
-
-This is a helper for creating VTrees in Views. The API is identical to
-[virtual-hyperscript](
-https://github.com/Matt-Esch/virtual-dom/tree/master/virtual-hyperscript)
-but returns React element tree instead.
-
-- - -
-
