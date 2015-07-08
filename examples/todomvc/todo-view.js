@@ -12,11 +12,11 @@ const Header = Cycle.component('Header', function (interactions, props) {
 
   return {
     view: props.get('input').map(input =>
-      <header id="header">
+      <header>
         <h1>todos</h1>
         <form className="new-todo-form"
               onSubmit={interactions.listener('onSubmit')}>
-          <input id="new-todo"
+          <input className="new-todo"
                  type="text"
                  onKeyUp={interactions.listener('onKeyUp')}
                  onChange={interactions.listener('onChange')}
@@ -44,13 +44,13 @@ const MainSection = Cycle.component('MainSection', function (interactions, props
   return {
     view: props.distinctUntilChanged().map(({list, filterFn}) => {
       let allCompleted = list.reduce((x, y) => x && y.completed, true);
-      let style = {display: list.size ? '' : 'none'};
-      return <section id="main" style={style}>
-        <input id="toggle-all"
+      let style = {display: list.size ? 'inherit' : 'none'};
+      return <section className="main" style={style}>
+        <input className="toggle-all"
                type="checkbox"
                checked={allCompleted}
                onChange={interactions.listener('onToggleAll')} />
-        <ul id="todo-list">
+        <ul className="todo-list">
           {list
             .filter(filterFn)
             .map(item =>
@@ -80,7 +80,7 @@ const CompleteButton = Cycle.component('CompleteButton', function (interactions,
   return {
     view: props.get('amountCompleted').map(amountCompleted => {
       if (amountCompleted > 0) {
-        return <button id="clear-completed"
+        return <button className="clear-completed"
                        onClick={interactions.listener('onClick')}>
           Clear completed ({amountCompleted})
         </button>;
@@ -98,13 +98,13 @@ const Footer = Cycle.component('Footer', function (interactions, props) {
   let view = props.distinctUntilChanged().map(({list, filter}) => {
     let amountCompleted = list.count(item => item.get('completed'));
     let amountActive = list.size - amountCompleted;
-    let style = {display: list.size ? '' : 'none'};
+    let style = {display: list.size ? 'inherit' : 'none'};
 
-    return <footer id="footer" style={style}>
-      <span id="todo-count">
+    return <footer className="footer" style={style}>
+      <span className="todo-count">
         <strong>{amountActive} item{amountActive !== 1 ? 's' : ''} left</strong>
       </span>
-      <ul id="filters">
+      <ul className="filters">
         <li>
           <a className={filter === '' ? 'selected' : ''}
              href="#/">

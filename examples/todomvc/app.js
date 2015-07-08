@@ -12,4 +12,4 @@ function app(interactions) {
   return view(todos$, interactions);
 }
 
-Cycle.applyToDOM('#todoapp', app);
+Cycle.applyToDOM('.todoapp', app);
