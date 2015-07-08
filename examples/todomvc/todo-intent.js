@@ -11,7 +11,8 @@ function todoIntent(interactions) {
     clearInput$: interactions.get('onInputKeyUp')
       .filter(ev => ev.keyCode === ESC_KEY),
     insertTodo$: interactions.get('onInputSubmit')
-      .map(value => String(value).trim()),
+      .map(value => String(value).trim())
+      .filter(value => value !== ''),
     editTodo$: interactions.get('onItemNewContent'),
     toggleTodo$: interactions.get('onItemToggle'),
     toggleAll$: interactions.get('onToggleAll'),

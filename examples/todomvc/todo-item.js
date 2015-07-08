@@ -67,11 +67,13 @@ let TodoItem = Cycle.component('TodoItem', function (interactions, props) {
       onToggle: interactions.get('onToggle')
         .withLatestFrom(id$, (ev, id) => id),
       onDestroy: interactions.get('onDestroy')
+        .merge(stopEdit$.filter(content => content.trim() === ''))
         .withLatestFrom(id$, (ev, id) => id),
       onNewContent: stopEdit$
-        .distinctUntilChanged()
+        .filter(content => content.trim() !== '')
         .withLatestFrom(id$, (content, id) => ({
-          id, content
+          id,
+          content: content.trim()
         }))
     }
   };
