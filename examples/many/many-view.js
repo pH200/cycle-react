@@ -3,20 +3,30 @@ const Rx = Cycle.Rx;
 const React = require('react');
 const ManyItem = require('./many-component');
 
-function manyView(items$, interactions) {
-  const TopButtons = Cycle.component('TopButtons', () => Rx.Observable.just(
-    <div>
-      <button className="add-one-btn"
-              onClick={interactions.listener('AddOne')}>
-        Add New Item
-      </button>
-      <button className="add-many-btn"
-              onClick={interactions.listener('AddMany')}>
-        Add Many Items
-      </button>
-    </div>
-  ));
+const TopButtons = Cycle.component('TopButtons', function (interactions) {
+  let onAddOne = interactions.get('onAddOne');
+  let onAddMany = interactions.get('onAddMany');
+  return {
+    view: Rx.Observable.just(
+      <div>
+        <button className="add-one-btn"
+                onClick={interactions.listener('onAddOne')}>
+          Add New Item
+        </button>
+        <button className="add-many-btn"
+                onClick={interactions.listener('onAddMany')}>
+          Add Many Items
+        </button>
+      </div>
+    ),
+    events: {
+      onAddOne,
+      onAddMany
+    }
+  };
+});
 
+function manyView(items$, interactions) {
   function renderItem(item) {
     return <ManyItem className="item"
                      key={item.id}
@@ -30,7 +40,8 @@ function manyView(items$, interactions) {
 
   return items$.map(function renderElements(itemsData) {
     return <div>
-      <TopButtons />
+      <TopButtons onAddOne={interactions.listener('AddOne')}
+                  onAddMany={interactions.listener('AddMany')} />
       {itemsData.map(renderItem)}
     </div>;
   });
