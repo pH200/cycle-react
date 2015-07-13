@@ -5,7 +5,7 @@ var createEventSubject = require('./event-subject');
 function makeInteractions() {
   var subjects = {};
 
-  function getEventSubject(name) {
+  function get(name) {
     if (name === null || name === (void 0)) {
       throw new Error('Invalid name for the interaction collection.');
     }
@@ -15,23 +15,36 @@ function makeInteractions() {
     return subjects[name];
   }
 
-  return {
-    get: getEventSubject,
-    listener: function listener(name) {
-      var eventSubject = subjects[name];
-      if (!eventSubject && process.env.NODE_ENV !== 'production') {
-        if (typeof console !== 'undefined') {
-          console.warn(
-            'Listening event "' + name + '" before using interactions.get("' +
-            name + '")'
-          );
-        }
+  function listener(name) {
+    var eventSubject = subjects[name];
+    if (!eventSubject && process.env.NODE_ENV !== 'production') {
+      if (typeof console !== 'undefined') {
+        console.warn(
+          'Listening event "' + name + '" before using interactions.get("' +
+          name + '")'
+        );
       }
-      if (!eventSubject) {
-        eventSubject = getEventSubject(name);
-      }
-      return eventSubject.onEvent;
     }
+    if (!eventSubject) {
+      eventSubject = get(name);
+    }
+    return eventSubject.onEvent;
+  }
+
+  function bindListeners(interactionTypes) {
+    var result = {};
+    var names = Object.keys(interactionTypes);
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      result[name] = listener(interactionTypes[name]);
+    }
+    return result;
+  }
+
+  return {
+    get: get,
+    listener: listener,
+    bindListeners: bindListeners
   };
 }
 
