@@ -1,6 +1,8 @@
 # Changelog
 
-## 1.0.0-beta3
+## 1.0.1
+
+MAJOR RELEASE: 1.0.1 is the stable version of Cycle-React.
 
 Add feature: `props.getAll()` returns the Observable of the whole properties object
 [#10]
