@@ -120,7 +120,7 @@ function component(
       this._subscribeCycleComponent();
     },
     componentWillUnmount: function componentWillUnmount() {
-      // componentWillMount is not being called for server
+      // componentWillUnmount is not being called for server
       this._unsubscribeCycleComponent();
     },
     componentDidMount: function componentDidMount() {
