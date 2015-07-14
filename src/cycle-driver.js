@@ -1,9 +1,8 @@
 'use strict';
 var Rx = require('rx');
 var applyToDOM = require('./render-dom');
-var makeInteractions = require('./interactions').makeInteractions;
 
-function makeGet(interactions, rootElem$) {
+function makeGet(rootElem$) {
   return function get(selector) {
     if (selector === ':root') {
       return rootElem$;
@@ -17,14 +16,13 @@ function makeDOMDriver(container) {
       return {};
     }
     var rootElem$ = new Rx.Subject();
-    var interactions = makeInteractions(rootElem$);
     var subscription = definition$.subscribe(function render(definitionFn) {
       var renderMeta = applyToDOM(container, definitionFn);
       rootElem$.onNext(renderMeta.container);
     });
 
     return {
-      get: makeGet(interactions, rootElem$),
+      get: makeGet(rootElem$),
       dispose: function dispose() {
         subscription.dispose();
         rootElem$.dispose();
