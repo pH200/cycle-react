@@ -31,6 +31,7 @@ Breaking change: Interactions API no longer uses selector for querying events
 components that use event handlers. We want to keep the compatibility with
 the original React while not confusing developers. Therefore, the selector API
 has been removed in favor of event handler API.
+> Information of the new interactions API can be found at docs/interactions.md
 
 > The migration guide can be found below.
 
@@ -97,7 +98,7 @@ let MyComponent = Cycle.component('MyComponent', function (interactions, props) 
 // Intentions:
 // Event arguments from Cycle-React components are no longer
 // wrapped by CustomEvent.
-interactions.subject('tick').map(ev => ev);
+interactions.get('tick').map(ev => ev);
 // View:
 // Use interactions.listener(name) to create event handler
 <MyComponent onMyComponentTick={interactions.listener('tick')} />
@@ -105,7 +106,8 @@ interactions.subject('tick').map(ev => ev);
 
 ### Migration
 
-1. Append the "on" prefix to every event observables inside events object
+1. Append the "on" prefix to every event observable inside the events object
+of the component
 2. Rewrite the code that used `interactions.get(selector, eventType)` by using
 `interactions.get(eventName)` and `interactions.listener(eventName)` like the
 example above
