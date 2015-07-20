@@ -11,7 +11,7 @@ function add(x, y) {
 }
 
 function compileExample(exampleName, examplePath) {
-  var cyclePath = path.resolve(__dirname, '../index.js');
+  var cyclePath = path.resolve(__dirname, '../../index.js');
 
   // shareReplay(1) to cache compiled js
   return Rx.Observable.defer(function () {

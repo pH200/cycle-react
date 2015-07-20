@@ -1,8 +1,8 @@
 'use strict';
-var applyToDOM = require('./src/render-dom');
+//var applyToDOM = require('./src/render-dom');
 var createReactClass = require('./src/create-react-class');
-var makeDOMDriver = require('./src/cycle-driver');
-var React = require('react');
+//var makeDOMDriver = require('./src/cycle-driver');
+var React = require('react-native');
 var Rx = require('rx');
 
 var Cycle = {
@@ -35,7 +35,7 @@ var Cycle = {
    * @param {DefinitionFn} computer a function that takes `interactions` as input
    * and outputs an Observable of React elements.
    */
-  applyToDOM: applyToDOM,
+  //applyToDOM: applyToDOM,
 
   /**
    * Takes a `DefinitionFn` function which outputs an Observable of React
@@ -64,7 +64,7 @@ var Cycle = {
    * debugging and testing.
    * @function makeDOMDriver
    */
-  makeDOMDriver: makeDOMDriver,
+  //makeDOMDriver: makeDOMDriver,
 
   /**
    * A shortcut to the root object of React.

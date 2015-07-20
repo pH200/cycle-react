@@ -1,7 +1,7 @@
 /* eslint-env browser */
 'use strict';
 var React = require('react');
-var component = require('./create-react-class');
+var component = require('./create-react-class')(React);
 
 function isElement(obj) {
   return (

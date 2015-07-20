@@ -13,8 +13,6 @@ const Timer = Cycle.component('Timer', function () {
   return Rx.Observable.interval(1000).map(i => <Counter counter={i} />);
 });
 
-Cycle.applyToDOM('.js-container', Timer);
-// or
-// React.render(
-//  React.createElement(Timer),
-//  document.querySelector('.js-container'));
+React.render(
+ React.createElement(Timer),
+ document.querySelector('.js-container'));
