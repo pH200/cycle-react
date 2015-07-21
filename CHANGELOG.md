@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0
+
+Add feature: Support React Native. Thank @cem2ran for the PR.
+
+Breaking change: The peer dependency of React has been removed.
+
+> React 0.13 and React Native 0.7 are the supported versions of Cycle-React.
+> Cycle-React will put the dependency of React back once the isomorphic
+> module of [React 0.14](https://facebook.github.io/react/blog/2015/07/03/react-v0.14-beta-1.html)
+> has been released.
+
+> In addition, Cycle-React will move "applyToDOM" and "makeDOMDriver"
+> into the separated package for the upcoming "react-dom" package.
+
 ## 1.0.1
 
 MAJOR RELEASE: 1.0.1 is the stable version of Cycle-React.
