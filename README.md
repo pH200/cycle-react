@@ -17,7 +17,7 @@ framework called [Cycle.js](https://github.com/cyclejs/cycle-core).
 ## Installing
 
 ```
-npm install cycle-react
+npm install cycle-react react
 ```
 
 ## Example
@@ -99,6 +99,19 @@ http://cycle.js.org/dialogue.html
 In addition, we're working on the documentation site for Cycle-React with more
 useful examples, too. Stay tuned!
 
+## React Native
+
+To use Cycle-React with React Native, import Cycle-React with
+`cycle-react/native`.
+Example can be found at [examples/native](/examples/native)
+
+```js
+var {component, Rx} = require('cycle-react/native');
+var Hello = component('Hello', () =>
+  Rx.Observable.just(<Text>Hello!</Text>)
+);
+```
+
 ## Cycle.js Driver
 
 Cycle.js (not Cycle-React) has the
@@ -149,6 +162,10 @@ for guidelines.
 * Ask "_how do I...?_" questions in Cycle-React's Gitter: <br/>
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pH200/cycle-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 * Propose and discuss significant changes as a GitHub issues
+
+## Contributions and thanks
+
+- [@cem2ran](https://github.com/cem2ran) for adding the support of React Native
 
 ## License
 
