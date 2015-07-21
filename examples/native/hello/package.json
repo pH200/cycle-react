@@ -6,6 +6,7 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "cycle-react": "file:../../../"
+    "cycle-react": "2.0.0-beta1",
+    "react-native": "^0.7.1"
   }
 }
