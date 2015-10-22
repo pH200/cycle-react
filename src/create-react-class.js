@@ -59,6 +59,7 @@ function createReactClass(React) {
         var propsSubject$ = makePropsObservable(this.props);
         this.propsSubject$ = propsSubject$;
         var interactions = makeInteractions();
+        this.interactions = interactions;
         var cycleComponent = digestDefinitionFnOutput(
           bindThis ?
           definitionFn(interactions, this.propsSubject$, this) :
@@ -118,10 +119,7 @@ function createReactClass(React) {
         // componentWillMount is called for both client and server
         // https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
         this._subscribeCycleComponent();
-      },
-      componentWillUnmount: function componentWillUnmount() {
-        // componentWillUnmount is not being called for server
-        this._unsubscribeCycleComponent();
+        this.interactions.listener('React_componentWillMount')();
       },
       componentDidMount: function componentDidMount() {
         this._subscribeCycleEvents();
@@ -129,9 +127,22 @@ function createReactClass(React) {
           this.onMount(this);
         }
         this.hasMounted = true;
+        this.interactions.listener('React_componentDidMount')();
       },
       componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
         this.propsSubject$.onNext(nextProps);
+        this.interactions.listener('React_componentWillReceiveProps')(nextProps);
+      },
+      componentWillUpdate: function componentWillUpdate(nextProps) {
+        this.interactions.listener('React_componentWillUpdate')(nextProps);
+      },
+      componentDidUpdate: function componentDidUpdate(nextProps) {
+        this.interactions.listener('React_componentDidUpdate')(nextProps);
+      },
+      componentWillUnmount: function componentWillUnmount() {
+        // componentWillUnmount is not being called for server
+        this._unsubscribeCycleComponent();
+        this.interactions.listener('React_componentWillUnmount')();
       },
       render: function render() {
         if (this.state && this.state.vtree) {

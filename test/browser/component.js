@@ -649,4 +649,37 @@ describe('Component', function () {
     number$.request(1);
     assert.notStrictEqual(log.length, 2);
   });
+
+  it('should trigger the React_componentWillMount interaction', function (done) {
+    // Make simple custom element
+    let MyElement = Cycle.component('MyElement', function (interactions) {
+      interactions.get('React_componentWillMount')
+        .subscribe(done);
+      return Rx.Observable.just(<h3 className="myelementclass" />);
+    });
+    // Use the custom element
+    let vtree$ = Rx.Observable.just(<MyElement />);
+    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+  });
+
+  it('should trigger the React_componentDidUpdate interaction', function () {
+    let log = 0;
+    let number$ = Rx.Observable.range(1, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.component('MyElement', function (interactions) {
+      interactions.get('React_componentDidUpdate')
+        .subscribe(() => log++);
+      return number$.map(n => <h3 className="myelementclass">{n}</h3>);
+    });
+    // Use the custom element
+    let vtree$ = Rx.Observable.just(<MyElement />);
+    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    // Make assertions
+    number$.request(1);
+    assert.strictEqual(log, 1);
+
+    // Update the element
+    number$.request(1);
+    assert.strictEqual(log, 2);
+  });
 });

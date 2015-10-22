@@ -3,7 +3,15 @@
 var createEventSubject = require('./event-subject');
 
 function makeInteractions() {
-  var subjects = {};
+  /* eslint-disable camelcase */
+  var subjects = {
+    React_componentWillMount: createEventSubject(),
+    React_componentDidMount: createEventSubject(),
+    React_componentWillReceiveProps: createEventSubject(),
+    React_componentWillUpdate: createEventSubject(),
+    React_componentDidUpdate: createEventSubject(),
+    React_componentWillUnmount: createEventSubject()
+  };
 
   function get(name) {
     if (name === null || name === (void 0)) {
