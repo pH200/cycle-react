@@ -1,6 +1,6 @@
 {
   "name": "cycle-react",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": {
     "name": "pH200",
     "email": "ph.minamo@cytisan.com"
@@ -23,22 +23,22 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "rx": "2.5.3"
+    "rx": "4.0.6"
   },
   "devDependencies": {
-    "babel": "^5.6.4",
-    "babel-eslint": "^3.1.21",
-    "babelify": "^6.1.2",
-    "browserify": "^10.2.4",
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.3",
+    "babelify": "^6.4.0",
+    "browserify": "^11.2.0",
     "cheerio": "~0.19.0",
-    "cuid": "^1.2.5",
-    "eslint": "^0.24.0",
-    "express": "^4.13.0",
-    "immutable": "^3.7.4",
-    "mocha": "^2.2.5",
-    "react": "^0.13.3",
-    "testem": "~0.8.3",
-    "uglify-js": "^2.4.23"
+    "cuid": "^1.3.8",
+    "eslint": "^1.7.3",
+    "express": "^4.13.3",
+    "immutable": "^3.7.5",
+    "mocha": "^2.3.3",
+    "react": "~0.14.0",
+    "testem": "~0.9.8",
+    "uglify-js": "^2.5.0"
   },
   "engines": {
     "node": ">=0.10.0"
