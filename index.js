@@ -13,7 +13,6 @@ var Cycle = {
    * @param {Object} interactions - The collection of events.
    * @param {Object} props - The observable for React props.
    * @param {Object} [self] - "this" object for the React component.
-   * "bindThis" option must be set for enabling this parameter.
    * @returns {}
    */
   /**

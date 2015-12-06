@@ -450,7 +450,7 @@ describe('Component', function () {
     );
   });
 
-  it('should accept vtree as function and "ref" if "bindThis" was set', function (done) {
+  it('should accept vtree as function and "ref"', function (done) {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
@@ -464,7 +464,7 @@ describe('Component', function () {
         <h3 className="myelementclass"
             ref="theRef" />
       );
-    }, {bindThis: true});
+    });
     Cycle.applyToDOM(createRenderTarget(), MyElement);
     // Make assertions
     vtreeController$.request(1);

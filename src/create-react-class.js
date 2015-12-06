@@ -44,8 +44,6 @@ function createReactClass(React) {
     var options = componentOptions || {};
     // The option for the default root element type.
     var rootTagName = options.rootTagName || 'div';
-    // The option for passing "this" to definitionFn
-    var bindThis = !!options.bindThis;
 
     var reactClassProto = {
       displayName: displayName,
@@ -61,9 +59,7 @@ function createReactClass(React) {
         var interactions = makeInteractions();
         this.interactions = interactions;
         var cycleComponent = digestDefinitionFnOutput(
-          bindThis ?
-          definitionFn(interactions, this.propsSubject$, this) :
-          definitionFn(interactions, this.propsSubject$)
+          definitionFn(interactions, this.propsSubject$, this)
         );
         this.cycleComponent = cycleComponent;
         this.cycleComponentDispose = cycleComponent.dispose;
@@ -146,12 +142,17 @@ function createReactClass(React) {
       },
       render: function render() {
         if (this.state && this.state.vtree) {
-          if (bindThis && typeof this.state.vtree === 'function') {
-            // `this` is bound automatically by React.createClass so the element
-            // will have the owner set by this component
-            return this.state.vtree();
+          // TODO: Remove this block in the future releases
+          if (typeof this.state.vtree === 'function' &&
+              typeof console !== 'undefined')
+          {
+            console.warn(
+              'Support for using the function as view is ' +
+              'deprecated and will be soon removed.'
+            );
+            return React.cloneElement(this.state.vtree());
           }
-          return this.state.vtree;
+          return React.cloneElement(this.state.vtree);
         }
         return React.createElement(rootTagName);
       }
