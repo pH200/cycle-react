@@ -1,7 +1,8 @@
 const Cycle = require('cycle-react');
 const React = require('react');
+const ReactDOM = require('react-dom');
 
-function computer(interactions) {
+const Root = Cycle.component('Root', function computer(interactions) {
   return interactions.get('OnInputChange')
     .map((ev) => ev.target.value)
     .startWith('')
@@ -14,6 +15,9 @@ function computer(interactions) {
         <h1>Hello {name}</h1>
       </div>
     ));
-}
+});
 
-Cycle.applyToDOM('.js-container', computer);
+ReactDOM.render(
+  <Root />,
+  document.querySelector('.js-container')
+);

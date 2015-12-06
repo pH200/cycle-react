@@ -2,6 +2,7 @@
 /* global describe, it, beforeEach */
 let assert = require('assert');
 let Cycle = require('../../');
+let applyToDOM = require('./lib/apply-to-dom');
 let {Rx, React} = Cycle;
 
 function createRenderTarget() {
@@ -28,7 +29,7 @@ describe('Component', function () {
     });
     // Use the custom element
     let vtree$ = Rx.Observable.just(<MyElement />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myElement, null);
@@ -57,7 +58,7 @@ describe('Component', function () {
         .startWith('#FF0000')
         .map(color => <MyElement color={color} />);
     }
-    Cycle.applyToDOM(createRenderTarget(), definitionFn);
+    applyToDOM(createRenderTarget(), definitionFn);
     number$.request(8);
     // Make assertions
     let myElement = document.querySelector('.stateful-element');
@@ -85,7 +86,7 @@ describe('Component', function () {
     let vtree$ = Rx.Observable.just(
       <MyElement color="#FF0000" content="Hello world" />
     );
-    let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    let domUI = applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let myElement = document.querySelector('.inner-element');
     assert.notStrictEqual(myElement, null);
@@ -111,7 +112,7 @@ describe('Component', function () {
         <MyElement2 />
       </div>
     );
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let myElement1 = document.querySelector('.myelement1class');
     let myElement2 = document.querySelector('.myelement2class');
@@ -138,7 +139,7 @@ describe('Component', function () {
     });
     // Use the custom elements
     let vtree$ = Rx.Observable.just(<Outer />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let innerElement = document.querySelector('.innerClass');
     assert.notStrictEqual(innerElement, null);
@@ -168,7 +169,7 @@ describe('Component', function () {
       );
       return vtree$;
     });
-    Cycle.applyToDOM(createRenderTarget(), Root);
+    applyToDOM(createRenderTarget(), Root);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myElement, null);
@@ -223,7 +224,7 @@ describe('Component', function () {
         );
     }
 
-    Cycle.applyToDOM(createRenderTarget(), computer);
+    applyToDOM(createRenderTarget(), computer);
 
     // Simulate clicks
     sequence$.request(2);
@@ -249,7 +250,7 @@ describe('Component', function () {
         <h2>World</h2>
       </SimpleWrapper>
     );
-    let domUI = Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    let domUI = applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let wrapper = document.querySelector('.wrapper');
     assert.notStrictEqual(wrapper, null);
@@ -290,7 +291,7 @@ describe('Component', function () {
         );
     }
 
-    Cycle.applyToDOM(createRenderTarget(), computer);
+    applyToDOM(createRenderTarget(), computer);
 
     document.querySelector('.button').click();
     document.querySelector('.button').click();
@@ -333,7 +334,7 @@ describe('Component', function () {
         );
     }
 
-    Cycle.applyToDOM(createRenderTarget(), computer);
+    applyToDOM(createRenderTarget(), computer);
 
     document.querySelector('.button').click();
     document.querySelector('.button').click();
@@ -373,7 +374,7 @@ describe('Component', function () {
       return vtree$;
     });
     customElementSwitch$.request(1);
-    Cycle.applyToDOM(createRenderTarget(), Root);
+    applyToDOM(createRenderTarget(), Root);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myElement, null);
@@ -411,7 +412,7 @@ describe('Component', function () {
       return vtree$;
     });
     customElementSwitch$.request(1);
-    Cycle.applyToDOM(createRenderTarget(), Root);
+    applyToDOM(createRenderTarget(), Root);
     // Make assertions
     number$.request(1);
     let myElement = document.querySelector('.myelementclass');
@@ -437,7 +438,7 @@ describe('Component', function () {
     });
     // Use the custom element
     let vtree$ = Rx.Observable.just(<MyElement />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     vtreeController$.request(1);
     let myElement = document.querySelector('.myelementclass');
@@ -465,7 +466,7 @@ describe('Component', function () {
             ref="theRef" />
       );
     });
-    Cycle.applyToDOM(createRenderTarget(), MyElement);
+    applyToDOM(createRenderTarget(), MyElement);
     // Make assertions
     vtreeController$.request(1);
   });
@@ -486,7 +487,7 @@ describe('Component', function () {
         <MyElement /> :
         <div />;
     });
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
     number$.request(1);
@@ -528,7 +529,7 @@ describe('Component', function () {
         <MyElement onMyEvent={onMyEventHandler} /> :
         <div />;
     });
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
     let myElement = document.querySelector('.myelementclass');
@@ -568,7 +569,7 @@ describe('Component', function () {
         <MyElement /> :
         <div />;
     });
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
     number$.request(1);
@@ -603,7 +604,7 @@ describe('Component', function () {
         <MyElement /> :
         <div />;
     });
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
     number$.request(1);
@@ -635,7 +636,7 @@ describe('Component', function () {
         <MyElement /> :
         <div />;
     });
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     customElementSwitch$.request(1);
     number$.request(1);
@@ -659,7 +660,7 @@ describe('Component', function () {
     });
     // Use the custom element
     let vtree$ = Rx.Observable.just(<MyElement />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
   });
 
   it('should trigger the React_componentDidUpdate interaction', function () {
@@ -673,7 +674,7 @@ describe('Component', function () {
     });
     // Use the custom element
     let vtree$ = Rx.Observable.just(<MyElement />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     number$.request(1);
     assert.strictEqual(log, 1);

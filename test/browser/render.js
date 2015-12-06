@@ -2,6 +2,7 @@
 /* global describe, it, beforeEach */
 let assert = require('assert');
 let Cycle = require('../../');
+let applyToDOM = require('./lib/apply-to-dom');
 let Fixture89 = require('./fixtures/issue-89');
 let {Rx, React} = Cycle;
 
@@ -12,7 +13,7 @@ function createRenderTarget() {
   return element;
 }
 
-describe('Cycle.applyToDOM', function () {
+describe('applyToDOM', function () {
   beforeEach(function () {
     let testDivs = Array.prototype.slice.call(document.querySelectorAll('.cycletest'));
     testDivs.forEach(function (x) {
@@ -22,37 +23,9 @@ describe('Cycle.applyToDOM', function () {
     });
   });
 
-  it('should accept a DOM element as input', function () {
-    let element = createRenderTarget();
-    assert.doesNotThrow(function () {
-      Cycle.applyToDOM(element, () => Rx.Observable.empty());
-    });
-  });
-
-  it('should accept a string selector to an existing element as input', function () {
-    let id = 'testShouldAcceptSelectorToExisting';
-    let element = createRenderTarget();
-    element.id = id;
-    assert.doesNotThrow(function () {
-      Cycle.applyToDOM('#' + id, () => Rx.Observable.empty());
-    });
-  });
-
-  it('should not accept a selector to an unknown element as input', function () {
-    assert.throws(function () {
-      Cycle.applyToDOM('#nonsenseIdToNothing', () => Rx.Observable.empty());
-    }, /Cannot render into unknown element/);
-  });
-
-  it('should not accept a number as input', function () {
-    assert.throws(function () {
-      Cycle.applyToDOM(123);
-    }, /Given container is not a DOM element neither a selector string/);
-  });
-
   it('should throw if definitionFn returns bad output', function () {
     assert.throws(function () {
-      Cycle.applyToDOM(createRenderTarget(), () => ({}));
+      applyToDOM(createRenderTarget(), () => ({}));
     }, /definitionFn given to/);
   });
 
@@ -64,7 +37,7 @@ describe('Cycle.applyToDOM', function () {
         <option value="baz">Baz</option>
       </select>
     );
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     let selectEl = document.querySelector('.my-class');
     assert.notStrictEqual(selectEl, null);
     assert.notStrictEqual(typeof selectEl, 'undefined');
@@ -75,7 +48,7 @@ describe('Cycle.applyToDOM', function () {
     let MyElement = Cycle.component('MyElement', function () {
       return Rx.Observable.just(<h3 className="myelementclass" />);
     });
-    Cycle.applyToDOM(createRenderTarget(), MyElement);
+    applyToDOM(createRenderTarget(), MyElement);
     let myelement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myelement, null);
     assert.notStrictEqual(typeof myelement, 'undefined');
@@ -97,7 +70,7 @@ describe('Cycle.applyToDOM', function () {
       );
       return vtree$;
     }
-    Cycle.applyToDOM(createRenderTarget(), computer);
+    applyToDOM(createRenderTarget(), computer);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myElement, null);
@@ -122,7 +95,7 @@ describe('Cycle.applyToDOM', function () {
         </div>
       );
     }
-    Cycle.applyToDOM(createRenderTarget(), computer);
+    applyToDOM(createRenderTarget(), computer);
     let span = document.querySelector('.wrapperDiv > *:first-child');
     assert.notStrictEqual(span, null);
     assert.notStrictEqual(typeof span, 'undefined');
@@ -135,7 +108,7 @@ describe('Cycle.applyToDOM', function () {
   it('should not set props.className to the root element', function () {
     let MyElement = Cycle.component('MyElement', Fixture89.myelement);
     let vtree$ = Rx.Observable.just(<MyElement className="ERR" />);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
     // Make assertions
     let myElement = document.querySelector('.myelementclass');
     assert.notStrictEqual(myElement, null);
@@ -147,7 +120,7 @@ describe('Cycle.applyToDOM', function () {
     let MyElement = Cycle.component('MyElement', Fixture89.myelement);
     let number$ = Fixture89.makeModelNumber$();
     let vtree$ = Fixture89.viewWithContainerFn(number$, MyElement);
-    Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+    applyToDOM(createRenderTarget(), () => vtree$);
 
     number$.request(1);
     let myelement1 = document.querySelector('.myelementclass');
@@ -167,7 +140,7 @@ describe('Cycle.applyToDOM', function () {
     let number$ = Fixture89.makeModelNumber$();
     let vtree$ = Fixture89.viewWithoutContainerFn(number$, MyElement);
     assert.doesNotThrow(() => {
-      Cycle.applyToDOM(createRenderTarget(), () => vtree$);
+      applyToDOM(createRenderTarget(), () => vtree$);
       number$.request(1);
     });
   });

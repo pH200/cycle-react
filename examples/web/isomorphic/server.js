@@ -1,6 +1,7 @@
 'use strict';
 let Cycle = require('../../');
 let React = require('react');
+let ReactDOMServer = require('react-dom/server');
 let express = require('express');
 let browserify = require('browserify');
 let serialize = require('serialize-javascript');
@@ -51,7 +52,7 @@ server.use(function (req, res) {
   console.log(`req: ${req.method} ${req.url}`);
 
   let context = {route: req.url};
-  let componentHtml = React.renderToString(
+  let componentHtml = ReactDOMServer.renderToString(
     React.createElement(App, {context: context})
   );
   let html$ = Rx.Observable.combineLatest(

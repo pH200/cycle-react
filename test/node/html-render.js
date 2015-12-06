@@ -2,6 +2,7 @@
 /* global describe, it, beforeEach */
 let assert = require('assert');
 let cheerio = require('cheerio');
+let ReactDOMServer = require('react-dom/server');
 let Cycle = require('../../');
 let {Rx, React} = Cycle;
 
@@ -10,7 +11,7 @@ describe('Server-side rendering', function () {
     let Root = Cycle.component('Root', () => Rx.Observable.just(
       <div className="test-element">Foobar</div>
     ));
-    let html = React.renderToStaticMarkup(React.createElement(Root));
+    let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element">Foobar</div>');
   });
 
@@ -26,7 +27,7 @@ describe('Server-side rendering', function () {
         }
       };
     });
-    let html = React.renderToStaticMarkup(React.createElement(MyElement));
+    let html = ReactDOMServer.renderToStaticMarkup(React.createElement(MyElement));
     assert.strictEqual(html, '<div class="test-element">Foobar</div>');
     assert.notStrictEqual(log, 123);
   });
@@ -38,7 +39,7 @@ describe('Server-side rendering', function () {
     let Root = Cycle.component('Root', () => Rx.Observable.just(
       <div className="test-element"><MyElement /></div>
     ));
-    let html = React.renderToStaticMarkup(React.createElement(Root));
+    let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element"><h3 class="myelementclass"></h3></div>');
   });
 
@@ -53,7 +54,7 @@ describe('Server-side rendering', function () {
         <MyElement foobar="yes" />
       </div>
     ));
-    let html = React.renderToStaticMarkup(React.createElement(Root));
+    let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element"><h3 class="myelementclass">YES</h3></div>');
   });
 });

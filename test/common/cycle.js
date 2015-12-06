@@ -5,10 +5,6 @@ let Cycle = require('../../');
 
 describe('Cycle', function () {
   describe('API', function () {
-    it('should have `applyToDOM`', function () {
-      assert.strictEqual(typeof Cycle.applyToDOM, 'function');
-    });
-
     it('should have `component`', function () {
       assert.strictEqual(typeof Cycle.component, 'function');
     });
