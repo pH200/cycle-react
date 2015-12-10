@@ -3,7 +3,6 @@
     "node": true
   },
   "rules": {
-    "strict": 2,
     "no-underscore-dangle": 0,
     "quotes": [2, "single"],
 
@@ -12,7 +11,7 @@
     "curly": 2,
     "max-len": [1, 110, 4],
     "max-depth": [2, 5],
-    "indent": [2, 2],
+    "indent": [2, 2, {"SwitchCase": 1}],
     "no-trailing-spaces": [2, {"skipBlankLines": false}],
     "one-var": [2, "never"],
     "func-names": 2,
@@ -38,7 +37,9 @@
       "anonymous": "always",
       "named": "never"
     }],
-    "space-in-brackets": [2, "never"],
+    "object-curly-spacing": [2, "never"],
+    "array-bracket-spacing": [2, "never"],
+    "computed-property-spacing": [2, "never"],
     "space-in-parens": [2, "never"],
     "space-infix-ops": [2, {"int32Hint": true}],
     "space-return-throw-case": 2,
@@ -56,7 +57,6 @@
     "consistent-return": 2,
     "spaced-line-comment": 0,
     "quotes": [2, "single"],
-    "global-strict": [2, "always"],
     "eqeqeq": 2,
     "guard-for-in": 2,
     "no-alert": 2,
