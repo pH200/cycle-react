@@ -56,6 +56,4 @@ function makeInteractions() {
   };
 }
 
-module.exports = {
-  makeInteractions: makeInteractions
-};
+module.exports = makeInteractions;

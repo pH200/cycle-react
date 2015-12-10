@@ -1,8 +1,8 @@
 'use strict';
 var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
-var makeInteractions = require('./interactions').makeInteractions;
-var makePropsObservable = require('./props').makePropsObservable;
+var makeInteractions = require('./interactions');
+var makePropsObservable = require('./props');
 
 function makeDispatchFunction(eventName, self) {
   return function dispatchCustomEvent(evData) {

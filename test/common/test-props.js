@@ -2,33 +2,7 @@
 /* global describe, it */
 let assert = require('assert');
 let Rx = require('rx');
-let {
-  makeEmptyPropsObservable,
-  makePropsObservable
-} = require('../../src/props');
-
-describe('makeEmptyPropsObservable', function () {
-  it('should be an empty observable', function (done) {
-    let props = makeEmptyPropsObservable();
-    props.subscribe(() => {
-      throw new Error('Should not have element');
-    }, () => {}, done);
-  });
-
-  it('should has `get()` returning empty observable', function (done) {
-    let props = makeEmptyPropsObservable();
-    props.get().subscribe(() => {
-      throw new Error('Should not have element');
-    }, () => {}, done);
-  });
-
-  it('should has `getAll()` returning empty observable', function (done) {
-    let props = makeEmptyPropsObservable();
-    props.getAll().subscribe(() => {
-      throw new Error('Should not have element');
-    }, () => {}, done);
-  });
-});
+let makePropsObservable = require('../../src/props');
 
 describe('makePropsObservable', function () {
   it('should be an observable for all properties', function (done) {

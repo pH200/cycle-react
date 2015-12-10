@@ -3,7 +3,7 @@
 let assert = require('assert');
 let Rx = require('rx');
 let EventEmitter = require('events').EventEmitter;
-let {makeInteractions} = require('../../src/interactions');
+let makeInteractions = require('../../src/interactions');
 
 describe('interactions', function () {
   it('should provide collection of interactions', function (done) {

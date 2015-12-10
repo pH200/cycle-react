@@ -5,17 +5,6 @@ function isEqual(x, y) {
   return x === y;
 }
 
-function makeEmptyPropsObservable() {
-  var empty = Rx.Observable.empty();
-  empty.get = function getProp() {
-    return Rx.Observable.empty();
-  };
-  empty.getAll = function getAll() {
-    return Rx.Observable.empty();
-  };
-  return empty;
-}
-
 function makePropsObservable(props) {
   var propsSubject$ = new Rx.BehaviorSubject(props);
   propsSubject$.get = function getProp(propName, comparer) {
@@ -32,7 +21,4 @@ function makePropsObservable(props) {
   return propsSubject$;
 }
 
-module.exports = {
-  makeEmptyPropsObservable: makeEmptyPropsObservable,
-  makePropsObservable: makePropsObservable
-};
+module.exports = makePropsObservable;
