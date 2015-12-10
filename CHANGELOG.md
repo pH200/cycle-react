@@ -4,8 +4,6 @@
 
 Breaking change: applyToDOM and makeDOMDriver are both removed. Use `ReactDOM.render` instead.
 
-Breaking change: The peer dependency of React has been added back.
-
 Deprecated: Deprecated `bindThis` with the function as view.
 
 Add feature: Support lifecycle events by `interactions.get`. [#18]

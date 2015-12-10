@@ -1,6 +1,6 @@
 {
   "name": "cycle-react",
-  "version": "3.0.0-beta2",
+  "version": "3.0.0",
   "author": {
     "name": "pH200",
     "email": "ph.minamo@cytisan.com"
@@ -24,9 +24,6 @@
   "main": "index.js",
   "dependencies": {
     "rx": "4.0.7"
-  },
-  "peerDependencies": {
-    "react": ">0.14.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
