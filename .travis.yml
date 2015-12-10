@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 before_script:
   # for react peer dependency
-  - npm install react
+  - npm install react react-dom
   # for headless browsers
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
