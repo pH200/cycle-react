@@ -652,10 +652,11 @@ describe('Component', function () {
     assert.notStrictEqual(log.length, 2);
   });
 
-  it('should trigger the React_componentWillMount interaction', function (done) {
+  it('should trigger the componentWillMount lifecycle', function (done) {
     // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function (interactions) {
-      interactions.get('React_componentWillMount')
+    let MyElement = Cycle.component('MyElement', function (_1, _2, _3, lifecycles) {
+      lifecycles
+        .componentWillMount
         .subscribe(done);
       return Rx.Observable.just(<h3 className="myelementclass" />);
     });
@@ -664,11 +665,11 @@ describe('Component', function () {
     applyToDOM(createRenderTarget(), () => vtree$);
   });
 
-  it('should trigger the React_componentDidMount interaction', function (done) {
+  it('should trigger the componentDidMount lifecycle', function (done) {
     // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function (interactions, props, self) {
-      interactions
-        .get('React_componentDidMount')
+    let MyElement = Cycle.component('MyElement', function (_1, _2, self, lifecycles) {
+      lifecycles
+        .componentDidMount
         .do(() => {
           let node = ReactDOM.findDOMNode(self);
           assert.ok(node);
@@ -682,12 +683,13 @@ describe('Component', function () {
     applyToDOM(createRenderTarget(), () => vtree$);
   });
 
-  it('should trigger the React_componentDidUpdate interaction', function () {
+  it('should trigger the componentDidUpdate lifecycle', function () {
     let log = 0;
     let number$ = Rx.Observable.range(1, 2).controlled();
     // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function (interactions) {
-      interactions.get('React_componentDidUpdate')
+    let MyElement = Cycle.component('MyElement', function (_1, _2, _3, lifecycles) {
+      lifecycles
+        .componentDidUpdate
         .subscribe(() => log++);
       return number$.map(n => <h3 className="myelementclass">{n}</h3>);
     });

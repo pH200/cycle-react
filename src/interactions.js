@@ -1,14 +1,6 @@
 /* globals process */
 function makeInteractions(createEventSubject) {
-  /* eslint-disable camelcase */
-  var subjects = {
-    React_componentWillMount: createEventSubject(),
-    React_componentDidMount: createEventSubject(),
-    React_componentWillReceiveProps: createEventSubject(),
-    React_componentWillUpdate: createEventSubject(),
-    React_componentDidUpdate: createEventSubject(),
-    React_componentWillUnmount: createEventSubject()
-  };
+  var subjects = {};
 
   function get(name) {
     if (name === null || name === (void 0)) {

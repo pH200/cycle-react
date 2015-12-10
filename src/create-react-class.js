@@ -1,4 +1,6 @@
-var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
+var util = require('./util');
+var digestDefinitionFnOutput = util.digestDefinitionFnOutput;
+var createLifecycleSubjects = util.createLifecycleSubjects;
 var makeInteractions = require('./interactions');
 
 function createReactClass(React, Adapter) {
@@ -62,8 +64,10 @@ function createReactClass(React, Adapter) {
         this.propsSubject$ = propsSubject$;
         var interactions = makeInteractions(createEventSubject);
         this.interactions = interactions;
+        var lifecycles = createLifecycleSubjects(createEventSubject);
+        this.lifecycles = lifecycles;
         var cycleComponent = digestDefinitionFnOutput(
-          definitionFn(interactions, this.propsSubject$, this)
+          definitionFn(interactions, propsSubject$, this, lifecycles)
         );
         this.cycleComponent = cycleComponent;
         this.cycleComponentDispose = cycleComponent.dispose;
@@ -73,7 +77,7 @@ function createReactClass(React, Adapter) {
           self.setState({vtree: vtree});
         });
 
-        this.disposable.add(this.propsSubject$);
+        this.disposable.add(propsSubject$);
         this.disposable.add(subscription);
       },
       _unsubscribeCycleComponent: function _unsubscribeCycleComponent() {
@@ -111,7 +115,7 @@ function createReactClass(React, Adapter) {
         // componentWillMount is called for both client and server
         // https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
         this._subscribeCycleComponent();
-        this.interactions.listener('React_componentWillMount')();
+        this.lifecycles.componentWillMount.onEvent();
       },
       componentDidMount: function componentDidMount() {
         this._subscribeCycleEvents();
@@ -119,22 +123,22 @@ function createReactClass(React, Adapter) {
           this.onMount(this);
         }
         this.hasMounted = true;
-        this.interactions.listener('React_componentDidMount')();
+        this.lifecycles.componentDidMount.onEvent();
       },
       componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
         this.propsSubject$.onNext(nextProps);
-        this.interactions.listener('React_componentWillReceiveProps')(nextProps);
+        this.lifecycles.componentWillReceiveProps.onEvent(nextProps);
       },
       componentWillUpdate: function componentWillUpdate(nextProps) {
-        this.interactions.listener('React_componentWillUpdate')(nextProps);
+        this.lifecycles.componentWillUpdate.onEvent(nextProps);
       },
-      componentDidUpdate: function componentDidUpdate(nextProps) {
-        this.interactions.listener('React_componentDidUpdate')(nextProps);
+      componentDidUpdate: function componentDidUpdate(prevProps) {
+        this.lifecycles.componentDidUpdate.onEvent(prevProps);
       },
       componentWillUnmount: function componentWillUnmount() {
         // componentWillUnmount is not being called for server
         this._unsubscribeCycleComponent();
-        this.interactions.listener('React_componentWillUnmount')();
+        this.lifecycles.componentWillUnmount.onEvent();
       },
       render: function render() {
         if (this.state && this.state.vtree) {

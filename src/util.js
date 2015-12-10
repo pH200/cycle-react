@@ -27,5 +27,15 @@ module.exports = {
       dispose: dispose,
       customEvents: customEvents || {}
     };
+  },
+  createLifecycleSubjects: function createLifecycleSubjects(createEventSubject) {
+    return {
+      componentWillMount: createEventSubject(),
+      componentDidMount: createEventSubject(),
+      componentWillReceiveProps: createEventSubject(),
+      componentWillUpdate: createEventSubject(),
+      componentDidUpdate: createEventSubject(),
+      componentWillUnmount: createEventSubject()
+    };
   }
 };
