@@ -38,6 +38,26 @@ let MyElement = Cycle.component('MyElement', function definition() {
 interactions.get('OnTickEvent'); // Observable<T>
 ```
 
+## this
+
+The third parameter of `definitionFn` is `self`, which represents `this` of
+your created React class.
+
+Normally, you don't want to use this. However, it might be required for
+working with some React components.
+
+Example:
+
+```js
+let Navigation = require('react-router').Navigation;
+let options = {
+  mixins: [Navigation]
+};
+let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
+  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>);
+}, options);
+```
+
 ## Lifecycle events
 
 You can query your component's
@@ -92,26 +112,6 @@ let options = {
 };
 let MyElement = Cycle.component('MyElement', function () {
   // ...
-}, options);
-```
-
-## this
-
-The third parameter of `definitionFn` is `self`, which represents `this` of
-your created React class.
-
-Normally, you don't want to use this. However, it might be required for
-working with some React components.
-
-Example:
-
-```js
-let Navigation = require('react-router').Navigation;
-let options = {
-  mixins: [Navigation]
-};
-let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
-  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>);
 }, options);
 ```
 
