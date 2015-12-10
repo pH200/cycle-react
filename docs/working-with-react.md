@@ -42,19 +42,20 @@ interactions.get('OnTickEvent'); // Observable<T>
 
 You can query your component's
 [lifecycle events](https://facebook.github.io/react/docs/component-specs.html)
-through the `interactions` collection. The key for the lifecycle event is the
-event name with the `React_` prefix.
+through the forth parameter `lifecycle` for definitionFn.
 
-Note: Although Cycle-React provides all lifecycle events available, the only
+The key for the lifecycle event is the lifecycle name itself.
+
+Note: Although Cycle-React provides all lifecycle events from React, the only
 two reasonable events are `componentDidMount` and `componentDidUpdate`.
 You should not manipulate the DOM element directly except from these two events.
 
 Example:
 
 ```js
-let MyElement = Cycle.component('MyElement', function (interactions, props, self) {
-  // Get the lifecycle event collection for componentDidMount
-  let componentDidMountObservable = interactions.get('React_componentDidMount');
+let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles) {
+  // Get the observable for componentDidMount
+  let componentDidMountObservable = lifecycles.componentDidMount;
 
   return componentDidMountObservable.map(() => {
     // Find the DOM node from "self"
@@ -65,14 +66,14 @@ let MyElement = Cycle.component('MyElement', function (interactions, props, self
 });
 ```
 
-Keys for lifecycle events:
+Supported lifecycle events:
 
-- React_componentWillMount
-- React_componentDidMount
-- React_componentWillReceiveProps
-- React_componentWillUpdate
-- React_componentDidUpdate
-- React_componentWillUnmount
+- componentWillMount
+- componentDidMount
+- componentWillReceiveProps
+- componentWillUpdate
+- componentDidUpdate
+- componentWillUnmount
 
 ## Mixins
 

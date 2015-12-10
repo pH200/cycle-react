@@ -1,17 +1,17 @@
 # Changelog
 
+## 3.1.0
+
+Add feature: Support lifecycle events by the fourth parameter `lifecycles`
+for the component's definitionFn. [#18]
+
+See `working-with-react.md` for details.
+
 ## 3.0.0
 
 Breaking change: applyToDOM and makeDOMDriver are both removed. Use `ReactDOM.render` instead.
 
 Deprecated: Deprecated `bindThis` with the function as view.
-
-Add feature: Support lifecycle events by `interactions.get`. [#18]
-
-```
-// Get the lifecycle event collection for componentDidMount
-interactions.get('React_componentDidMount');
-```
 
 ## 2.0.0
 
