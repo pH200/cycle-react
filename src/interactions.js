@@ -1,8 +1,5 @@
 /* globals process */
-'use strict';
-var createEventSubject = require('./event-subject');
-
-function makeInteractions() {
+function makeInteractions(createEventSubject) {
   /* eslint-disable camelcase */
   var subjects = {
     React_componentWillMount: createEventSubject(),

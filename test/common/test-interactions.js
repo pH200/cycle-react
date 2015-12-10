@@ -3,11 +3,12 @@
 let assert = require('assert');
 let Rx = require('rx');
 let EventEmitter = require('events').EventEmitter;
+let createEventSubject = require('../../src/rx/event-subject');
 let makeInteractions = require('../../src/interactions');
 
 describe('interactions', function () {
   it('should provide collection of interactions', function (done) {
-    let interactions = makeInteractions();
+    let interactions = makeInteractions(createEventSubject);
     interactions.get('foo').subscribe(function (value) {
       assert.strictEqual(value, 'bar');
       done();
@@ -17,7 +18,7 @@ describe('interactions', function () {
   });
 
   it('should return the same interaction observable from the same key', function () {
-    let interactions = makeInteractions();
+    let interactions = makeInteractions(createEventSubject);
     assert.strictEqual(
       interactions.get('foo'),
       interactions.get('foo')
@@ -25,7 +26,7 @@ describe('interactions', function () {
   });
 
   it('should return the object of listeners by bindListeners', function (done) {
-    let interactions = makeInteractions();
+    let interactions = makeInteractions(createEventSubject);
     let interactionTypes = {
       foo: 'onFoo',
       foo2: 'onFoo2'
@@ -47,13 +48,13 @@ describe('interactions', function () {
   });
 
   it('should throw error when the key is null', function () {
-    let interactions = makeInteractions();
+    let interactions = makeInteractions(createEventSubject);
     assert.throws(() => interactions.get(), /Invalid name/i);
     assert.throws(() => interactions.get(null), /Invalid name/i);
   });
 
   it('should warn when `listener` is used before `get`', function (done) {
-    let interactions = makeInteractions();
+    let interactions = makeInteractions(createEventSubject);
     let tempConsoleWarn = console.warn;
     console.warn = function warn(message) {
       assert.ok(/foo/.test(message));

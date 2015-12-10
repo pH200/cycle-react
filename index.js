@@ -1,5 +1,6 @@
 'use strict';
 var createReactClass = require('./src/create-react-class');
+var createAdapter = require('./src/rx/adapter');
 var React = require('react');
 var Rx = require('rx');
 
@@ -36,7 +37,7 @@ var Cycle = {
    * @param {Object} [options] - The options for component.
    * @returns {ReactComponent} The React component.
    */
-  component: createReactClass(React),
+  component: createReactClass(React, createAdapter()),
 
   /**
    * A shortcut to the root object of React.

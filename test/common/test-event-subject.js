@@ -1,7 +1,7 @@
 'use strict';
 /* global describe, it */
 let assert = require('assert');
-let createEventSubject = require('../../src/event-subject');
+let createEventSubject = require('../../src/rx/event-subject');
 
 describe('createEventSubject', function () {
   it('should have onEvent', function () {

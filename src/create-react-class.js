@@ -1,40 +1,44 @@
-'use strict';
-var Rx = require('rx');
 var digestDefinitionFnOutput = require('./util').digestDefinitionFnOutput;
 var makeInteractions = require('./interactions');
-var makePropsObservable = require('./props');
 
-function makeDispatchFunction(eventName, self) {
-  return function dispatchCustomEvent(evData) {
-    if (self.props) {
-      var eventHandler = self.props[eventName];
-      if (eventHandler) {
-        eventHandler(evData);
+function createReactClass(React, Adapter) {
+  var makePropsObservable = Adapter.makePropsObservable;
+  var createEventSubject = Adapter.createEventSubject;
+  var CompositeDisposable = Adapter.CompositeDisposable;
+  var createDisposable = Adapter.createDisposable;
+  var doOnNext = Adapter.doOnNext;
+  var subscribe = Adapter.subscribe;
+  var subscribeAll = Adapter.subscribeAll;
+
+  function makeDispatchFunction(eventName, self) {
+    return function dispatchCustomEvent(evData) {
+      if (self.props) {
+        var eventHandler = self.props[eventName];
+        if (eventHandler) {
+          eventHandler(evData);
+        }
       }
-    }
-  };
-}
-
-function composingEventObservables(events, self) {
-  var eventNames = Object.keys(events);
-  var eventObservables = [];
-  for (var i = 0; i < eventNames.length; i++) {
-    var eventName = eventNames[i];
-    var eventObs = events[eventName];
-    eventObservables.push(
-      eventObs.doOnNext(makeDispatchFunction(eventName, self))
-    );
+    };
   }
-  return eventObservables;
-}
 
-function createReactClass(React) {
+  function composingEventObservables(events, self) {
+    var eventNames = Object.keys(events);
+    var eventObservables = [];
+    for (var i = 0; i < eventNames.length; i++) {
+      var eventName = eventNames[i];
+      var eventObs = events[eventName];
+      eventObservables.push(
+        doOnNext(eventObs, makeDispatchFunction(eventName, self))
+      );
+    }
+    return eventObservables;
+  }
+
   return function component(
     displayName,
     definitionFn,
-    componentOptions,
-    observer,
-    eventObserver) {
+    componentOptions
+  ) {
     if (typeof displayName !== 'string') {
       throw new Error('Invalid displayName');
     }
@@ -53,10 +57,10 @@ function createReactClass(React) {
       },
       _subscribeCycleComponent: function _subscribeCycleComponent() {
         var self = this;
-        this.disposable = new Rx.CompositeDisposable();
+        this.disposable = new CompositeDisposable();
         var propsSubject$ = makePropsObservable(this.props);
         this.propsSubject$ = propsSubject$;
-        var interactions = makeInteractions();
+        var interactions = makeInteractions(createEventSubject);
         this.interactions = interactions;
         var cycleComponent = digestDefinitionFnOutput(
           definitionFn(interactions, this.propsSubject$, this)
@@ -65,11 +69,10 @@ function createReactClass(React) {
         this.cycleComponentDispose = cycleComponent.dispose;
         this.onMount = cycleComponent.onMount;
         var vtree$ = cycleComponent.vtree$;
-        var vtreeDoSet$ = vtree$.doOnNext(function onNextVTree(vtree) {
+        var subscription = subscribe(vtree$, function onNextVTree(vtree) {
           self.setState({vtree: vtree});
         });
-        var subscription = observer ?
-          vtreeDoSet$.subscribe(observer) : vtreeDoSet$.subscribe();
+
         this.disposable.add(this.propsSubject$);
         this.disposable.add(subscription);
       },
@@ -80,7 +83,7 @@ function createReactClass(React) {
         if (this.cycleComponentDispose) {
           var dispose = this.cycleComponentDispose;
           if (typeof dispose === 'function') {
-            this.disposable.add(Rx.Disposable.create(dispose));
+            this.disposable.add(createDisposable(dispose));
           } else if (typeof dispose.dispose === 'function') {
             this.disposable.add(dispose);
           }
@@ -96,14 +99,7 @@ function createReactClass(React) {
           self
         );
         if (eventObservables.length > 0) {
-          var eventSubscription;
-          if (eventObserver) {
-            eventSubscription =
-              Rx.Observable.merge(eventObservables).subscribe(eventObserver);
-          } else {
-            eventSubscription =
-              Rx.Observable.merge(eventObservables).subscribe();
-          }
+          var eventSubscription = subscribeAll(eventObservables);
           this.disposable.add(eventSubscription);
         }
       },

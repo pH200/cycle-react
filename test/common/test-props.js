@@ -2,7 +2,7 @@
 /* global describe, it */
 let assert = require('assert');
 let Rx = require('rx');
-let makePropsObservable = require('../../src/props');
+let makePropsObservable = require('../../src/rx/props');
 
 describe('makePropsObservable', function () {
   it('should be an observable for all properties', function (done) {
