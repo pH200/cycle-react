@@ -4,7 +4,8 @@
  */
 'use strict';
 
-var {React, component} = require('cycle-react/native');
+var React = require('react-native');
+var {component} = require('cycle-react/native');
 var {
   AppRegistry,
   StyleSheet,
@@ -32,7 +33,7 @@ var styles = StyleSheet.create({
   }
 });
 
-function computer(interactions) {
+var hello = component('hello', function computer(interactions) {
   return interactions.get('OnInputChange')
     .map((ev) => ev.nativeEvent.text)
     .startWith('')
@@ -45,8 +46,6 @@ function computer(interactions) {
         <Text style={styles.instructions}>Hello {name}</Text>
       </View>
     ));
-}
-
-var hello = component('Hello', (interactions) => computer(interactions));
+});
 
 AppRegistry.registerComponent('hello', () => hello);
