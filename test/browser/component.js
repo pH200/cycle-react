@@ -4,6 +4,7 @@ let assert = require('assert');
 let Cycle = require('../../');
 let applyToDOM = require('./lib/apply-to-dom');
 let {Rx, React} = Cycle;
+let ReactDOM = require('react-dom');
 
 function createRenderTarget() {
   let element = document.createElement('div');
@@ -456,7 +457,7 @@ describe('Component', function () {
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
       vtreeController$.subscribe(() => {
-        let editField = React.findDOMNode(self.refs.theRef);
+        let editField = ReactDOM.findDOMNode(self.refs.theRef);
         assert.notStrictEqual(editField, null);
         assert.strictEqual(editField.tagName, 'H3');
         done();
@@ -655,6 +656,24 @@ describe('Component', function () {
     // Make simple custom element
     let MyElement = Cycle.component('MyElement', function (interactions) {
       interactions.get('React_componentWillMount')
+        .subscribe(done);
+      return Rx.Observable.just(<h3 className="myelementclass" />);
+    });
+    // Use the custom element
+    let vtree$ = Rx.Observable.just(<MyElement />);
+    applyToDOM(createRenderTarget(), () => vtree$);
+  });
+
+  it('should trigger the React_componentDidMount interaction', function (done) {
+    // Make simple custom element
+    let MyElement = Cycle.component('MyElement', function (interactions, props, self) {
+      interactions
+        .get('React_componentDidMount')
+        .do(() => {
+          let node = ReactDOM.findDOMNode(self);
+          assert.ok(node);
+          assert.strictEqual(node.tagName, 'H3');
+        })
         .subscribe(done);
       return Rx.Observable.just(<h3 className="myelementclass" />);
     });
