@@ -7,7 +7,7 @@ Get the event observable from interactions collection.
 Example:
 
 ```js
-Cycle.applyToDOM('.js-container', function computer(interactions) {
+Cycle.component('MyElement', function computer(interactions) {
   // get(eventName: string): Observable<any>
   return interactions.get('OnMyInput')
     .map(ev => ev.target.value)

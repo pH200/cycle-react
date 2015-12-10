@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.0.0
+
+Breaking change: applyToDOM and makeDOMDriver are both removed. Use `ReactDOM.render` instead.
+
+Breaking change: The peer dependency of React has been added back.
+
+Deprecated: Deprecated `bindThis` with the function as view.
+
+Add feature: Support lifecycle events by `interactions.get`. [#18]
+
+```
+// Get the lifecycle event collection for componentDidMount
+interactions.get('React_componentDidMount');
+```
+
 ## 2.0.0
 
 Add feature: Support React Native. Thank @cem2ran for the PR.

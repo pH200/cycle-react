@@ -7,9 +7,9 @@ to [Facebook's React](http://facebook.github.io/react/).
 
 Cycle-React allows users to write [React](https://github.com/facebook/react)
 applications in functional style and represents their UIs as Observables.
-In addition, Cycle-React is immutable and uses
-[PureRenderMixin](https://facebook.github.io/react/docs/pure-render-mixin.html)
-internally by default.
+In addition, Cycle-React is immutable and
+[optimizes](https://facebook.github.io/react/docs/pure-render-mixin.html)
+the component updates internally by default.
 
 Additionally, Cycle-React is also a React-style implementation of a beautiful
 framework called [Cycle.js](https://github.com/cyclejs/cycle-core).
@@ -23,10 +23,11 @@ npm install cycle-react react
 ## Example
 
 ```js
-let Cycle = require('cycle-react');
-let React = require('react');
+const Cycle = require('cycle-react');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
-function computer(interactions) {
+const Hello = Cycle.component('Hello', function computer(interactions) {
   return interactions.get('OnNameChanged')
     .map(ev => ev.target.value)
     .startWith('')
@@ -38,23 +39,27 @@ function computer(interactions) {
         <h1>Hello {name}</h1>
       </div>
     );
-}
+});
 
-Cycle.applyToDOM('.js-container', computer);
+ReactDOM.render(
+  <Hello />,
+  document.querySelector('.js-container')
+);
 ```
 
-The input of the `computer` is `interactions`, a collection containing all
-user interaction events happening on the user-defined event handlers on the DOM,
-which you can query using `interactions.get(eventName)`. And the event handler
-can be defined by `interactions.listener(eventName)`.
+The input of the function `computer` is `interactions`, a collection containing
+all user interaction events happening on the user-defined event handlers on the
+DOM, which you can query using `interactions.get(eventName)`. And the event
+handler can be defined by `interactions.listener(eventName)`.
 
 The output of the `computer` is `Observable<ReactElement>`
 (a reactive sequence of elements, in other words, view).
 
-Function `applyToDOM` subscribes that Observable of elements and renders the
-elements to DOM, by using `React.createClass` and `React.render` internally.
+Function `component` subscribes that Observable of elements and create a new
+React component class, which can be used normally by `React.createElement` and
+`ReactDOM.render`.
 
-Notice that although `React.createClass` is mentioned here, you don't have to
+Notice that although `class` is mentioned here, you don't have to
 use it. That's why Cycle-React was made. We took functions over classes
 and mutable states.
 
@@ -65,12 +70,13 @@ André's amazing presentation:
 ## React component example
 
 ```js
-let Cycle = require('cycle-react');
-let React = require('react');
-let Rx = Cycle.Rx;
+const Cycle = require('cycle-react');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Rx = Cycle.Rx;
 
 // "component" returns a native React component which can be used normally
-// by "React.createElement" and "Cycle.applyToDOM".
+// by "React.createElement".
 let Counter = Cycle.component('Counter', function (interactions, props) {
   return props.get('counter').map(counter =>
     <h3>Seconds Elapsed: {counter}</h3>
@@ -83,11 +89,10 @@ let Timer = Cycle.component('Timer', function () {
   );
 });
 
-Cycle.applyToDOM('.js-container', Timer);
-// or
-// React.render(
-//   React.createElement(Timer),
-//   document.querySelector('.js-container'));
+ReactDOM.render(
+  <Timer />,
+  document.querySelector('.js-container')
+);
 ```
 
 ## Learn more
@@ -111,17 +116,6 @@ var Hello = component('Hello', () =>
   Rx.Observable.just(<Text>Hello!</Text>)
 );
 ```
-
-## Cycle.js Driver
-
-Cycle.js (not Cycle-React) has the
-[driver architecture](http://cycle.js.org/drivers.html) to externalize the
-side-effects. Cycle Web, for example, is a driver externalizes DOM environment.
-And Cycle-React provides a DOM driver (powered by React, of course)
-for Cycle.js, too.
-
-Details can be found at
-["Using Cycle-React's DOM driver for Cycle.js"](/docs/cycle-js-driver.md).
 
 ## FAQ
 

@@ -3,7 +3,6 @@
 - [API](/docs/api.md)
 - [Interactions API](/docs/interactions.md)
 - [Working with React](/docs/working-with-react.md)
-- [Using Cycle.js driver](/docs/cycle-js-driver.md)
 
 ### Where to ask for help?
 

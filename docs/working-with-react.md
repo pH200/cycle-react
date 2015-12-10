@@ -38,6 +38,42 @@ let MyElement = Cycle.component('MyElement', function definition() {
 interactions.get('OnTickEvent'); // Observable<T>
 ```
 
+## Lifecycle events
+
+You can query your component's
+[lifecycle events](https://facebook.github.io/react/docs/component-specs.html)
+through the `interactions` collection. The key for the lifecycle event is the
+event name with the `React_` prefix.
+
+Note: Although Cycle-React provides all lifecycle events available, the only
+two reasonable events are `componentDidMount` and `componentDidUpdate`.
+You should not manipulate the DOM element directly except from these two events.
+
+Example:
+
+```js
+let MyElement = Cycle.component('MyElement', function (interactions, props, self) {
+  // Get the lifecycle event collection for componentDidMount
+  let componentDidMountObservable = interactions.get('React_componentDidMount');
+
+  return componentDidMountObservable.map(() => {
+    // Find the DOM node from "self"
+    let node = ReactDOM.findDOMNode(self);
+    // ...
+    return <div>The element</div>;
+  });
+});
+```
+
+Keys for lifecycle events:
+
+- React_componentWillMount
+- React_componentDidMount
+- React_componentWillReceiveProps
+- React_componentWillUpdate
+- React_componentDidUpdate
+- React_componentWillUnmount
+
 ## Mixins
 
 Working with mixins could make your Cycle-React apps written in a
@@ -60,8 +96,9 @@ let MyElement = Cycle.component('MyElement', function () {
 
 ## this
 
-`opts.bindThis` will pass the third parameter `self` to `definitionFn`.
-`self` represents `this` of your created React class.
+The third parameter of `definitionFn` is `self`, which represents `this` of
+your created React class.
+
 Normally, you don't want to use this. However, it might be required for
 working with some React components.
 
@@ -70,41 +107,10 @@ Example:
 ```js
 let Navigation = require('react-router').Navigation;
 let options = {
-  mixins: [Navigation],
-  bindThis: true
+  mixins: [Navigation]
 };
 let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
-  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>)
-}, options);
-```
-
-## Refs
-
-If you've ever tried to set `ref` to the element with Cycle-React, you've
-probably encountered this following error:
-
-```
-Invariant Violation: addComponentAsRefTo(...): Only a ReactOwner can have refs.
-This usually means that you're trying to add a ref to a component that doesn't
-have an owner (that is, was not created inside of another component's `render`
-method).
-```
-
-This is because Cycle-React evaluates the vtree(ReactElement) inside the Rx
-subscription instead of `Component.prototype.render`. In order to fix this,
-you can return the lazy value of ReactElement with the option
-`{bindThis: true}` set.
-
-Example:
-
-```js
-let options = {
-  // The bindThis option must be set
-  bindThis: true
-};
-let MyElement = Cycle.component('MyElement', (_1, _2, self) => {
-  // Return lambda instead of plain vtree
-  return Rx.Observable.just(() => <input ref="myInput" />);
+  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>);
 }, options);
 ```
 
