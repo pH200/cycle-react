@@ -1,5 +1,15 @@
 'use strict';
 
+function LifecycleSubjects(createEventSubject) {
+  // Expose observables like properties
+  this.componentWillMount = createEventSubject();
+  this.componentDidMount = createEventSubject();
+  this.componentWillReceiveProps = createEventSubject();
+  this.componentWillUpdate = createEventSubject();
+  this.componentDidUpdate = createEventSubject();
+  this.componentWillUnmount = createEventSubject();
+}
+
 module.exports = {
   digestDefinitionFnOutput: function digestDefinitionFnOutput(output) {
     var vtree$;
@@ -29,13 +39,6 @@ module.exports = {
     };
   },
   createLifecycleSubjects: function createLifecycleSubjects(createEventSubject) {
-    return {
-      componentWillMount: createEventSubject(),
-      componentDidMount: createEventSubject(),
-      componentWillReceiveProps: createEventSubject(),
-      componentWillUpdate: createEventSubject(),
-      componentDidUpdate: createEventSubject(),
-      componentWillUnmount: createEventSubject()
-    };
+    return new LifecycleSubjects(createEventSubject);
   }
 };
