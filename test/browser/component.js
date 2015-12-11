@@ -704,4 +704,38 @@ describe('Component', function () {
     number$.request(1);
     assert.strictEqual(log, 2);
   });
+
+  it('should trigger the componentWillUnmount lifecycle', function (done) {
+    let number$ = Rx.Observable.range(1, 2).controlled();
+    // Make simple custom element
+    let MyElement = Cycle.component('MyElement', function (_1, _2, _3, lifecycles) {
+      let calledOnCompleted = false;
+      lifecycles.componentDidMount
+        .withLatestFrom(number$, (_, num) => num)
+        .subscribe(
+          num => assert.strictEqual(num, 1),
+          err => assert.ifError(err),
+          () => calledOnCompleted = true
+        );
+      lifecycles.componentWillUnmount
+        .subscribe(() => {
+          assert.ok(calledOnCompleted);
+          done();
+        });
+      return Rx.Observable.just(<h3 className="myelementclass">element</h3>);
+    });
+    let Root = Cycle.component('Root', function () {
+      return number$.map(n => n === 1 ?
+        (<MyElement />) :
+        (<div>empty</div>)
+      );
+    });
+    // Use the custom element
+    let vtree$ = Rx.Observable.just(<Root />);
+    applyToDOM(createRenderTarget(), () => vtree$);
+    // Make assertions
+    number$.request(1);
+    // Update the element
+    number$.request(1);
+  });
 });
