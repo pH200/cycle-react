@@ -93,8 +93,9 @@ module.exports = (function MakeReactRenderScheduler(__super__) {
     var id = ++this._lastId;
     var disposable = new Rx.SingleAssignmentDisposable();
 
+    var self = this;
     var timeoutHandle = setTimeout(function delayedSchedule() {
-      this.scheduleAction(disposable, action, this, state, id);
+      self.scheduleAction(disposable, action, this, state, id);
     }, dueTime);
     var scheduledIdDisposable = new ScheduledIdDisposable(this.scheduled, id);
 
