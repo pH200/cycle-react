@@ -455,6 +455,8 @@ describe('Component', function () {
   it('should accept vtree as function and "ref"', function (done) {
     let vtreeController$ = Rx.Observable.range(0, 2).controlled();
     // Make simple custom element
+
+    let renderSubject = new Rx.Subject();
     let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
       vtreeController$.subscribe(() => {
         let editField = ReactDOM.findDOMNode(self.refs.theRef);
@@ -462,12 +464,16 @@ describe('Component', function () {
         assert.strictEqual(editField.tagName, 'H3');
         done();
       });
-      return Rx.Observable.just(() =>
+      return renderSubject.delay(0, self.scheduler).map(() =>
         <h3 className="myelementclass"
             ref="theRef" />
       );
     });
+
     applyToDOM(createRenderTarget(), MyElement);
+    renderSubject.onNext(null);
+    renderSubject.onNext(null);
+
     // Make assertions
     vtreeController$.request(1);
   });
