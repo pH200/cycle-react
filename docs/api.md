@@ -34,6 +34,7 @@ options example:
       mixins: [],
       propTypes: null,
       disableHotLoader: false
+      renderScheduler: false
     });
 
 `opt.rootTagName` is the default tagName for the root element.
@@ -65,7 +66,7 @@ you have an initial value for the vtree$. Examples:
 #### Arguments:
 
 - `displayName :: String` a name for identifying the React component.
-- `definitionFn :: Function` the implementation for the custom element. This function takes two arguments: `interactions`, and `properties`, and
+- `definitionFn :: Function` the implementation for the custom element. This function takes up to five arguments: `interactions`, `properties`, `component`, `lifecycles`, `renderScheduler` and
 should output an object of Observables.
 - `[options] :: Object` the options for component.
 

@@ -1,83 +1,82 @@
 var Rx = require('rx');
-function __extends(d, b) {
-  for (var p in b) {
-    if (b.hasOwnProperty(p)) {
-      d[p] = b[p];
-    }
-  }
-  function __() {
-    this.constructor = d;
-  }
-
-  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var inherits = require('inherits');
 
 module.exports = (function MakeReactRenderScheduler(__super__) {
   function ReactRenderScheduler() {
     __super__.call(this);
-    this.scheduled = {};
+    this.scheduled = [];
     this._lastId = -1;
+    this.isProcessing = false;
     this.scheduledReadySubject = new Rx.Subject();
   }
 
-  __extends(ReactRenderScheduler, __super__);
+  inherits(ReactRenderScheduler, __super__);
 
-  function ScheduledIdDisposable(scheduled, id) {
+  function ScheduledDisposable(scheduled, handler) {
     this.scheduled = scheduled;
-    this.id = id;
+    this.handler = handler;
     this.isDisposed = false;
-    this.actionDisposable = null;
     this.hasNew = false;
   }
 
-  ScheduledIdDisposable.prototype.dispose = function dispose() {
+  ScheduledDisposable.prototype.dispose = function dispose() {
     if (!this.isDisposed) {
       this.isDiposed = true;
-      delete this.scheduled[this.id];
+      var idx = this.scheduled.indexOf(this.handler);
+      if (idx === -1) {
+        return;
+      }
+      this.scheduled.splice(idx, 1);
     }
   };
 
   ReactRenderScheduler.prototype.runScheduled = function runScheduled() {
-    if (!this.hasNew) {
-      return;
-    }
-    this.hasNew = false;
-    var scheduled = this.scheduled;
-    this.scheduled = {};
+    this.isProcessing = true;
 
-    // Keep in mind that scheduled actions can be disposed of while processing
-    // in this loop
-    var keys = Object.keys(scheduled);
-    var length = keys.length;
-    for (var i = 0; i < length; ++i) {
-      var work = scheduled[keys[i]];
-      if (work) {
+    try {
+      if (!this.hasNew) {
+        return;
+      }
+      this.hasNew = false;
+
+      var scheduled = this.scheduled;
+
+      // Keep in mind that scheduled actions can be disposed of, or added to while processing
+      // in this loop, so we can't use a traditional for loop or rely on stable length.
+      while (scheduled.length > 0) {
+        var next = scheduled.shift();
         try {
-          work();
+          next();
         } catch (e) {
           console.error(e);
         }
       }
+
+      this.scheduled = [];
+    } finally {
+      this.isProcessing = false;
     }
   };
 
   ReactRenderScheduler.prototype.scheduleAction =
-    function scheduleAction(disposable, action, scheduler, state, id) {
-      this.scheduled[id] = function schedule() {
+    function scheduleAction(disposable, action, scheduler, state) {
+      var handler = function schedule() {
         if (!disposable.isDiposed) {
           disposable.setDisposable(Rx.Disposable._fixup(action(scheduler, state)));
         }
       };
 
+      this.scheduled.push(handler);
+
       this.hasNew = true;
-      this.scheduledReadySubject.onNext(id);
+      this.scheduledReadySubject.onNext(++this._lastId);
+      return handler;
     };
 
   ReactRenderScheduler.prototype.schedule = function schedule(state, action) {
-    var id = ++this._lastId;
     var disposable = new Rx.SingleAssignmentDisposable();
-    this.scheduleAction(disposable, action, this, state, id);
-    var scheduledIdDisposable = new ScheduledIdDisposable(this.scheduled, id);
+    var handler = this.scheduleAction(disposable, action, this, state);
+    var scheduledIdDisposable = new ScheduledDisposable(this.scheduled, handler);
 
     return Rx.Disposable.create(function dispose() {
       disposable.dispose();
@@ -90,18 +89,18 @@ module.exports = (function MakeReactRenderScheduler(__super__) {
       return this.schedule(state, action);
     }
 
-    var id = ++this._lastId;
-    var disposable = new Rx.SingleAssignmentDisposable();
+    var innerDisposable = new Rx.SingleAssignmentDisposable();
+    var outerDisposable = new Rx.SingleAssignmentDisposable();
 
     var self = this;
     var timeoutHandle = setTimeout(function delayedSchedule() {
-      self.scheduleAction(disposable, action, this, state, id);
+      var handler = self.scheduleAction(innerDisposable, action, self, state);
+      outerDisposable.setDisposable(new ScheduledDisposable(self.scheduled, handler));
     }, dueTime);
-    var scheduledIdDisposable = new ScheduledIdDisposable(this.scheduled, id);
 
     return Rx.Disposable.create(function dispose() {
-      disposable.dispose();
-      scheduledIdDisposable.dispose();
+      innerDisposable.dispose();
+      outerDisposable.dispose();
       clearTimeout(timeoutHandle);
     });
   };

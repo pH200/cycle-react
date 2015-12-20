@@ -4,6 +4,11 @@ var createLifecycleSubjects = util.createLifecycleSubjects;
 var makeInteractions = require('./interactions');
 var ReactRenderScheduler = require('./rx/react-render-scheduler');
 
+// Use a special object to distinguish between a render that results in an empty vtree,
+// or having not rendered a vTree.  This matters with the render scheduler and how it delays
+// applying the vtree.
+var noVtree = {};
+
 function createReactClass(React, Adapter) {
   var makePropsObservable = Adapter.makePropsObservable;
   var createEventSubject = Adapter.createEventSubject;
@@ -37,11 +42,9 @@ function createReactClass(React, Adapter) {
     return eventObservables;
   }
 
-  return function component(
-    displayName,
-    definitionFn,
-    componentOptions
-  ) {
+  return function component(displayName,
+                            definitionFn,
+                            componentOptions) {
     if (typeof displayName !== 'string') {
       throw new Error('Invalid displayName');
     }
@@ -87,24 +90,25 @@ function createReactClass(React, Adapter) {
         this.cycleComponent = cycleComponent;
         this.cycleComponentDispose = cycleComponent.dispose;
         this.onMount = cycleComponent.onMount;
-        this._renderedVtree = null;
-        this._rendering = false;
+        this._renderedVtree = noVtree;
         var vtree$ = cycleComponent.vtree$;
 
         if (enableRenderScheduler) {
           var schedulerReadySubscription = subscribe(
             this.renderScheduler.scheduledReadySubject,
             function onHasScheduled(lastScheduledId) {
-              self.setState({
-                lastScheduledId: lastScheduledId
-              });
+              if (!self.renderScheduler.isProcessing) {
+                self.setState({
+                  lastScheduledId: lastScheduledId
+                });
+              }
             }
           );
           this.disposable.add(schedulerReadySubscription);
         }
 
         var subscription = subscribe(vtree$, function onNextVTree(vtree) {
-          if (self._rendering) {
+          if (self.renderScheduler && self.renderScheduler.isProcessing) {
             self._renderedVtree = vtree;
           } else {
             self.setState({vtree: vtree});
@@ -177,10 +181,11 @@ function createReactClass(React, Adapter) {
       render: function render() {
         var vtree = this.state ? this.state.vtree : null;
         if (this.renderScheduler && this.renderScheduler.hasNew) {
-          this._renderedVtree = null;
-          this._rendering = true;
+          this._renderedVtree = noVtree;
           this.renderScheduler.runScheduled();
-          vtree = this._renderedVtree;
+          if (this._renderedVtree !== noVtree) {
+            vtree = this._renderedVtree;
+          }
         }
 
         if (vtree) {
@@ -201,8 +206,7 @@ function createReactClass(React, Adapter) {
     }
     // Override forceUpdate for react-hot-loader
     if (options._testForceHotLoader ||
-      (!options.disableHotLoader && module.hot))
-    {
+      (!options.disableHotLoader && module.hot)) {
       reactClassProto.forceUpdate = function hotForceUpdate(callback) {
         if (this.hasMounted) {
           this._unsubscribeCycleComponent();
