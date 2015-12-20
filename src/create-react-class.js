@@ -51,16 +51,19 @@ function createReactClass(React, Adapter) {
     var options = componentOptions || {};
     // The option for the default root element type.
     var rootTagName = options.rootTagName || 'div';
+    var enableRenderScheduler = !!options.renderScheduler;
 
     var reactClassProto = {
       displayName: displayName,
       getInitialState: function getInitialState() {
         this.hasMounted = false;
-        return {vtree: null};
+        return {
+          vtree: null,
+          lastScheduledId: -1
+        };
       },
       _subscribeCycleComponent: function _subscribeCycleComponent() {
         var self = this;
-        this.scheduler = new ReactRenderScheduler();
         this.disposable = new CompositeDisposable();
         var propsSubject$ = makePropsObservable(this.props);
         this.propsSubject$ = propsSubject$;
@@ -68,8 +71,18 @@ function createReactClass(React, Adapter) {
         this.interactions = interactions;
         var lifecycles = createLifecycleSubjects(createEventSubject);
         this.lifecycles = lifecycles;
+        if (enableRenderScheduler) {
+          this.renderScheduler = new ReactRenderScheduler();
+        }
+
         var cycleComponent = digestDefinitionFnOutput(
-          definitionFn(interactions, propsSubject$, this, lifecycles)
+          definitionFn(
+            interactions,
+            propsSubject$,
+            this,
+            lifecycles,
+            this.renderScheduler
+          )
         );
         this.cycleComponent = cycleComponent;
         this.cycleComponentDispose = cycleComponent.dispose;
@@ -78,10 +91,17 @@ function createReactClass(React, Adapter) {
         this._rendering = false;
         var vtree$ = cycleComponent.vtree$;
 
-        var schedulerReadySubscription = subscribe(this.scheduler.scheduledReadySubject,
-          function onHasScheduled(id) {
-            self.setState({lastScheduledId: id});
-          });
+        if (enableRenderScheduler) {
+          var schedulerReadySubscription = subscribe(
+            this.renderScheduler.scheduledReadySubject,
+            function onHasScheduled(lastScheduledId) {
+              self.setState({
+                lastScheduledId: lastScheduledId
+              });
+            }
+          );
+          this.disposable.add(schedulerReadySubscription);
+        }
 
         var subscription = subscribe(vtree$, function onNextVTree(vtree) {
           if (self._rendering) {
@@ -93,7 +113,6 @@ function createReactClass(React, Adapter) {
 
         this.disposable.add(propsSubject$);
         this.disposable.add(subscription);
-        this.disposable.add(schedulerReadySubscription);
       },
       _unsubscribeCycleComponent: function _unsubscribeCycleComponent() {
         if (this.propsSubject$) {
@@ -157,22 +176,15 @@ function createReactClass(React, Adapter) {
       },
       render: function render() {
         var vtree = this.state ? this.state.vtree : null;
-        if (this.scheduler && this.scheduler.hasNew) {
+        if (this.renderScheduler && this.renderScheduler.hasNew) {
           this._renderedVtree = null;
           this._rendering = true;
-          this.scheduler.runScheduled();
+          this.renderScheduler.runScheduled();
           vtree = this._renderedVtree;
         }
 
-        if (this.state && vtree) {
-          // TODO: Remove this block in the future releases
-          if (typeof vtree === 'function' &&
-              typeof console !== 'undefined')
-          {
-            console.warn(
-              'Support for using the function as view is ' +
-              'deprecated and will be soon removed.'
-            );
+        if (vtree) {
+          if (typeof vtree === 'function') {
             return React.cloneElement(vtree());
           }
           return React.cloneElement(vtree);

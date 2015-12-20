@@ -457,14 +457,14 @@ describe('Component', function () {
     // Make simple custom element
 
     let renderSubject = new Rx.Subject();
-    let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
+    let MyElement = Cycle.component('MyElement', function (_1, _2, self, _4, renderScheduler) {
       vtreeController$.subscribe(() => {
         let editField = ReactDOM.findDOMNode(self.refs.theRef);
         assert.notStrictEqual(editField, null);
         assert.strictEqual(editField.tagName, 'H3');
         done();
       });
-      return renderSubject.delay(0, self.scheduler).map(() =>
+      return renderSubject.delay(0, renderScheduler).map(() =>
         <h3 className="myelementclass"
             ref="theRef" />
       );
