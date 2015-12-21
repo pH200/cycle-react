@@ -97,34 +97,43 @@ Supported lifecycle events:
 
 ## Refs
 
-In order to use refs in React, your JSX elements must be created within a React.render method.  However, Observables
+In order to use refs in React, your JSX elements must be created within a React.render method. However, Observables
 do not, by default, get invoked within this render method, making refs unusable.  There are two approaches to fix:
 
 1.  Return an Observable of functions containing the ReactElements.
 ```js
 let MyElement = Cycle.component('MyElement', function (interactions, props) {
-  return props.map(() => <div ref="top-div"></div>);
+  return props.map(() => (
+    // Return a wrapper function instead of a raw ReactElement.
+    () => <div ref="top-div"></div>
+  ));
 });
 ```
 
-2.  Use the render scheduler.  Use a delay(0, renderScheduler) in order to cause the remaining chained observables
-to be invoked within the component's render method.  NOTE:  Using this scheduler to send events or cause state
+2.  Use the render scheduler.  Use a observeOn(renderScheduler) in order to cause the remaining chained observables
+to be invoked within the component's render method.
+NOTE: Using this scheduler to send events or cause state
 changes in another react element will throw an error as per React's restrictions
 (no setState during any batched rendering).  It's best to use this scheduler only for rendering elements.
 ```js
 let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  return props.delay(0, renderScheduler).map(() => <div ref="top-div"></div>);
+  return props
+    .observeOn(renderScheduler)
+    .map(() => <div ref="top-div"></div>);
 }, {renderScheduler: true});
 ```
 
 The advantage of the latter approach is that you can use the scheduler to compose different Observable streams
-more easily.  This is useful, if say, one part of your dom is more expensive to build than others, so you want
+more easily.  This is useful, if say, one part of your DOM is more expensive to build than others, so you want
 to use separate Observables to compose it.
 
 ```js
 let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  var inner$ = props.get('innerText').delay(0, renderScheduler).map((p) => <div ref="inner">{p.innerText}</div>);
-  return props.get('outerText').combineLatest(inner$, (outerText, inner) => <div>{outerText} {inner}</div>);
+  var inner$ = props.get('innerText')
+    .observeOn(renderScheduler)
+    .map((p) => <div ref="inner">{p.innerText}</div>);
+  return props.get('outerText')
+    .combineLatest(inner$, (outerText, inner) => <div>{outerText} {inner}</div>);
 }, {renderScheduler: true});
 ```
 
@@ -132,9 +141,9 @@ The other advantage of using the scheduler is in 'delaying' actions until after 
 
 ```js
 let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  return props.delay(0, renderScheduler).map(() => {
-    renderScheduler.schedule(null, function() {
-      component.refs.theref; // this is now set.  actions that are scheduled during a render will batch immediately after.
+  return props.observeOn(renderScheduler).map(() => {
+    renderScheduler.schedule(null, function () {
+      self.refs.theref; // this is now set.  actions that are scheduled during a render will batch immediately after.
     });
     return <div ref="theref"></div>
   });

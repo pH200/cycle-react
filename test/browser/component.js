@@ -466,9 +466,8 @@ describe('Component', function () {
           assert.strictEqual(editField.tagName, 'H3');
           done();
         });
-        return renderSubject.delay(0, renderScheduler).map(() =>
-          <h3 className="myelementclass"
-        ref="theRef" />
+        return renderSubject.observeOn(renderScheduler).map(() =>
+          <h3 className="myelementclass" ref="theRef" />
         );
       }, {renderScheduler: true});
 
@@ -505,7 +504,7 @@ describe('Component', function () {
           done();
         });
 
-        return renderSubject.delay(0, renderScheduler).map(() => {
+        return renderSubject.observeOn(renderScheduler).map(() => {
           renderScheduler.schedule(null, function () {
             secondScheduleInvoked = true;
           });
