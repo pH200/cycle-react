@@ -452,24 +452,97 @@ describe('Component', function () {
     );
   });
 
-  it('should accept vtree as function and "ref"', function (done) {
-    let vtreeController$ = Rx.Observable.range(0, 2).controlled();
-    // Make simple custom element
-    let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
-      vtreeController$.subscribe(() => {
-        let editField = ReactDOM.findDOMNode(self.refs.theRef);
-        assert.notStrictEqual(editField, null);
-        assert.strictEqual(editField.tagName, 'H3');
-        done();
-      });
-      return Rx.Observable.just(() =>
-        <h3 className="myelementclass"
-            ref="theRef" />
-      );
+  describe('with renderScheduler enabled', function () {
+    it('will invoke the observable within the render context', function (done) {
+      let vtreeController$ = Rx.Observable.range(0, 2).controlled();
+      // Make simple custom element
+
+      let renderSubject = new Rx.Subject();
+      let MyElement = Cycle.component('MyElement', function (_1, _2, self, _4, renderScheduler) {
+        vtreeController$.subscribe(() => {
+          let editField = ReactDOM.findDOMNode(self.refs.theRef);
+          assert.notStrictEqual(editField, null);
+          assert.strictEqual(editField.tagName, 'H3');
+          done();
+        });
+        return renderSubject.delay(0, renderScheduler).map(() =>
+          <h3 className="myelementclass"
+        ref="theRef" />
+        );
+      }, {renderScheduler: true});
+
+      applyToDOM(createRenderTarget(), MyElement);
+      renderSubject.onNext(null);
+      renderSubject.onNext(null);
+
+      // Make assertions
+      vtreeController$.request(1);
     });
-    applyToDOM(createRenderTarget(), MyElement);
-    // Make assertions
-    vtreeController$.request(1);
+
+    it('batches multiple renderScheduler calls without overinvoking setState', function (done) {
+      let vtreeController$ = Rx.Observable.range(0, 2).controlled();
+      // Make simple custom element
+
+      let renderSubject = new Rx.Subject();
+      let MyElement = Cycle.component('MyElement', function (_1, _2, self, _4, renderScheduler) {
+        let oldSetState = self.setState;
+        let numInvoked = 0;
+        let secondScheduleInvoked = false;
+
+        self.setState = function () {
+          numInvoked++;
+          return oldSetState.apply(self, arguments);
+        };
+
+        vtreeController$.subscribe(() => {
+          let editField = ReactDOM.findDOMNode(self.refs.theRef);
+          assert.notStrictEqual(editField, null);
+          assert.strictEqual(editField.tagName, 'H3');
+          assert.strictEqual(secondScheduleInvoked, true);
+          assert.strictEqual(numInvoked, 1);
+
+          done();
+        });
+
+        return renderSubject.delay(0, renderScheduler).map(() => {
+          renderScheduler.schedule(null, function () {
+            secondScheduleInvoked = true;
+          });
+          return <h3 className="myelementclass" ref="theRef"/>;
+        });
+      }, {renderScheduler: true});
+
+      applyToDOM(createRenderTarget(), MyElement);
+      renderSubject.onNext(null);
+
+      // Make assertions
+      vtreeController$.request(1);
+    });
+
+    it('retains the old vtree if nothing is rendering from a scheduled action', function (done) {
+      let vtreeController$ = Rx.Observable.range(0, 2).controlled();
+      let MyElement = Cycle.component('MyElement', function (_1, _2, self, _4, renderScheduler) {
+        let secondScheduleInvoked = false;
+
+        vtreeController$.delay(2).subscribe(() => {
+          let editField = ReactDOM.findDOMNode(self);
+          assert.notStrictEqual(editField, null);
+          assert.strictEqual(editField.tagName, 'H3');
+          assert.strictEqual(secondScheduleInvoked, true);
+
+          done();
+        });
+
+        renderScheduler.scheduleFuture(null, 1, () => secondScheduleInvoked = true);
+
+        return Rx.Observable.just(<h3>Hello</h3>);
+      }, {renderScheduler: true});
+
+      applyToDOM(createRenderTarget(), MyElement);
+
+      // Make assertions
+      vtreeController$.request(1);
+    });
   });
 
   it('should dispose vtree$ after destruction', function () {

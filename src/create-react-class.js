@@ -2,6 +2,12 @@ var util = require('./util');
 var digestDefinitionFnOutput = util.digestDefinitionFnOutput;
 var createLifecycleSubjects = util.createLifecycleSubjects;
 var makeInteractions = require('./interactions');
+var ReactRenderScheduler = require('./rx/react-render-scheduler');
+
+// Use a special object to distinguish between a render that results in an empty vtree,
+// or having not rendered a vTree.  This matters with the render scheduler and how it delays
+// applying the vtree.
+var noVtree = {};
 
 function createReactClass(React, Adapter) {
   var makePropsObservable = Adapter.makePropsObservable;
@@ -36,11 +42,9 @@ function createReactClass(React, Adapter) {
     return eventObservables;
   }
 
-  return function component(
-    displayName,
-    definitionFn,
-    componentOptions
-  ) {
+  return function component(displayName,
+                            definitionFn,
+                            componentOptions) {
     if (typeof displayName !== 'string') {
       throw new Error('Invalid displayName');
     }
@@ -50,12 +54,16 @@ function createReactClass(React, Adapter) {
     var options = componentOptions || {};
     // The option for the default root element type.
     var rootTagName = options.rootTagName || 'div';
+    var enableRenderScheduler = !!options.renderScheduler;
 
     var reactClassProto = {
       displayName: displayName,
       getInitialState: function getInitialState() {
         this.hasMounted = false;
-        return {vtree: null};
+        return {
+          vtree: null,
+          lastScheduledId: -1
+        };
       },
       _subscribeCycleComponent: function _subscribeCycleComponent() {
         var self = this;
@@ -66,15 +74,45 @@ function createReactClass(React, Adapter) {
         this.interactions = interactions;
         var lifecycles = createLifecycleSubjects(createEventSubject);
         this.lifecycles = lifecycles;
+        if (enableRenderScheduler) {
+          this.renderScheduler = new ReactRenderScheduler();
+        }
+
         var cycleComponent = digestDefinitionFnOutput(
-          definitionFn(interactions, propsSubject$, this, lifecycles)
+          definitionFn(
+            interactions,
+            propsSubject$,
+            this,
+            lifecycles,
+            this.renderScheduler
+          )
         );
         this.cycleComponent = cycleComponent;
         this.cycleComponentDispose = cycleComponent.dispose;
         this.onMount = cycleComponent.onMount;
+        this._renderedVtree = noVtree;
         var vtree$ = cycleComponent.vtree$;
+
+        if (enableRenderScheduler) {
+          var schedulerReadySubscription = subscribe(
+            this.renderScheduler.scheduledReadySubject,
+            function onHasScheduled(lastScheduledId) {
+              if (!self.renderScheduler.isProcessing) {
+                self.setState({
+                  lastScheduledId: lastScheduledId
+                });
+              }
+            }
+          );
+          this.disposable.add(schedulerReadySubscription);
+        }
+
         var subscription = subscribe(vtree$, function onNextVTree(vtree) {
-          self.setState({vtree: vtree});
+          if (self.renderScheduler && self.renderScheduler.isProcessing) {
+            self._renderedVtree = vtree;
+          } else {
+            self.setState({vtree: vtree});
+          }
         });
 
         this.disposable.add(propsSubject$);
@@ -141,18 +179,20 @@ function createReactClass(React, Adapter) {
         this.lifecycles.componentWillUnmount.onEvent();
       },
       render: function render() {
-        if (this.state && this.state.vtree) {
-          // TODO: Remove this block in the future releases
-          if (typeof this.state.vtree === 'function' &&
-              typeof console !== 'undefined')
-          {
-            console.warn(
-              'Support for using the function as view is ' +
-              'deprecated and will be soon removed.'
-            );
-            return React.cloneElement(this.state.vtree());
+        var vtree = this.state ? this.state.vtree : null;
+        if (this.renderScheduler && this.renderScheduler.hasNew) {
+          this._renderedVtree = noVtree;
+          this.renderScheduler.runScheduled();
+          if (this._renderedVtree !== noVtree) {
+            vtree = this._renderedVtree;
           }
-          return React.cloneElement(this.state.vtree);
+        }
+
+        if (vtree) {
+          if (typeof vtree === 'function') {
+            return React.cloneElement(vtree());
+          }
+          return React.cloneElement(vtree);
         }
         return React.createElement(rootTagName);
       }
@@ -166,8 +206,7 @@ function createReactClass(React, Adapter) {
     }
     // Override forceUpdate for react-hot-loader
     if (options._testForceHotLoader ||
-      (!options.disableHotLoader && module.hot))
-    {
+      (!options.disableHotLoader && module.hot)) {
       reactClassProto.forceUpdate = function hotForceUpdate(callback) {
         if (this.hasMounted) {
           this._unsubscribeCycleComponent();
