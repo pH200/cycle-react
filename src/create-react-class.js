@@ -153,7 +153,7 @@ function createReactClass(React, Adapter) {
         // componentWillMount is called for both client and server
         // https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
         this._subscribeCycleComponent();
-        this.lifecycles.componentWillMount.onEvent();
+        this.lifecycles.componentWillMount.onNext();
       },
       componentDidMount: function componentDidMount() {
         this._subscribeCycleEvents();
@@ -161,22 +161,28 @@ function createReactClass(React, Adapter) {
           this.onMount(this);
         }
         this.hasMounted = true;
-        this.lifecycles.componentDidMount.onEvent();
+        this.lifecycles.componentDidMount.onNext();
       },
       componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
         this.propsSubject$.onNext(nextProps);
-        this.lifecycles.componentWillReceiveProps.onEvent(nextProps);
+        this.lifecycles.componentWillReceiveProps.onNext(nextProps);
       },
       componentWillUpdate: function componentWillUpdate(nextProps) {
-        this.lifecycles.componentWillUpdate.onEvent(nextProps);
+        this.lifecycles.componentWillUpdate.onNext(nextProps);
       },
       componentDidUpdate: function componentDidUpdate(prevProps) {
-        this.lifecycles.componentDidUpdate.onEvent(prevProps);
+        this.lifecycles.componentDidUpdate.onNext(prevProps);
       },
       componentWillUnmount: function componentWillUnmount() {
-        // componentWillUnmount is not being called for server
+        // componentWillUnmount is not being called for the server context
+        this.lifecycles.componentWillMount.onCompleted();
+        this.lifecycles.componentDidMount.onCompleted();
+        this.lifecycles.componentWillReceiveProps.onCompleted();
+        this.lifecycles.componentWillUpdate.onCompleted();
+        this.lifecycles.componentDidUpdate.onCompleted();
+        this.lifecycles.componentWillUnmount.onNext();
+        this.lifecycles.componentWillUnmount.onCompleted();
         this._unsubscribeCycleComponent();
-        this.lifecycles.componentWillUnmount.onEvent();
       },
       render: function render() {
         var vtree = this.state ? this.state.vtree : null;
