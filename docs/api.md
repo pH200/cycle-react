@@ -1,8 +1,6 @@
 # Cycle-React API
 
 - [`component`](#component)
-- [`React`](#React)
-- [`Rx`](#Rx)
 
 ### <a id="component"></a> `component(displayName, definitionFn, [options])`
 
@@ -69,17 +67,5 @@ you have an initial value for the vtree$. Examples:
 - `definitionFn :: Function` the implementation for the custom element. This function takes up to five arguments: `interactions`, `properties`, `component`, `lifecycles`, `renderScheduler` and
 should output an object of Observables.
 - `[options] :: Object` the options for component.
-
-- - -
-
-### <a id="React"></a> `React`
-
-A shortcut to the root object of React.
-
-- - -
-
-### <a id="Rx"></a> `Rx`
-
-A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
 
 - - -

@@ -1,4 +1,4 @@
-let {Rx} = require('cycle-react');
+let Rx = require('rx');
 let {Map, fromJS} = require('immutable');
 
 module.exports = function getSource() {

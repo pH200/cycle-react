@@ -4,7 +4,8 @@ let assert = require('assert');
 let cheerio = require('cheerio');
 let ReactDOMServer = require('react-dom/server');
 let Cycle = require('../../');
-let {Rx, React} = Cycle;
+let Rx = require('rx');
+let React = require('react');
 
 describe('Server-side rendering', function () {
   it('should output HTML when given a simple component', function () {

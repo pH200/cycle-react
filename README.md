@@ -17,7 +17,7 @@ framework called [Cycle.js](https://github.com/cyclejs/cycle-core).
 ## Installing
 
 ```
-npm install cycle-react react
+npm install cycle-react react rx
 ```
 
 ## Example
@@ -73,7 +73,7 @@ André's amazing presentation:
 const Cycle = require('cycle-react');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Rx = Cycle.Rx;
+const Rx = require('rx');
 
 // "component" returns a native React component which can be used normally
 // by "React.createElement".
@@ -111,7 +111,8 @@ To use Cycle-React with React Native, import Cycle-React with
 Example can be found at [examples/native](/examples/native)
 
 ```js
-var {component, Rx} = require('cycle-react/native');
+var {component} = require('cycle-react/native');
+var Rx = require('rx');
 var Hello = component('Hello', () =>
   Rx.Observable.just(<Text>Hello!</Text>)
 );

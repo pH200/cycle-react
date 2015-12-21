@@ -1,4 +1,4 @@
-let {Rx} = require('cycle-react');
+let Rx = require('rx');
 let cuid = require('cuid');
 let {Map} = require('immutable');
 

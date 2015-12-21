@@ -1,4 +1,4 @@
-let {Rx} = require('cycle-react');
+let Rx = require('rx');
 let ESC_KEY = 27;
 
 function todoIntent(interactions) {

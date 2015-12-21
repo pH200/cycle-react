@@ -23,8 +23,10 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "inherits": "^2.0.1",
-    "rx": "4.0.7"
+    "inherits": "^2.0.1"
+  },
+  "peerDependencies": {
+    "rx": "*"
   },
   "devDependencies": {
     "babel": "^5.8.23",
@@ -39,6 +41,7 @@
     "mocha": "^2.3.3",
     "react": "~0.14.0",
     "react-dom": "^0.14.3",
+    "rx": "4.0.7",
     "testem": "~0.9.8",
     "uglify-js": "^2.5.0"
   },

@@ -1,5 +1,5 @@
 const Cycle = require('cycle-react');
-const Rx = Cycle.Rx;
+const Rx = require('rx');
 
 function manyModel(intentions) {
   function createRandomItem() {

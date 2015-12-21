@@ -1,5 +1,5 @@
 const Cycle = require('cycle-react');
-const Rx = Cycle.Rx;
+const Rx = require('rx');
 const React = require('react');
 
 const ManyItem = Cycle.component('ManyItem', function (interactions, props) {

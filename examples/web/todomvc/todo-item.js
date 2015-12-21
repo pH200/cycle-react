@@ -1,6 +1,6 @@
 let Cycle = require('cycle-react');
 let React = require('react');
-let Rx = Cycle.Rx;
+let Rx = require('rx');
 let ESC_KEY = 27;
 
 let TodoItem = Cycle.component('TodoItem', function (interactions, props) {

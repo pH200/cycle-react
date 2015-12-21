@@ -2,7 +2,7 @@
 /* global describe, it */
 let assert = require('assert');
 let Cycle = require('../../');
-let Rx = Cycle.Rx;
+let Rx = require('rx');
 
 describe('component', function () {
   it('should have a default rootTagName', function () {

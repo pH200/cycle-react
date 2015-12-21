@@ -4,7 +4,8 @@ let assert = require('assert');
 let Cycle = require('../../');
 let applyToDOM = require('./lib/apply-to-dom');
 let Fixture89 = require('./fixtures/issue-89');
-let {Rx, React} = Cycle;
+let Rx = require('rx');
+let React = require('react');
 
 function createRenderTarget() {
   let element = document.createElement('div');

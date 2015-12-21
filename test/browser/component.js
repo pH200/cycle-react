@@ -3,7 +3,8 @@
 let assert = require('assert');
 let Cycle = require('../../');
 let applyToDOM = require('./lib/apply-to-dom');
-let {Rx, React} = Cycle;
+let Rx = require('rx');
+let React = require('react');
 let ReactDOM = require('react-dom');
 
 function createRenderTarget() {

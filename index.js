@@ -2,7 +2,6 @@
 var createReactClass = require('./src/create-react-class');
 var createAdapter = require('./src/rx/adapter');
 var React = require('react');
-var Rx = require('rx');
 
 var Cycle = {
   /**
@@ -37,19 +36,7 @@ var Cycle = {
    * @param {Object} [options] - The options for component.
    * @returns {ReactComponent} The React component.
    */
-  component: createReactClass(React, createAdapter()),
-
-  /**
-   * A shortcut to the root object of React.
-   * @name React
-   */
-  React: React,
-
-  /**
-   * A shortcut to the root object of [RxJS](https://github.com/Reactive-Extensions/RxJS).
-   * @name Rx
-   */
-  Rx: Rx
+  component: createReactClass(React, createAdapter())
 };
 
 module.exports = Cycle;

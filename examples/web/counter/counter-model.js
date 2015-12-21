@@ -1,6 +1,6 @@
 // This example merges the "intent" tier into the "model" tier.
 // See "many" and "todomvc" for MVI examples.
-import {Rx} from 'cycle-react';
+import Rx from 'rx';
 import {
   onIncrement,
   onDecrement,

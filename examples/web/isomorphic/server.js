@@ -5,7 +5,7 @@ let ReactDOMServer = require('react-dom/server');
 let express = require('express');
 let browserify = require('browserify');
 let serialize = require('serialize-javascript');
-let {Rx} = Cycle;
+let Rx = require('rx');
 let fromStream = require('../lib/rx-fromstream');
 let {App} = require('./app');
 
