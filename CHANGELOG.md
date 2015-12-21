@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.0.0
+
+Breaking change: `rx` is a peer dependency now [#21]
+
+Breaking change: The shortcut for React and Rx are both removed [#21]
+
+Add feature: Added render scheduler for supporting refs,
+see `working-with-react.md` for the details [#23]
+
+Fix: The feature of using function wrapper for view is no longer deprecated [#23]
+
+Fix: The `onCompleted` signal will be emitted for all lifecycle observables
+before the component being unmounted
+
 ## 3.1.0
 
 Add feature: Support lifecycle events by the fourth parameter `lifecycles`
