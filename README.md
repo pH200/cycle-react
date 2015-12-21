@@ -161,6 +161,7 @@ for guidelines.
 ## Contributions and thanks
 
 - [@cem2ran](https://github.com/cem2ran) for adding the support of React Native
+- [@corps](https://github.com/corps) for implementing the render scheduler feature
 
 ## License
 
