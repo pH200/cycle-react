@@ -38,10 +38,21 @@ function makeInteractions(createEventSubject) {
     return result;
   }
 
+  function _getCurrentListeners() {
+    var result = {};
+    var names = Object.keys(subjects);
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      result[name] = listener(name);
+    }
+    return result;
+  }
+
   return {
     get: get,
     listener: listener,
-    bindListeners: bindListeners
+    bindListeners: bindListeners,
+    _getCurrentListeners: _getCurrentListeners
   };
 }
 

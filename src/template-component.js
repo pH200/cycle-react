@@ -49,7 +49,7 @@ function createRenderer(React, rootTagName, templateFn) {
     var hasNewValue = this.hasNewValue;
 
     if (hasNewValue) {
-      return templateFn(viewData, this.interactions);
+      return templateFn(viewData, this.interactions._getCurrentListeners());
     }
     return React.createElement(rootTagName);
   };
