@@ -69,24 +69,6 @@ describe('component', function () {
     assert.strictEqual(MyElement.prototype.foo, (void 0));
   });
 
-  it('should be able to bind `this` for definitionFn', function () {
-    let plan = 0;
-    let MyElement = Cycle.component(
-      'MyElement',
-      (_1, _2, self) => {
-        assert.strictEqual(self.foo, 'bar');
-        plan++;
-        return Rx.Observable.empty();
-      },
-      {
-        mixins: [{foo: 'bar'}]
-      }
-    );
-    let element = new MyElement();
-    element.componentWillMount();
-    assert.strictEqual(plan, 1);
-  });
-
   it('should override forceUpdate for react-hot-loader', function () {
     let MyElement = Cycle.component(
       'MyElement',

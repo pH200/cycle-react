@@ -1,7 +1,10 @@
 'use strict';
-var createReactClass = require('./src/create-react-class');
+var createComponent = require('./src/component');
+var createTemplateComponent = require('./src/template-component');
 var createAdapter = require('./src/rx/adapter');
 var React = require('react');
+
+var RxAdapter = createAdapter();
 
 var Cycle = {
   /**
@@ -36,7 +39,8 @@ var Cycle = {
    * @param {Object} [options] - The options for component.
    * @returns {ReactComponent} The React component.
    */
-  component: createReactClass(React, createAdapter())
+  component: createComponent(React, RxAdapter),
+  templateComponent: createTemplateComponent(React, RxAdapter)
 };
 
 module.exports = Cycle;

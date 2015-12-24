@@ -10,33 +10,29 @@ function LifecycleSubjects(createEventSubject) {
   this.componentWillUnmount = createEventSubject();
 }
 
-module.exports = {
-  digestDefinitionFnOutput: function digestDefinitionFnOutput(output) {
-    var vtree$;
-    var onMount;
-    var dispose;
-    var customEvents;
-    if (output && output.hasOwnProperty('view') &&
-      typeof output.view.subscribe === 'function')
-    {
-      vtree$ = output.view;
-      onMount = output.onMount;
-      dispose = output.dispose;
-      customEvents = output.events;
-    } else if (output && typeof output.subscribe === 'function') {
-      vtree$ = output;
-    } else {
-      throw new Error(
-        'definitionFn given to render or component must return an ' +
-        'Observable of React elements, or an object containing such ' +
-        'Observable named as `view`');
+function makeDispatchFunction(eventName, self) {
+  return function dispatchCustomEvent(evData) {
+    if (self.props) {
+      var eventHandler = self.props[eventName];
+      if (eventHandler) {
+        eventHandler(evData);
+      }
     }
-    return {
-      vtree$: vtree$,
-      onMount: onMount,
-      dispose: dispose,
-      customEvents: customEvents || {}
-    };
+  };
+}
+
+module.exports = {
+  subscribeEventObservables: function subscribeEventObservables(events, self, subscribe) {
+    var eventNames = Object.keys(events);
+    var eventSubscriptions = [];
+    for (var i = 0; i < eventNames.length; i++) {
+      var eventName = eventNames[i];
+      var eventObs = events[eventName];
+      eventSubscriptions.push(
+        subscribe(eventObs, makeDispatchFunction(eventName, self))
+      );
+    }
+    return eventSubscriptions;
   },
   createLifecycleSubjects: function createLifecycleSubjects(createEventSubject) {
     return new LifecycleSubjects(createEventSubject);

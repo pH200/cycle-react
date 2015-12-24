@@ -8,14 +8,8 @@ module.exports = function createAdapter() {
     makePropsObservable: makePropsObservable,
     CompositeDisposable: Rx.CompositeDisposable,
     createDisposable: Rx.Disposable.create,
-    doOnNext: function doOnNext(observable, onNext) {
-      return observable.doOnNext(onNext);
-    },
     subscribe: function subscribe(observable, onNext) {
       return observable.subscribe(onNext);
-    },
-    subscribeAll: function subscribeAll(observables) {
-      return Rx.Observable.merge(observables).subscribe();
     }
   };
 };
