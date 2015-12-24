@@ -40,7 +40,7 @@ var Cycle = {
    * @returns {ReactComponent} The React component.
    */
   component: createComponent(React, RxAdapter),
-  templateComponent: createTemplateComponent(React, RxAdapter)
+  viewComponent: createTemplateComponent(React, RxAdapter)
 };
 
 module.exports = Cycle;
