@@ -30,7 +30,7 @@ function RefsGetter(componentSelf) {
 }
 RefsGetter.prototype.get = function get(name) {
   return this.componentSelf.refs[name];
-}
+};
 
 function createCycleComponent(definitionFn, interactions, propsSubject$, lifecycles, self) {
   return digestDefinitionFnOutput(

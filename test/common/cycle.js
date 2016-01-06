@@ -8,5 +8,9 @@ describe('Cycle', function () {
     it('should have `component`', function () {
       assert.strictEqual(typeof Cycle.component, 'function');
     });
+
+    it('should have `viewComponent`', function () {
+      assert.strictEqual(typeof Cycle.viewComponent, 'function');
+    });
   });
 });

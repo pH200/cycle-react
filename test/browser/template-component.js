@@ -6,7 +6,7 @@ const applyToDOM = require('./lib/apply-to-dom');
 const Rx = require('rx');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const templateComponent = Cycle.templateComponent;
+const viewComponent = Cycle.viewComponent;
 
 const {just} = Rx.Observable;
 
@@ -33,7 +33,7 @@ describe('Template Component', function () {
 
   it('should recognize and create simple element that is registered', function () {
     // Make simple custom element
-    const MyElement = templateComponent(
+    const MyElement = viewComponent(
       'MyElement',
       () => just('myelementclass'),
       (className) => <h3 className={className} />
@@ -49,7 +49,7 @@ describe('Template Component', function () {
   it('should render inner state and properties independently', function () {
     // Make custom element with internal state, and properties as input
     const number$ = Rx.Observable.range(1, 10).controlled();
-    const MyElement = templateComponent('MyElement', function (interactions, props) {
+    const MyElement = viewComponent('MyElement', function (interactions, props) {
       return Rx.Observable.combineLatest(
         props.get('color'),
         number$,
@@ -60,7 +60,7 @@ describe('Template Component', function () {
         {String(number)}
       </h3>
     ));
-    const Root = templateComponent(
+    const Root = viewComponent(
       'Root',
       () => just('#00FF00').startWith('#FF0000'),
       (color) => <MyElement color={color} />
@@ -82,7 +82,7 @@ describe('Template Component', function () {
       just(2).delay(40),
       just(3).delay(60)
     );
-    let MyElement = templateComponent(
+    let MyElement = viewComponent(
       'MyElement',
       (_1, _2, refs, lifecycles) => {
         lifecycles.componentDidUpdate
@@ -104,7 +104,7 @@ describe('Template Component', function () {
   });
 
   it('should trigger the componentWillMount lifecycle', function (done) {
-    let MyElement = templateComponent(
+    let MyElement = viewComponent(
       'MyElement',
       (_1, _2, _3, lifecycles) => {
         lifecycles
@@ -118,7 +118,7 @@ describe('Template Component', function () {
   });
 
   it('should trigger the componentDidMount lifecycle', function (done) {
-    let MyElement = templateComponent(
+    let MyElement = viewComponent(
       'MyElement',
       (_1, _2, refs, lifecycles) => {
         lifecycles
@@ -140,7 +140,7 @@ describe('Template Component', function () {
     let log = 0;
     let number$ = Rx.Observable.range(1, 2).controlled();
     // Make simple custom element
-    let MyElement = templateComponent(
+    let MyElement = viewComponent(
       'MyElement',
       (_1, _2, _3, lifecycles) => {
         lifecycles
@@ -164,7 +164,7 @@ describe('Template Component', function () {
   it('should trigger the componentWillUnmount lifecycle', function (done) {
     let number$ = Rx.Observable.range(1, 2).controlled();
     // Make simple custom element
-    let MyElement = templateComponent(
+    let MyElement = viewComponent(
       'MyElement',
       (_1, _2, _3, lifecycles) => {
         let calledOnCompleted = false;
