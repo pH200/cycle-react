@@ -1,0 +1,16 @@
+exports[`Template Component should recognize and create simple element that is registered 1`] = `
+<h3
+  className="myelementclass" />
+`;
+
+exports[`Template Component should render inner state and properties independently 1`] = `
+<h3
+  className="stateful-element"
+  style={
+    Object {
+      "color": "#00FF00",
+    }
+  }>
+  8
+</h3>
+`;

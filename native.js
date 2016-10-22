@@ -1,9 +1,11 @@
-'use strict';
-var createReactClass = require('./src/create-react-class');
-var createAdapter = require('./src/rx/adapter');
-var React = require('react-native');
+const createComponent = require('./src/component');
+const createTemplateComponent = require('./src/template-component');
+const createAdapter = require('./src/rx/adapter');
+const React = require('react-native');
 
-var Cycle = {
+const RxAdapter = createAdapter();
+
+const Cycle = {
   /**
    * The component's definition function.
    *
@@ -36,7 +38,8 @@ var Cycle = {
    * @param {Object} [options] - The options for component.
    * @returns {ReactComponent} The React component.
    */
-  component: createReactClass(React, createAdapter())
+  component: createComponent(React, RxAdapter),
+  viewComponent: createTemplateComponent(React, RxAdapter)
 };
 
 module.exports = Cycle;

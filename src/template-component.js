@@ -19,21 +19,11 @@ function digestDefinitionFnOutput(output, isObservable) {
     'Observable named as `viewData`');
 }
 
-class RefsGetter {
-  constructor(componentSelf) {
-    this.componentSelf = componentSelf;
-  }
-  get(name) {
-    return this.componentSelf.refs[name];
-  }
-}
-
-function createCycleComponent(isObservable, definitionFn, interactions, propsSubject$, lifecycles, self) {
+function createCycleComponent(isObservable, definitionFn, interactions, propsSubject$, lifecycles) {
   return digestDefinitionFnOutput(
     definitionFn(
       interactions,
       propsSubject$,
-      new RefsGetter(self),
       lifecycles
     ),
     isObservable

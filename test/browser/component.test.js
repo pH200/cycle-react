@@ -1,9 +1,12 @@
-const {component} = require('../../');
-const {Observable} = require('rx');
 const r = require('react').createElement;
 const renderer = require('react-test-renderer');
+const {component} = require('../../');
+const {Observable} = require('rx');
 
 describe('Component', () => {
+  jest.useRealTimers();
+  afterEach(done => setTimeout(done, 1));
+
   it('should recognize and create simple element that is registered', () => {
     // Make simple custom element
     const MyElement = component('MyElement', () =>
@@ -122,11 +125,10 @@ describe('Component', () => {
     number$.request(1);
   });
 
-  it('should not miss custom events from a list of custom elements', (done) => {
+  it('should not miss custom events from a list of custom elements', () => {
     jest.useRealTimers();
     // Make custom element
     const Slider = component('Slider', (interactions, props) => {
-      console.log(123);
       const remove$ = interactions.get('click').map(() => true);
       const id$ = props.get('id').shareReplay(1);
       const vtree$ = id$.map(id =>
@@ -144,8 +146,6 @@ describe('Component', () => {
       [{id: 23}],
       [{id: 23}, {id: 45}]
     ).controlled();
-
-    sequence$.subscribe(x => console.log(x));
 
     function computer(interactions) {
       const eventData$ = interactions.get('remove');
@@ -169,15 +169,13 @@ describe('Component', () => {
         );
     }
 
-    const testRoot = r(component('test2', computer));
+    const testRoot = r(component('test', computer));
     const comp = renderer.create(testRoot);
 
-    setTimeout(function() {
-      // Simulate clicks
+    // Simulate clicks
     sequence$.request(2);
     
     const tree1 = comp.toJSON();
-    console.log(tree1);
     expect(tree1).toMatchSnapshot();
 
     tree1.children[0].props.onClick();
@@ -189,10 +187,6 @@ describe('Component', () => {
     expect(tree3).toMatchSnapshot();
 
     expect(tree3.children).toBeNull();
-    done();
-    }, 1000);
-
-    
   });
 
   it('should recognize nested vtree as properties.get("children")', () => {
@@ -500,7 +494,7 @@ describe('Component', () => {
       theSwitch === 0 ? r(MyElement) : r('div')
     );
     const testRoot = r(component('test', () => vtree$));
-    const comp = renderer.create(testRoot);
+    renderer.create(testRoot);
 
     // Make assertions
     customElementSwitch$.request(1);
@@ -532,7 +526,7 @@ describe('Component', () => {
       theSwitch === 0 ? r(MyElement) : r('div')
     );
     const testRoot = r(component('test', () => vtree$));
-    const comp = renderer.create(testRoot);
+    renderer.create(testRoot);
 
     // Make assertions
     customElementSwitch$.request(1);

@@ -61,8 +61,7 @@ function createReactClass(
           definitionFn,
           this.interactions,
           this.propsSubject$,
-          this.lifecycles,
-          this
+          this.lifecycles
         );
         const subscription = subscribe(
           this.cycleComponent.newValue$,

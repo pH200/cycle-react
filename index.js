@@ -1,12 +1,11 @@
-'use strict';
-var createComponent = require('./src/component');
-var createTemplateComponent = require('./src/template-component');
-var createAdapter = require('./src/rx/adapter');
-var React = require('react');
+const createComponent = require('./src/component');
+const createTemplateComponent = require('./src/template-component');
+const createAdapter = require('./src/rx/adapter');
+const React = require('react');
 
-var RxAdapter = createAdapter();
+const RxAdapter = createAdapter();
 
-var Cycle = {
+const Cycle = {
   /**
    * The component's definition function.
    *

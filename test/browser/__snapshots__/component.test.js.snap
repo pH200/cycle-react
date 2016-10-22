@@ -61,13 +61,33 @@ exports[`Component should distinct property changes for props.get 3`] = `
 </div>
 `;
 
-exports[`Component should emit events even when dynamically evolving 1`] = `<div />`;
+exports[`Component should emit events even when dynamically evolving 1`] = `
+<h3
+  className="myelementclass">
+  foo
+</h3>
+`;
 
-exports[`Component should emit events even when dynamically evolving 2`] = `<div />`;
+exports[`Component should emit events even when dynamically evolving 2`] = `
+<button
+  className="myelementclass">
+  bar
+</button>
+`;
 
-exports[`Component should emit events for dynamic event handlers 1`] = `<div />`;
+exports[`Component should emit events for dynamic event handlers 1`] = `
+<h3
+  className="myelementclass">
+  foo
+</h3>
+`;
 
-exports[`Component should emit events for dynamic event handlers 2`] = `<div />`;
+exports[`Component should emit events for dynamic event handlers 2`] = `
+<h3
+  className="myelementclass">
+  foo
+</h3>
+`;
 
 exports[`Component should have Observable properties object as props.get("*") 1`] = `
 <h3
