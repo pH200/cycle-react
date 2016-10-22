@@ -1,19 +1,16 @@
 const createReactClass = require('./create-react-class');
 
-function digestDefinitionFnOutput(output) {
-  if (output && output.hasOwnProperty('view') &&
-    typeof output.view.subscribe === 'function')
-  {
+function digestDefinitionFnOutput(output, isObservable) {
+  if (output && output.hasOwnProperty('view') && isObservable(output.view)) {
     return {
       newValue$: output.view,
       dispose: output.dispose,
-      customEvents: output.events || {}
-    }
+      customEvents: output.events
+    };
   }
-  if (output && typeof output.subscribe === 'function') {
+  if (output && isObservable(output)) {
     return {
-      newValue$: output,
-      customEvents: {}
+      newValue$: output
     };
   }
   throw new Error(
@@ -22,13 +19,25 @@ function digestDefinitionFnOutput(output) {
     'Observable named as `view`');
 }
 
-function createCycleComponent(definitionFn, interactions, propsSubject$) {
+function createCycleComponent(isObservable, definitionFn, interactions, propsSubject$) {
   return digestDefinitionFnOutput(
     definitionFn(
       interactions,
       propsSubject$
-    )
+    ),
+    isObservable
   );
+}
+
+function createRenderer(React, rootTagName) { 
+  return function render() { 
+    var vtree = this.state ? this.state.newValue : null; 
+ 
+    if (vtree) { 
+      return vtree; 
+    } 
+    return React.createElement(rootTagName); 
+  }; 
 }
 
 function createComponent(React, Adapter) {
@@ -36,6 +45,7 @@ function createComponent(React, Adapter) {
     React,
     Adapter,
     createCycleComponent,
+    createRenderer,
     false
   );
 }

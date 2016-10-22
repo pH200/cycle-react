@@ -5,6 +5,7 @@ function createReactClass(
   React,
   Adapter,
   createCycleComponent,
+  createRenderer,
   isTemplateComponent
 ) {
   const {
@@ -12,7 +13,8 @@ function createReactClass(
     createEventSubject,
     CompositeDisposable,
     createDisposable,
-    subscribe
+    subscribe,
+    isObservable
   } = Adapter;
 
   return function component(displayName,
@@ -41,6 +43,7 @@ function createReactClass(
     class ReactClass extends PureComponent {
       constructor(props) {
         super(props);
+        this.hasNewValue = false;
         this.state = {
           newValue: null
         };
@@ -54,6 +57,7 @@ function createReactClass(
           null;
 
         this.cycleComponent = createCycleComponent(
+          isObservable,
           definitionFn,
           this.interactions,
           this.propsSubject$,
@@ -62,7 +66,10 @@ function createReactClass(
         );
         const subscription = subscribe(
           this.cycleComponent.newValue$,
-          (newValue) => this.setState({newValue: newValue}));
+          (newValue) => {
+            this.hasNewValue = true;
+            this.setState({newValue: newValue})
+          });
 
         this.disposable.add(this.propsSubject$);
         this.disposable.add(subscription);
@@ -143,14 +150,8 @@ function createReactClass(
         }
         this._unsubscribeCycleComponent();
       }
-      render() {
-        const vtree = this.state ? this.state.newValue : null;
-        if (vtree) {
-          return vtree;
-        }
-        return React.createElement(rootTagName);
-      }
     }
+    ReactClass.prototype.render = createRenderer(React, rootTagName, templateFn);
 
     ReactClass.displayName = displayName;
     if (options.propTypes) {

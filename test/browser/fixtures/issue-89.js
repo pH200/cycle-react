@@ -1,12 +1,11 @@
-'use strict';
-let Rx = require('rx');
-let React = require('react');
+const Rx = require('rx');
+const r = require('react').createElement;
 
 function myelement(interactions, props) {
   return props
     .map(p => p.content)
     .distinctUntilChanged()
-    .map(content => <h3 className="myelementclass">{content}</h3>);
+    .map(content => r('h3', {className: 'myelementclass'}, content));
 }
 
 function makeModelNumber$() {
@@ -15,15 +14,13 @@ function makeModelNumber$() {
 
 function viewWithContainerFn(number$, MyElement) {
   return number$.map(number =>
-    <div>
-      <MyElement content={String(number)} />
-    </div>
+    r('div', null, r(MyElement, {content: String(number)}))
   );
 }
 
 function viewWithoutContainerFn(number$, MyElement) {
   return number$.map(number =>
-    <MyElement content={String(number)} />
+    r(MyElement, {content: String(number)})
   );
 }
 

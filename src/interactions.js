@@ -1,4 +1,3 @@
-/* globals process */
 function makeInteractions(createEventSubject) {
   const subjects = {};
 
@@ -23,10 +22,7 @@ function makeInteractions(createEventSubject) {
         );
       }
     }
-    if (!eventSubject) {
-      eventSubject = get(name);
-    }
-    return eventSubject.onEvent;
+    return (eventSubject || get(name)).onEvent;
   }
 
   function bindListeners(interactionTypes) {
@@ -42,7 +38,7 @@ function makeInteractions(createEventSubject) {
   function _getCurrentListeners() {
     const result = {};
     const names = Object.keys(subjects);
-    for (const i = 0; i < names.length; i++) {
+    for (let i = 0; i < names.length; i++) {
       const name = names[i];
       result[name] = listener(name);
     }
