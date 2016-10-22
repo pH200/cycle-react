@@ -13,7 +13,7 @@ function LifecycleSubjects(createEventSubject) {
 function makeDispatchFunction(eventName, self) {
   return function dispatchCustomEvent(evData) {
     if (self.props) {
-      var eventHandler = self.props[eventName];
+      const eventHandler = self.props[eventName];
       if (eventHandler) {
         eventHandler(evData);
       }
@@ -22,19 +22,19 @@ function makeDispatchFunction(eventName, self) {
 }
 
 module.exports = {
-  subscribeEventObservables: function subscribeEventObservables(events, self, subscribe) {
-    var eventNames = Object.keys(events);
-    var eventSubscriptions = [];
-    for (var i = 0; i < eventNames.length; i++) {
-      var eventName = eventNames[i];
-      var eventObs = events[eventName];
+  subscribeEventObservables(events, self, subscribe) {
+    const eventNames = Object.keys(events);
+    const eventSubscriptions = [];
+    for (let i = 0; i < eventNames.length; i++) {
+      const eventName = eventNames[i];
+      const eventObs = events[eventName];
       eventSubscriptions.push(
         subscribe(eventObs, makeDispatchFunction(eventName, self))
       );
     }
     return eventSubscriptions;
   },
-  createLifecycleSubjects: function createLifecycleSubjects(createEventSubject) {
+  createLifecycleSubjects(createEventSubject) {
     return new LifecycleSubjects(createEventSubject);
   }
 };

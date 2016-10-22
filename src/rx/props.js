@@ -1,11 +1,10 @@
-'use strict';
-var Rx = require('rx');
+const Rx = require('rx');
 
 function isEqual(x, y) {
   return x === y;
 }
 
-function makePropsObservable(props) {
+module.exports = function makePropsObservable(props) {
   var propsSubject$ = new Rx.BehaviorSubject(props);
   propsSubject$.get = function getProp(propName, comparer) {
     if (propName === '*') {
@@ -20,5 +19,3 @@ function makePropsObservable(props) {
   };
   return propsSubject$;
 }
-
-module.exports = makePropsObservable;

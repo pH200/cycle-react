@@ -10,6 +10,7 @@
     "max-nested-callbacks": 0,
     "global-strict": 0,
     "func-names": 0,
-    "new-cap": 0
+    "new-cap": 0,
+    "no-console": 0
   }
 }

@@ -54,6 +54,7 @@ describe('interactions', function () {
   });
 
   it('should warn when `listener` is used before `get`', function (done) {
+    /* eslint-disable no-console */
     let interactions = makeInteractions(createEventSubject);
     let tempConsoleWarn = console.warn;
     console.warn = function warn(message) {

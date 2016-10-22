@@ -1,12 +1,9 @@
-'use strict';
-var Rx = require('rx');
+const Rx = require('rx');
 
-function createEventSubject() {
-  var subject = new Rx.Subject();
+module.exports = function createEventSubject() {
+  const subject = new Rx.Subject();
   subject.onEvent = function onEvent(value) {
     subject.onNext(value);
   };
   return subject;
 }
-
-module.exports = createEventSubject;

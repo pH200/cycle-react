@@ -1,6 +1,6 @@
-var Rx = require('rx');
-var createEventSubject = require('./event-subject');
-var makePropsObservable = require('./props');
+const Rx = require('rx');
+const createEventSubject = require('./event-subject');
+const makePropsObservable = require('./props');
 
 module.exports = function createAdapter() {
   return {

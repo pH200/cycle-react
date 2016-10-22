@@ -10,7 +10,7 @@ let React = require('react');
 describe('Server-side rendering', function () {
   it('should output HTML when given a simple component', function () {
     let Root = Cycle.component('Root', () => Rx.Observable.just(
-      <div className="test-element">Foobar</div>
+      React.createElement('div', {className: 'test-element'}, 'Foobar')
     ));
     let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element">Foobar</div>');
@@ -21,7 +21,7 @@ describe('Server-side rendering', function () {
     let MyElement = Cycle.component('MyElement', function () {
       return {
         view: Rx.Observable.just(
-          <div className="test-element">Foobar</div>
+          React.createElement('div', {className: 'test-element'}, 'Foobar')
         ),
         events: {
           myevent: Rx.Observable.just(123).doOnNext(n => log = n)
@@ -35,10 +35,10 @@ describe('Server-side rendering', function () {
 
   it('should render a simple nested component as HTML', function () {
     let MyElement = Cycle.component('MyElement', () => Rx.Observable.just(
-      <h3 className="myelementclass" />
+      React.createElement('h3', {className: 'myelementclass'})
     ));
     let Root = Cycle.component('Root', () => Rx.Observable.just(
-      <div className="test-element"><MyElement /></div>
+      React.createElement('div', {className: 'test-element'}, React.createElement(MyElement))
     ));
     let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element"><h3 class="myelementclass"></h3></div>');
@@ -47,13 +47,11 @@ describe('Server-side rendering', function () {
   it('should render a nested custom element with props as HTML', function () {
     let MyElement = Cycle.component('MyElement', function (_, props) {
       return props.get('foobar').map(foobar =>
-        <h3 className="myelementclass">{String(foobar).toUpperCase()}</h3>
+        React.createElement('h3', {className: 'myelementclass'}, String(foobar).toUpperCase())
       );
     });
     let Root = Cycle.component('Root', () => Rx.Observable.just(
-      <div className="test-element">
-        <MyElement foobar="yes" />
-      </div>
+      React.createElement('div', {className: 'test-element'}, React.createElement(MyElement, {foobar: 'yes'}))
     ));
     let html = ReactDOMServer.renderToStaticMarkup(React.createElement(Root));
     assert.strictEqual(html, '<div class="test-element"><h3 class="myelementclass">YES</h3></div>');

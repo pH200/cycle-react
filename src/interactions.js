@@ -1,6 +1,6 @@
 /* globals process */
 function makeInteractions(createEventSubject) {
-  var subjects = {};
+  const subjects = {};
 
   function get(name) {
     if (name === null || name === (void 0)) {
@@ -13,8 +13,9 @@ function makeInteractions(createEventSubject) {
   }
 
   function listener(name) {
-    var eventSubject = subjects[name];
+    const eventSubject = subjects[name];
     if (!eventSubject && process.env.NODE_ENV !== 'production') {
+      /* eslint-disable no-console */
       if (typeof console !== 'undefined') {
         console.warn(
           'Listening event "' + name + '" before using interactions.get("' +
@@ -29,20 +30,20 @@ function makeInteractions(createEventSubject) {
   }
 
   function bindListeners(interactionTypes) {
-    var result = {};
-    var names = Object.keys(interactionTypes);
-    for (var i = 0; i < names.length; i++) {
-      var name = names[i];
+    const result = {};
+    const names = Object.keys(interactionTypes);
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
       result[name] = listener(interactionTypes[name]);
     }
     return result;
   }
 
   function _getCurrentListeners() {
-    var result = {};
-    var names = Object.keys(subjects);
-    for (var i = 0; i < names.length; i++) {
-      var name = names[i];
+    const result = {};
+    const names = Object.keys(subjects);
+    for (const i = 0; i < names.length; i++) {
+      const name = names[i];
       result[name] = listener(name);
     }
     return result;
