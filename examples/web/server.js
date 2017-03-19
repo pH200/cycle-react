@@ -1,6 +1,7 @@
 var path = require('path');
 var express = require('express');
 var browserify = require('browserify');
+var envify = require('envify/custom');
 var Rx = require('rx');
 var fromStream = require('./lib/rx-fromstream');
 var app = express();
@@ -18,7 +19,8 @@ function compileExample(exampleName, examplePath) {
     console.log('[' + exampleName + '] compiling');
 
     var exampleStream = browserify()
-      .transform('babelify')
+      .transform(envify({NODE_ENV: 'production'}))
+      .transform('babelify', {presets: ["es2015", "react"]})
       .require(cyclePath, {expose: 'cycle-react'})
       .add(examplePath)
       .bundle();

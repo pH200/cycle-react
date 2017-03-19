@@ -2,14 +2,11 @@
 .settings
 
 # Installed libs
-node_modules
+node_modules/
 
 # Generated
-tests-bundle.js
 dist/
+coverage/
 
 # Misc
-ignore
 npm-debug.log
-ts/*
-!ts/cycle.d.ts
