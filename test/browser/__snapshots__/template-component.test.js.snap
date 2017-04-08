@@ -1,6 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`Template Component should recognize and create simple element that is registered 1`] = `
 <h3
-  className="myelementclass" />
+  className="myelementclass"
+/>
 `;
 
 exports[`Template Component should render inner state and properties independently 1`] = `
@@ -10,7 +13,8 @@ exports[`Template Component should render inner state and properties independent
     Object {
       "color": "#00FF00",
     }
-  }>
+  }
+>
   8
 </h3>
 `;

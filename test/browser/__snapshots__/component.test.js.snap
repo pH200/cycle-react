@@ -1,25 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`Component should catch interactions coming from custom element 1`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   foobar
 </h3>
 `;
 
 exports[`Component should catch interactions coming from custom element 2`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   foobar
 </h3>
 `;
 
 exports[`Component should dispose the vtree$ which created by Observable.using 1`] = `
 <h3
-  className="myelementclass" />
+  className="myelementclass"
+/>
 `;
 
 exports[`Component should dispose vtree$ after destruction 1`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   1
 </h3>
 `;
@@ -30,9 +36,11 @@ exports[`Component should dispose vtree$ after destruction 3`] = `<div />`;
 
 exports[`Component should distinct property changes for props.get 1`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol />
@@ -41,9 +49,11 @@ exports[`Component should distinct property changes for props.get 1`] = `
 
 exports[`Component should distinct property changes for props.get 2`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol />
@@ -52,9 +62,11 @@ exports[`Component should distinct property changes for props.get 2`] = `
 
 exports[`Component should distinct property changes for props.get 3`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol />
@@ -63,28 +75,32 @@ exports[`Component should distinct property changes for props.get 3`] = `
 
 exports[`Component should emit events even when dynamically evolving 1`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   foo
 </h3>
 `;
 
 exports[`Component should emit events even when dynamically evolving 2`] = `
 <button
-  className="myelementclass">
+  className="myelementclass"
+>
   bar
 </button>
 `;
 
 exports[`Component should emit events for dynamic event handlers 1`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   foo
 </h3>
 `;
 
 exports[`Component should emit events for dynamic event handlers 2`] = `
 <h3
-  className="myelementclass">
+  className="myelementclass"
+>
   foo
 </h3>
 `;
@@ -96,14 +112,16 @@ exports[`Component should have Observable properties object as props.get("*") 1`
     Object {
       "color": "#FF0000",
     }
-  }>
+  }
+>
   Hello world
 </h3>
 `;
 
 exports[`Component should not emit events after destruction 1`] = `
 <h3
-  className="myelementclass" />
+  className="myelementclass"
+/>
 `;
 
 exports[`Component should not emit events after destruction 2`] = `<div />`;
@@ -112,15 +130,18 @@ exports[`Component should not emit events after destruction 3`] = `<div />`;
 
 exports[`Component should not miss custom events from a list of custom elements 1`] = `
 <div
-  className="allSliders">
+  className="allSliders"
+>
   <h3
     className="internalslider"
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     23
   </h3>
   <h3
     className="internalslider"
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     45
   </h3>
 </div>
@@ -128,10 +149,12 @@ exports[`Component should not miss custom events from a list of custom elements 
 
 exports[`Component should not miss custom events from a list of custom elements 2`] = `
 <div
-  className="allSliders">
+  className="allSliders"
+>
   <h3
     className="internalslider"
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     45
   </h3>
 </div>
@@ -139,41 +162,50 @@ exports[`Component should not miss custom events from a list of custom elements 
 
 exports[`Component should not miss custom events from a list of custom elements 3`] = `
 <div
-  className="allSliders" />
+  className="allSliders"
+/>
 `;
 
 exports[`Component should not silently catch exceptions inside of custom elements 1`] = `
 <h3
-  className="myelementclass" />
+  className="myelementclass"
+/>
 `;
 
 exports[`Component should recognize and create a nested custom elements 1`] = `
 <div
-  className="outerClass">
+  className="outerClass"
+>
   <h3
-    className="innerClass" />
+    className="innerClass"
+  />
 </div>
 `;
 
 exports[`Component should recognize and create simple element that is registered 1`] = `
 <h3
-  className="myelementclass" />
+  className="myelementclass"
+/>
 `;
 
 exports[`Component should recognize and create two unrelated elements 1`] = `
 <div>
   <h1
-    className="myelement1class" />
+    className="myelement1class"
+  />
   <h2
-    className="myelement2class" />
+    className="myelement2class"
+  />
 </div>
 `;
 
 exports[`Component should recognize changes on a mutable collection given as props 1`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol />
@@ -182,14 +214,17 @@ exports[`Component should recognize changes on a mutable collection given as pro
 
 exports[`Component should recognize changes on a mutable collection given as props 2`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol>
     <li
-      className="test-item">
+      className="test-item"
+    >
       item1
     </li>
   </ol>
@@ -198,18 +233,22 @@ exports[`Component should recognize changes on a mutable collection given as pro
 
 exports[`Component should recognize changes on a mutable collection given as props 3`] = `
 <div
-  className="root">
+  className="root"
+>
   <button
-    onClick={[Function]}>
+    onClick={[Function]}
+  >
     add new item
   </button>
   <ol>
     <li
-      className="test-item">
+      className="test-item"
+    >
       item1
     </li>
     <li
-      className="test-item">
+      className="test-item"
+    >
       item2
     </li>
   </ol>
@@ -218,7 +257,8 @@ exports[`Component should recognize changes on a mutable collection given as pro
 
 exports[`Component should recognize nested vtree as properties.get("children") 1`] = `
 <div
-  className="wrapper">
+  className="wrapper"
+>
   <h1>
     Hello
   </h1>
@@ -235,7 +275,8 @@ exports[`Component should render inner state and properties independently 1`] = 
     Object {
       "color": "#00FF00",
     }
-  }>
+  }
+>
   8
 </h3>
 `;

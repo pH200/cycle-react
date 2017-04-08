@@ -1,6 +1,6 @@
 const {component} = require('../../');
 const {Observable} = require('rx');
-const {PropTypes} = require('react');
+const {PropTypes} = require('prop-types');
 
 describe('component', () => {
   it('should have a default rootTagName', () => {
