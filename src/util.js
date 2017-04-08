@@ -29,9 +29,11 @@ module.exports = {
       for (let i = 0; i < eventNames.length; i++) {
         const eventName = eventNames[i];
         const eventObs = events[eventName];
-        eventSubscriptions.push(
-          subscribe(eventObs, makeDispatchFunction(eventName, self))
-        );
+        if (self.props[eventName]) {
+          eventSubscriptions.push(
+            subscribe(eventObs, makeDispatchFunction(eventName, self))
+          );
+        }
       }
       return eventSubscriptions;
     }
