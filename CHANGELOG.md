@@ -1,5 +1,97 @@
 # Changelog
 
+## 5.0.0
+
+Breaking change: Custom events is now subscribed only when listener
+props is provided upon componentDidMountEvent [#37]
+
+For example, if you have following component:
+
+```
+<MyTimer />
+```
+
+And you add the event listener after the component has mounted:
+
+```
+<MyTimer onTick={listener('x')} />
+```
+
+The `onTick` event will be no longer raised for this cycle-react version.
+
+Breaking change: `mixin` is removed along with the usage of `createClass`
+
+Breaking change: `self` and `renderScheduler` have been removed
+
+As a result, `lifecycles` parameter has moved to the third parameter of
+`definitionFn`. For handling [refs](https://facebook.github.io/react/docs/refs-and-the-dom.html),
+please use `interactions` for generating callback function.
+
+See ["Working with React"](/docs/working-with-react.md) for further details.
+
+Breaking change: `cycle-react` is now native ES6
+
+Use any transplier if you need backward compatibility for `cycle-react`.
+If you are using [Babel](https://babeljs.io/) already you should have
+no problem.
+
+In addition, the following features are not used in cycle-react to ensure
+minimum dependency and good efficiency for all browsers.
+
+- Async
+- Iterators and generators
+- Symbol
+- for..of
+- Destructuring assignment
+- Default, spread and rest parameters
+- Promise
+
+You can still use any of the features above in your project with cycle-react.
+In fact, using destructuring assignment with cycle-react is recommended.
+
+- Preview: View component
+
+View component is a new way to define cycle-react components by divorcing view
+function from the component. For example, the original component function
+allows you to define the component like this:
+
+```
+component('Hello', (interactions) =>
+  interactions.get('OnNameChanged')
+    .map(ev => ev.target.value)
+    .startWith('')
+    .map(name =>
+      <div>
+        <label>Name:</label>
+        <input type="text" onChange={interactions.listener('OnNameChanged')} />
+        <hr />
+        <h1>Hello {name}</h1>
+      </div>
+    )
+);
+```
+
+New view component extracts the view function out of component definition:
+
+```
+viewComponent(
+  'Hello',
+  (interactions) =>
+    interactions.get('OnNameChanged')
+      .map(ev => ev.target.value)
+      .startWith(''),
+  // View function
+  (name, {OnNameChanged}) => (
+    <div>
+      <label>Name:</label>
+      <input type="text" onChange={OnNameChanged} />
+      <hr />
+      <h1>Hello {name}</h1>
+    </div>
+  )
+);
+```
+
 ## 4.0.0
 
 Breaking change: `rx` is a peer dependency now [#21]

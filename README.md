@@ -77,13 +77,13 @@ const Rx = require('rx');
 
 // "component" returns a native React component which can be used normally
 // by "React.createElement".
-let Counter = Cycle.component('Counter', function (interactions, props) {
+const Counter = Cycle.component('Counter', function (interactions, props) {
   return props.get('counter').map(counter =>
     <h3>Seconds Elapsed: {counter}</h3>
   );
 });
 
-let Timer = Cycle.component('Timer', function () {
+const Timer = Cycle.component('Timer', function () {
   return Rx.Observable.interval(1000).map(i =>
     <Counter counter={i} />
   );

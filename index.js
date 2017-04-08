@@ -12,7 +12,7 @@ const Cycle = {
    * @callback DefinitionFn
    * @param {Object} interactions - The collection of events.
    * @param {Object} props - The observable for React props.
-   * @param {Object} [self] - "this" object for the React component.
+   * @param {Object} [lifecycles] - lifecycle observables for the React component.
    * @returns {}
    */
   /**

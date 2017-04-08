@@ -23,7 +23,7 @@ Example:
 
 ```js
 // Define event for the component
-let MyElement = Cycle.component('MyElement', function definition() {
+const MyElement = Cycle.component('MyElement', function definition() {
   return {
     view: Rx.Observable.just(<h3 className="myelement">My Element</h3>),
     events: {
@@ -38,31 +38,11 @@ let MyElement = Cycle.component('MyElement', function definition() {
 interactions.get('OnTickEvent'); // Observable<T>
 ```
 
-## this
-
-The third parameter of `definitionFn` is `self`, which represents `this` of
-your created React class.
-
-Normally, you don't want to use this. However, it might be required for
-working with some React components.
-
-Example:
-
-```js
-let Navigation = require('react-router').Navigation;
-let options = {
-  mixins: [Navigation]
-};
-let MyElement = Cycle.component('MyElement', function (_1, _2, self) {
-  return Rx.Observable.just(<div onClick={() => self.goBack()}>Go back</div>);
-}, options);
-```
-
 ## Lifecycle events
 
 You can query your component's
 [lifecycle events](https://facebook.github.io/react/docs/component-specs.html)
-through the forth parameter `lifecycle` for definitionFn.
+through the third parameter `lifecycle` for definitionFn.
 
 The key for the lifecycle event is the lifecycle name itself.
 
@@ -73,14 +53,12 @@ You should not manipulate the DOM element directly except from these two events.
 Example:
 
 ```js
-let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles) {
+const MyElement = Cycle.component('MyElement', function (interactions, props, lifecycles) {
   // Get the observable for componentDidMount
-  let componentDidMountObservable = lifecycles.componentDidMount;
+  const componentDidMountObservable = lifecycles.componentDidMount;
 
   return componentDidMountObservable.map(() => {
-    // Find the DOM node from "self"
-    let node = ReactDOM.findDOMNode(self);
-    // ...
+    // Event handler for componentDidMountEvent
     return <div>The element</div>;
   });
 });
@@ -97,77 +75,27 @@ Supported lifecycle events:
 
 ## Refs
 
-In order to use refs in React, your JSX elements must be created within a React.render method. However, Observables
-do not, by default, get invoked within this render method, making refs unusable.  There are two approaches to fix:
-
-1.  Return an Observable of functions containing the ReactElements.
-```js
-let MyElement = Cycle.component('MyElement', function (interactions, props) {
-  return props.map(() => (
-    // Return a wrapper function instead of a raw ReactElement.
-    () => <div ref="top-div"></div>
-  ));
-});
-```
-
-2.  Use the render scheduler.  Use a observeOn(renderScheduler) in order to cause the remaining chained observables
-to be invoked within the component's render method.
-NOTE: Using this scheduler to send events or cause state
-changes in another react element will throw an error as per React's restrictions
-(no setState during any batched rendering).  It's best to use this scheduler only for rendering elements.
-```js
-let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  return props
-    .observeOn(renderScheduler)
-    .map(() => <div ref="top-div"></div>);
-}, {renderScheduler: true});
-```
-
-The advantage of the latter approach is that you can use the scheduler to compose different Observable streams
-more easily.  This is useful, if say, one part of your DOM is more expensive to build than others, so you want
-to use separate Observables to compose it.
-
-```js
-let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  var inner$ = props.get('innerText')
-    .observeOn(renderScheduler)
-    .map((p) => <div ref="inner">{p.innerText}</div>);
-  return props.get('outerText')
-    .combineLatest(inner$, (outerText, inner) => <div>{outerText} {inner}</div>);
-}, {renderScheduler: true});
-```
-
-The other advantage of using the scheduler is in 'delaying' actions until after refs have been rendered.
-
-```js
-let MyElement = Cycle.component('MyElement', function (interactions, props, self, lifecycles, renderScheduler) {
-  return props.observeOn(renderScheduler).map(() => {
-    renderScheduler.schedule(null, function () {
-      self.refs.theref; // this is now set.  actions that are scheduled during a render will batch immediately after.
-    });
-    return <div ref="theref"></div>
-  });
-}, {renderScheduler: true});
-```
-
-## Mixins
-
-Working with mixins could make your Cycle-React apps written in a
-less-functional style. However, it might be needed if you want to take
-advantage of other React components.
-
-`opts.mixins` is the mixins property used by React.createClass in
-Cycle-React internally. This value must be an array.
+Use [Interactions API](/docs/interactions.md) to generate callback function for
+[refs](https://facebook.github.io/react/docs/refs-and-the-dom.html).
 
 Example:
 
 ```js
-let options = {
-  mixins: []
-};
-let MyElement = Cycle.component('MyElement', function () {
-  // ...
-}, options);
+const MyElement = Cycle.component(
+  'MyElement',
+  (interactions) =>
+    interactions
+      .get('onRefUpdate')
+      // Handling with ref callback
+      // Function parameter is the DOM element
+      .do((textInput) => textInput.focus())
+      .startWith('')
+      .map(() => (
+        // Listening ref with interactions
+        <input type="text"
+               ref={interactions.listener('onRefUpdate')} />
+      ))
+);
 ```
 
 ## react-hot-loader
