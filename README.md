@@ -8,7 +8,7 @@ to [Facebook's React](http://facebook.github.io/react/).
 Cycle-React allows users to write [React](https://github.com/facebook/react)
 applications in functional style and represents their UIs as Observables.
 In addition, Cycle-React is immutable and
-[optimizes](https://facebook.github.io/react/docs/pure-render-mixin.html)
+[optimizes](https://facebook.github.io/react/docs/react-api.html#react.purecomponent)
 the component updates internally by default.
 
 Additionally, Cycle-React is also a React-style implementation of a beautiful
