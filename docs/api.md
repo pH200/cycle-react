@@ -64,8 +64,7 @@ you have an initial value for the vtree$. Examples:
 #### Arguments:
 
 - `displayName :: String` a name for identifying the React component.
-- `definitionFn :: Function` the implementation for the custom element. This function takes up to five arguments: `interactions`, `properties`, `component`, `lifecycles`, `renderScheduler` and
-should output an object of Observables.
+- `definitionFn :: Function` the implementation for the custom element. This function takes up to three arguments: `interactions`, `props` and `lifecycles`. This function should return an Observable.
 - `[options] :: Object` the options for component.
 
 - - -
