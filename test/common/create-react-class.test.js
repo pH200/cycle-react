@@ -1,4 +1,4 @@
-const {component} = require('../../');
+const {component} = require('../../src');
 const {Observable} = require('rx');
 const {PropTypes} = require('prop-types');
 

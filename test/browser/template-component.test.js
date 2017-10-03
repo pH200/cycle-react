@@ -1,6 +1,6 @@
 const r = require('react').createElement;
 const renderer = require('react-test-renderer');
-const {viewComponent} = require('../../');
+const {viewComponent} = require('../../src');
 const {Observable} = require('rx');
 const {just} = Observable;
 

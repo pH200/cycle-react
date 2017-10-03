@@ -1,4 +1,4 @@
-const Cycle = require('../../');
+const Cycle = require('../../src');
 
 describe('Cycle', function () {
   describe('API', function () {

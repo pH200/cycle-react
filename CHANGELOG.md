@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.1.2
+
+Compatibility fix for `create-react-app` and `react-scripts`
+
+The NPM package `cycle-react` now contains transpiled code that built
+by Babel. This fixes `react-scripts build`'s compatibility issue with
+ES6.
+
+The underlying component class has been changed from `PureComponent`
+to `Component`, due to implementation of `shouldComponentUpdate` raises
+warning message for `PureComponent`.
+
 ## 5.0.0
 
 Breaking change: Custom events is now subscribed only when listener
