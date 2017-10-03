@@ -4,7 +4,7 @@ let ESC_KEY = 27;
 function todoIntent(interactions) {
   return {
     changeRoute$: Rx.Observable.fromEvent(window, 'hashchange')
-      .map(ev => ev.newURL.match(/\#[^\#]*$/)[0].replace('#', ''))
+      .map(ev => ev.newURL.match(/#[^#]*$/)[0].replace('#', ''))
       .startWith(window.location.hash.replace('#', '')),
     changeInput$: interactions.get('onInputChange')
       .map(ev => ev.target.value),

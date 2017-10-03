@@ -1,5 +1,3 @@
-'use strict';
-
 function LifecycleSubjects(createEventSubject) {
   // Expose observables like properties
   this.componentWillMount = createEventSubject();

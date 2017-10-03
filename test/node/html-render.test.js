@@ -1,4 +1,4 @@
-const {component} = require('../../');
+const {component} = require('../../src');
 const {just} = require('rx').Observable;
 const r = require('react').createElement;
 const ReactDOMServer = require('react-dom/server');

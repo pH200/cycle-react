@@ -20,7 +20,7 @@ function compileExample(exampleName, examplePath) {
 
     var exampleStream = browserify()
       .transform(envify({NODE_ENV: 'production'}))
-      .transform('babelify', {presets: ["es2015", "react"]})
+      .transform('babelify', {presets: ["env", "react"]})
       .require(cyclePath, {expose: 'cycle-react'})
       .add(examplePath)
       .bundle();

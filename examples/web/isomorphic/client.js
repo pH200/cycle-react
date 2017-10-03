@@ -1,5 +1,5 @@
 'use strict';
-let Cycle = require('../../');
+let Cycle = require('../../src');
 let React = require('react');
 let ReactDOM = require('react-dom');
 let {App} = require('./app');

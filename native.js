@@ -1,11 +1,11 @@
-const createComponent = require('./src/component');
-const createTemplateComponent = require('./src/template-component');
-const createAdapter = require('./src/rx/adapter');
-const React = require('react-native');
+var createComponent = require('./build/component');
+var createTemplateComponent = require('./build/template-component');
+var createAdapter = require('./build/rx/adapter');
+var React = require('react-native');
 
-const RxAdapter = createAdapter();
+var RxAdapter = createAdapter();
 
-const Cycle = {
+var Cycle = {
   /**
    * The component's definition function.
    *

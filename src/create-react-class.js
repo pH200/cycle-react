@@ -37,10 +37,8 @@ function createReactClass(
     ) || {};
     // The option for the default root element type.
     const rootTagName = options.rootTagName || 'div';
-    // Use React.PureComponent by default (>= 15.3.0)
-    const PureComponent = React.PureComponent || /* istanbul ignore next */ React.Component;
 
-    class ReactClass extends PureComponent {
+    class ReactClass extends React.Component {
       constructor(props) {
         super(props);
         this.hasNewValue = false;
