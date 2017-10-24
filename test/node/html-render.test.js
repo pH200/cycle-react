@@ -45,7 +45,7 @@ describe('Server-side rendering', () => {
 
   it('should render a nested custom element with props as HTML', () => {
     const MyElement = component('MyElement', (_, props) =>
-      props.get('foobar').map(foobar =>
+      props.pluck('foobar').map(foobar =>
         r('h3', {className: 'myelementclass'}, foobar.toUpperCase())
       )
     );

@@ -25,7 +25,7 @@ describe('Component', () => {
     const number$ = controlled(range(1, 9)).observable;
     const MyElement = component('MyElement', (interactions, props) =>
       Observable.combineLatest(
-        props.get('color'),
+        props.pluck('color'),
         number$,
         (color, number) => r('h3', {className: 'stateful-element', style: {color}}, String(number))
       )
@@ -41,25 +41,6 @@ describe('Component', () => {
     const comp = renderer.create(testRoot);
     number$.request(8);
     
-    expect(comp.toJSON()).toMatchSnapshot();
-  });
-
-  it('should have Observable properties object as props.get("*")', () => {
-    // Make custom element
-    const MyElement = component('MyElement', (interactions, props) =>
-      props.get('*').map(propsObj => {
-        expect(typeof propsObj).toBe('object');
-        expect(propsObj.color).toBe('#FF0000');
-        expect(propsObj.content).toBe('Hello world');
-
-        const style = {color: propsObj.color};
-        return r('h3', {className: "inner-element", style}, String(propsObj.content));
-      })
-    );
-
-    const testRoot = r(MyElement, {color: "#FF0000", content: "Hello world"});
-    const comp = renderer.create(testRoot);
-
     expect(comp.toJSON()).toMatchSnapshot();
   });
 
@@ -132,7 +113,7 @@ describe('Component', () => {
     // Make custom element
     const Slider = component('Slider', (interactions, props) => {
       const remove$ = interactions.get('click').map(() => true);
-      const id$ = props.get('id').shareReplay(1);
+      const id$ = props.pluck('id').publishReplay(1).refCount();
       const vtree$ = id$.map(id =>
         r('h3', {className: 'internalslider', onClick: interactions.listener('click')}, String(id))
       );
@@ -194,7 +175,7 @@ describe('Component', () => {
   it('should recognize nested vtree as properties.get("children")', () => {
     // Make simple custom element
     const SimpleWrapper = component('SimpleWrapper', (interactions, props) =>
-      props.get('children').map(children =>
+      props.pluck('children').map(children =>
         r('div', {className: 'wrapper'}, children)
       )
     );
@@ -206,100 +187,6 @@ describe('Component', () => {
     const comp = renderer.create(testRoot);
     
     expect(comp.toJSON()).toMatchSnapshot();
-  });
-
-  it('should recognize changes on a mutable collection given as props', () => {
-    const MyElement = component('MyElement', (interactions, props) =>
-      props.get('list', () => false).map(list =>
-        r('ol', null, list.map(value =>
-          r('li', {
-            key: value,
-            className: 'test-item'
-          }, value)
-        ))
-      )
-    );
-
-    function computer(interactions) {
-      let counter = 0;
-      const clickMod$ = interactions.get('click')
-        .map(() => `item${++counter}`)
-        .map(random => function mod(data) {
-          data.push(random);
-          return data;
-        });
-      return clickMod$
-        .startWith([])
-        .scan((data, modifier) => modifier(data))
-        .map(data =>
-          r('div', {className: 'root'},
-            r('button', {onClick: interactions.listener('click')}, 'add new item'),
-            r(MyElement, {list: data})
-          )
-        );
-    }
-
-    const testRoot = r(component('test', computer));
-    const comp = renderer.create(testRoot);
-    
-    const tree1 = comp.toJSON();
-    expect(tree1).toMatchSnapshot();
-
-    // Click button
-    tree1.children[0].props.onClick();
-    const tree2 = comp.toJSON();
-    expect(tree2).toMatchSnapshot();
-
-    tree2.children[0].props.onClick();
-    const tree3 = comp.toJSON();
-    expect(tree3).toMatchSnapshot();
-  });
-
-  it('should distinct property changes for props.get', () => {
-    const MyElement = component('MyElement', (interactions, props) =>
-      props.get('list').map(list =>
-        r('ol', null, list.map(value =>
-          r('li', {
-            key: value,
-            className: 'test-item'
-          }, value)
-        ))
-      )
-    );
-
-    function computer(interactions) {
-      let counter = 0;
-      const clickMod$ = interactions.get('click')
-        .map(() => `item${++counter}`)
-        .map(random => function mod(data) {
-          data.push(random);
-          return data;
-        });
-      return clickMod$
-        .startWith([])
-        .scan((data, modifier) => modifier(data))
-        .map(data =>
-          r('div', {className: 'root'},
-            r('button', {onClick: interactions.listener('click')}, 'add new item'),
-            r(MyElement, {list: data})
-          )
-        );
-    }
-
-    const testRoot = r(component('test', computer));
-    const comp = renderer.create(testRoot);
-    
-    const tree1 = comp.toJSON();
-    expect(tree1).toMatchSnapshot();
-
-    // Click button
-    tree1.children[0].props.onClick();
-    const tree2 = comp.toJSON();
-    expect(tree2).toMatchSnapshot();
-
-    tree2.children[0].props.onClick();
-    const tree3 = comp.toJSON();
-    expect(tree3).toMatchSnapshot();
   });
 
   it('should not silently catch exceptions inside of custom elements', () => {

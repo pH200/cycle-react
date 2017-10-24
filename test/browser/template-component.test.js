@@ -35,7 +35,7 @@ describe('Template Component', () => {
     const MyElement = viewComponent(
       'MyElement',
       (interactions, props) => Observable.combineLatest(
-        props.get('color'),
+        props.pluck('color'),
         number$,
         (color, number) => ({color, number})
       ),

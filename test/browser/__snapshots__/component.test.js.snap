@@ -34,58 +34,6 @@ exports[`Component should dispose vtree$ after destruction 2`] = `<div />`;
 
 exports[`Component should dispose vtree$ after destruction 3`] = `<div />`;
 
-exports[`Component should distinct property changes for props.get 1`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol />
-</div>
-`;
-
-exports[`Component should distinct property changes for props.get 2`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol />
-</div>
-`;
-
-exports[`Component should distinct property changes for props.get 3`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol />
-</div>
-`;
-
-exports[`Component should have Observable properties object as props.get("*") 1`] = `
-<h3
-  className="inner-element"
-  style={
-    Object {
-      "color": "#FF0000",
-    }
-  }
->
-  Hello world
-</h3>
-`;
-
 exports[`Component should not emit events after destruction 1`] = `
 <h3
   className="myelementclass"
@@ -164,62 +112,6 @@ exports[`Component should recognize and create two unrelated elements 1`] = `
   <h2
     className="myelement2class"
   />
-</div>
-`;
-
-exports[`Component should recognize changes on a mutable collection given as props 1`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol />
-</div>
-`;
-
-exports[`Component should recognize changes on a mutable collection given as props 2`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol>
-    <li
-      className="test-item"
-    >
-      item1
-    </li>
-  </ol>
-</div>
-`;
-
-exports[`Component should recognize changes on a mutable collection given as props 3`] = `
-<div
-  className="root"
->
-  <button
-    onClick={[Function]}
-  >
-    add new item
-  </button>
-  <ol>
-    <li
-      className="test-item"
-    >
-      item1
-    </li>
-    <li
-      className="test-item"
-    >
-      item2
-    </li>
-  </ol>
 </div>
 `;
 
