@@ -1,15 +1,17 @@
-const Rx = require('rx');
 const createEventSubject = require('./event-subject');
 const makePropsObservable = require('./props');
+const CompositeDisposableRx4 = require('./CompositeDisposableRx4');
 
 module.exports = function createAdapter() {
   return {
     createEventSubject: createEventSubject,
     makePropsObservable: makePropsObservable,
-    CompositeDisposable: Rx.CompositeDisposable,
-    createDisposable: Rx.Disposable.create,
-    subscribe(observable, onNext) {
-      return observable.subscribe(onNext);
+    CompositeDisposable: CompositeDisposableRx4,
+    next(observer, value) {
+      return observer.onNext(value);
+    },
+    complete(observer) {
+      return observer.onCompleted();
     },
     isObservable(observable) {
       return observable && typeof observable.subscribe === 'function';

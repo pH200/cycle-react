@@ -1,4 +1,4 @@
-class CompositeDisposable {
+class CompositeDisposableRx4 {
   constructor() {
     this.disposables = [];
   }
@@ -13,6 +13,8 @@ class CompositeDisposable {
       const sub = this.disposables[i];
       if (sub.unsubscribe) {
         sub.unsubscribe();
+      } else if (sub.dispose) {
+        sub.dispose();
       } else if (typeof sub === 'function') {
         sub();
       }
@@ -20,4 +22,4 @@ class CompositeDisposable {
     this.disposables = null;
   }
 }
-module.exports = CompositeDisposable;
+module.exports = CompositeDisposableRx4;
