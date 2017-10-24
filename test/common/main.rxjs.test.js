@@ -1,4 +1,4 @@
-const Cycle = require('../../src');
+const Cycle = require('../../src/rxjs');
 
 describe('Cycle', function () {
   describe('API', function () {

@@ -12,8 +12,8 @@ function createReactClass(
     makePropsObservable,
     createEventSubject,
     CompositeDisposable,
-    createDisposable,
-    subscribe,
+    next,
+    complete,
     isObservable
   } = Adapter;
 
@@ -35,8 +35,6 @@ function createReactClass(
       // option isTemplateComponent (y): 4th argument (n): 3rd argument
       isTemplateComponent ? componentOptions : templateFn
     ) || {};
-    // The option for the default root element type.
-    const rootTagName = options.rootTagName || 'div';
 
     class ReactClass extends React.Component {
       constructor(props) {
@@ -61,9 +59,8 @@ function createReactClass(
           this.propsSubject$,
           this.lifecycles
         );
-        const subscription = subscribe(
-          this.cycleComponent.newValue$,
-          (newValue) => {
+        const subscription = this.cycleComponent.newValue$
+          .subscribe((newValue) => {
             this.hasNewValue = true;
             this.setState({newValue: newValue})
           });
@@ -71,28 +68,26 @@ function createReactClass(
         this.disposable.add(this.propsSubject$);
         this.disposable.add(subscription);
 
-        const cycleComponentDispose = this.cycleComponent.dispose;
+        const cycleComponentDispose = this.cycleComponent.unsubscribe;
         if (cycleComponentDispose) {
-          if (typeof cycleComponentDispose === 'function') {
-            this.disposable.add(createDisposable(cycleComponentDispose));
-          } else if (typeof cycleComponentDispose.dispose === 'function') {
+          if (typeof cycleComponentDispose === 'function' ||
+              typeof cycleComponentDispose.unsubscribe === 'function') {
             this.disposable.add(cycleComponentDispose);
           }
         }
       }
       _unsubscribeCycleComponent() {
         if (this.propsSubject$) {
-          this.propsSubject$.onCompleted();
+          complete(this.propsSubject$);
         }
         if (this.disposable) {
-          this.disposable.dispose();
+          this.disposable.unsubscribe();
         }
       }
       _subscribeCycleEvents() {
         const subscriptions = subscribeEventObservables(
           this.cycleComponent.customEvents,
-          this,
-          subscribe
+          this
         );
         if (subscriptions.length > 0) {
           for (let i = 0; i < subscriptions.length; i++) {
@@ -109,46 +104,46 @@ function createReactClass(
         // https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
         this._subscribeCycleComponent();
         if (isTemplateComponent) {
-          this.lifecycles.componentWillMount.onNext();
+          next(this.lifecycles.componentWillMount);
         }
       }
       componentDidMount() {
         this._subscribeCycleEvents();
         if (isTemplateComponent) {
-          this.lifecycles.componentDidMount.onNext();
+          next(this.lifecycles.componentDidMount);
         }
       }
       componentWillReceiveProps(nextProps) {
-        this.propsSubject$.onNext(nextProps);
+        next(this.propsSubject$, nextProps);
         if (isTemplateComponent) {
-          this.lifecycles.componentWillReceiveProps.onNext(nextProps);
+          next(this.lifecycles.componentWillReceiveProps, nextProps);
         }
       }
       componentWillUpdate(nextProps) {
         if (isTemplateComponent) {
-          this.lifecycles.componentWillUpdate.onNext(nextProps);
+          next(this.lifecycles.componentWillUpdate, nextProps);
         }
       }
       componentDidUpdate(prevProps) {
         if (isTemplateComponent) {
-          this.lifecycles.componentDidUpdate.onNext(prevProps);
+          next(this.lifecycles.componentDidUpdate, prevProps);
         }
       }
       componentWillUnmount() {
         // componentWillUnmount is not being called for the server context
         if (isTemplateComponent) {
-          this.lifecycles.componentWillMount.onCompleted();
-          this.lifecycles.componentDidMount.onCompleted();
-          this.lifecycles.componentWillReceiveProps.onCompleted();
-          this.lifecycles.componentWillUpdate.onCompleted();
-          this.lifecycles.componentDidUpdate.onCompleted();
-          this.lifecycles.componentWillUnmount.onNext();
-          this.lifecycles.componentWillUnmount.onCompleted();
+          complete(this.lifecycles.componentWillMount);
+          complete(this.lifecycles.componentDidMount);
+          complete(this.lifecycles.componentWillReceiveProps);
+          complete(this.lifecycles.componentWillUpdate);
+          complete(this.lifecycles.componentDidUpdate);
+          next(this.lifecycles.componentWillUnmount);
+          complete(this.lifecycles.componentWillUnmount);
         }
         this._unsubscribeCycleComponent();
       }
     }
-    ReactClass.prototype.render = createRenderer(React, rootTagName, templateFn);
+    ReactClass.prototype.render = createRenderer(React, templateFn);
 
     ReactClass.displayName = displayName;
     if (options.propTypes) {

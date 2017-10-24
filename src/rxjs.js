@@ -1,6 +1,6 @@
 const createComponent = require('./component');
 const createTemplateComponent = require('./template-component');
-const createAdapter = require('./adapter/rx');
+const createAdapter = require('./adapter/rxjs');
 const React = require('react');
 
 const RxAdapter = createAdapter();

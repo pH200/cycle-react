@@ -1,4 +1,4 @@
-const createEventSubject = require('../../src/rx/event-subject');
+const createEventSubject = require('../../../src/adapter/rxjs/event-subject');
 
 describe('createEventSubject', () => {
   it('should have onEvent', () => {
@@ -8,9 +8,9 @@ describe('createEventSubject', () => {
 
   it('should be a subject', () => {
     const subject = createEventSubject();
-    expect(typeof subject.onNext).toBe('function');
-    expect(typeof subject.onError).toBe('function');
-    expect(typeof subject.onCompleted).toBe('function');
+    expect(typeof subject.next).toBe('function');
+    expect(typeof subject.error).toBe('function');
+    expect(typeof subject.complete).toBe('function');
     expect(typeof subject.subscribe).toBe('function');
   });
 

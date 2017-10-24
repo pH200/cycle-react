@@ -4,7 +4,7 @@ function digestDefinitionFnOutput(output, isObservable) {
   if (output && output.hasOwnProperty('viewData') && isObservable(output.viewData)) {
     return {
       newValue$: output.viewData,
-      dispose: output.dispose,
+      unsubscribe: output.unsubscribe,
       customEvents: output.events
     };
   }
@@ -30,7 +30,7 @@ function createCycleComponent(isObservable, definitionFn, interactions, propsSub
   );
 }
 
-function createRenderer(React, rootTagName, templateFn) {
+function createRenderer(React, templateFn) {
   return function render() {
     const viewData = this.state ? this.state.newValue : null;
     const hasNewValue = this.hasNewValue;
@@ -38,7 +38,7 @@ function createRenderer(React, rootTagName, templateFn) {
     if (hasNewValue) {
       return templateFn(viewData, this.interactions._getCurrentListeners());
     }
-    return React.createElement(rootTagName);
+    return [];
   };
 }
 

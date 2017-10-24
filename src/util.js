@@ -20,7 +20,7 @@ function makeDispatchFunction(eventName, self) {
 }
 
 module.exports = {
-  subscribeEventObservables(events, self, subscribe) {
+  subscribeEventObservables(events, self) {
     if (events) {
       const eventNames = Object.keys(events);
       const eventSubscriptions = [];
@@ -29,7 +29,7 @@ module.exports = {
         const eventObs = events[eventName];
         if (self.props[eventName]) {
           eventSubscriptions.push(
-            subscribe(eventObs, makeDispatchFunction(eventName, self))
+            eventObs.subscribe(makeDispatchFunction(eventName, self))
           );
         }
       }

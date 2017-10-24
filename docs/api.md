@@ -28,37 +28,8 @@ The `options` is optional and can be ignored in most cases.
 options example:
 
     component('displayName', definitionFn, {
-      rootTagName: 'div',
-      mixins: [],
       propTypes: null,
       disableHotLoader: false
-      renderScheduler: false
-    });
-
-`opt.rootTagName` is the default tagName for the root element.
-Normally, you don't need to set this option if your root element is div or
-you have an initial value for the vtree$. Examples:
-
-    // The element for the first render would be <h1 />
-    component('displayName', () => Rx.Observable.just(<h1 />), {
-      rootTagName: 'div'
-    });
-
-    // The element for the first render would be <div></div>,
-    // and the second element would be <h1 /> (after 1000ms)
-    component('displayName',
-      () => Rx.Observable.timer(1000).map(() => <h1 />), {
-      rootTagName: 'div'
-    });
-
-    // The element for the first render would be <h2 />,
-    // and the second element would be <h1 /> (after 1000ms)
-    // rootTagName has no effect in this case
-    component('displayName',
-      () => Rx.Observable.timer(1000)
-        .map(() => <h1 />)
-        .startWith(<h2 />), {
-      rootTagName: 'div'
     });
 
 #### Arguments:

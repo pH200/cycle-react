@@ -1,4 +1,4 @@
-const makePropsObservable = require('../../src/rx/props');
+const makePropsObservable = require('../../../src/adapter/rxjs/props');
 
 describe('makePropsObservable', () => {
   it('should be an observable for all properties', (done) => {

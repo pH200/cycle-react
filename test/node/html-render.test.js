@@ -1,7 +1,12 @@
-const {component} = require('../../src');
-const {just} = require('rx').Observable;
+const {component} = require('../../src/rxjs');
+const {Observable} = require('rxjs/Rx');
+
 const r = require('react').createElement;
 const ReactDOMServer = require('react-dom/server');
+
+function just(value) {
+  return Observable.of(value);
+}
 
 describe('Server-side rendering', () => {
   it('should output HTML when given a simple component', () => {
@@ -19,7 +24,7 @@ describe('Server-side rendering', () => {
         r('div', {className: 'test-element'}, 'Foobar')
       ),
       events: {
-        myevent: just(123).doOnNext(log)
+        myevent: just(123).do(log)
       }
     }));
     const html = ReactDOMServer.renderToStaticMarkup(r(MyElement));

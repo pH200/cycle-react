@@ -1,7 +1,9 @@
 const r = require('react').createElement;
 const renderer = require('react-test-renderer');
-const {component} = require('../../src');
-const {Observable} = require('rx');
+const {component} = require('../../src/rxjs');
+const {Observable} = require('rxjs/Rx');
+const controlled = require('./lib/controlled');
+const {range} = require('lodash');
 
 describe('Component', () => {
   jest.useRealTimers();
@@ -10,7 +12,7 @@ describe('Component', () => {
   it('should recognize and create simple element that is registered', () => {
     // Make simple custom element
     const MyElement = component('MyElement', () =>
-      Observable.just(r('h3', {className: 'myelementclass'}))
+      Observable.of(r('h3', {className: 'myelementclass'}))
     );
     // Use the custom element
     const comp = renderer.create(r(MyElement));
@@ -20,7 +22,7 @@ describe('Component', () => {
 
   it('should render inner state and properties independently', () => {
     // Make custom element with internal state, and properties as input
-    const number$ = Observable.range(1, 10).controlled();
+    const number$ = controlled(range(1, 9)).observable;
     const MyElement = component('MyElement', (interactions, props) =>
       Observable.combineLatest(
         props.get('color'),
@@ -30,7 +32,7 @@ describe('Component', () => {
     );
     // Use the custom element
     function definitionFn() {
-      return Observable.just('#00FF00')
+      return Observable.of('#00FF00')
         .startWith('#FF0000')
         .map(color => r(MyElement, {color}));
     }
@@ -64,11 +66,11 @@ describe('Component', () => {
   it('should recognize and create two unrelated elements', () => {
     // Make the first custom element
     const MyElement1 = component('MyElement1', () =>
-      Observable.just(r('h1', {className: 'myelement1class'}))
+      Observable.of(r('h1', {className: 'myelement1class'}))
     );
     // Make the second custom element
     const MyElement2 = component('MyElement2', () =>
-      Observable.just(r('h2', {className: 'myelement2class'}))
+      Observable.of(r('h2', {className: 'myelement2class'}))
     );
     // Use the custom elements
     const testRoot = r('div', null, r(MyElement1), r(MyElement2));
@@ -80,11 +82,11 @@ describe('Component', () => {
   it('should recognize and create a nested custom elements', () => {
     // Make the inner custom element
     const Inner = component('Inner', () =>
-      Observable.just(r('h3', {className: "innerClass"}))
+      Observable.of(r('h3', {className: "innerClass"}))
     );
     // Make the outer custom element
     const Outer = component('Outer', () =>
-      Observable.just(
+      Observable.of(
         r('div', {className: 'outerClass'}, r(Inner))
       )
     );
@@ -96,10 +98,10 @@ describe('Component', () => {
   });
 
   it('should catch interactions coming from custom element', (done) => {
-    const number$ = Observable.of(123, 456).controlled();
+    const number$ = controlled([123, 456]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () => ({
-      view: Observable.just(r('h3', {className: "myelementclass"}, 'foobar')),
+      view: Observable.of(r('h3', {className: "myelementclass"}, 'foobar')),
       events: {
         onMyEvent: number$
       }
@@ -112,7 +114,7 @@ describe('Component', () => {
 
         done();
       });
-      const vtree$ = Observable.just(
+      const vtree$ = Observable.of(
         r(MyElement, {onMyEvent: interactions.listener('myevent')})
       );
       return vtree$;
@@ -142,10 +144,10 @@ describe('Component', () => {
       };
     });
 
-    const sequence$ = Observable.of(
+    const sequence$ = controlled([
       [{id: 23}],
       [{id: 23}, {id: 45}]
-    ).controlled();
+    ]).observable;
 
     function computer(interactions) {
       const eventData$ = interactions.get('remove');
@@ -301,7 +303,7 @@ describe('Component', () => {
   });
 
   it('should not silently catch exceptions inside of custom elements', () => {
-    const vtreeController$ = Observable.range(0, 2).controlled();
+    const vtreeController$ = controlled([0, 1, 2]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () =>
       vtreeController$.map(control => {
@@ -324,8 +326,8 @@ describe('Component', () => {
 
   it('should dispose vtree$ after destruction', () => {
     const log = [];
-    const number$ = Observable.range(1, 2).controlled();
-    const customElementSwitch$ = Observable.range(0, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
+    const customElementSwitch$ = controlled([0, 1]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () =>
       number$
@@ -355,11 +357,11 @@ describe('Component', () => {
 
   it('should not emit events after destruction', () => {
     const log = [];
-    const number$ = Observable.range(1, 3).controlled();
-    const customElementSwitch$ = Observable.range(0, 2).controlled();
+    const number$ = controlled([1, 2, 3]).observable;
+    const customElementSwitch$ = controlled([0, 1]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () => ({
-      view: Observable.just(r('h3', {className: 'myelementclass'})),
+      view: Observable.of(r('h3', {className: 'myelementclass'})),
       events: {
         onMyEvent: number$.do(i => log.push(i))
       }
@@ -395,14 +397,14 @@ describe('Component', () => {
 
   it('should dispose Disposable from custom element after destruction', () => {
     const log = [];
-    const number$ = Observable.range(1, 2).controlled();
-    const customElementSwitch$ = Observable.range(0, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
+    const customElementSwitch$ = controlled([0, 1]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () => {
       const subscription = number$.subscribe(i => log.push(i));
       return {
-        view: Observable.just(r('h3', {className: 'myelementclass'})),
-        dispose: subscription
+        view: Observable.of(r('h3', {className: 'myelementclass'})),
+        unsubscribe: subscription
       };
     });
     // Use the custom element
@@ -426,15 +428,15 @@ describe('Component', () => {
 
   it('should call dispose from custom element after destruction', () => {
     const log = jest.fn();
-    const number$ = Observable.range(1, 2).controlled();
-    const customElementSwitch$ = Observable.range(0, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
+    const customElementSwitch$ = controlled([0, 1]).observable;
     const subscription = number$.subscribe(log);
-    const dispose = jest.fn(() => subscription.dispose());
+    const dispose = jest.fn(() => subscription.unsubscribe());
     // Make simple custom element
     const MyElement = component('MyElement', () => {
       return {
-        view: Observable.just(r('h3', {className: 'myelementclass'})),
-        dispose: dispose
+        view: Observable.of(r('h3', {className: 'myelementclass'})),
+        unsubscribe: dispose
       };
     });
     // Use the custom element
@@ -459,8 +461,8 @@ describe('Component', () => {
 
   it('should dispose the vtree$ which created by Observable.using', () => {
     const log = jest.fn();
-    const number$ = Observable.range(1, 2).controlled();
-    const customElementSwitch$ = Observable.range(0, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
+    const customElementSwitch$ = controlled([0, 1]).observable;
     // Make simple custom element
     const MyElement = component('MyElement', () =>
       Observable.using(

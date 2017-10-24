@@ -1,8 +1,13 @@
 const r = require('react').createElement;
 const renderer = require('react-test-renderer');
-const {viewComponent} = require('../../src');
-const {Observable} = require('rx');
-const {just} = Observable;
+const {viewComponent} = require('../../src/rxjs');
+const {Observable} = require('rxjs/Rx');
+const controlled = require('./lib/controlled');
+const {range} = require('lodash');
+
+function just(value) {
+  return Observable.of(value);
+}
 
 describe('Template Component', () => {
   jest.useRealTimers();
@@ -26,7 +31,7 @@ describe('Template Component', () => {
 
   it('should render inner state and properties independently', () => {
     // Make custom element with internal state, and properties as input
-    const number$ = Observable.range(1, 10).controlled();
+    const number$ = controlled(range(1, 11)).observable;
     const MyElement = viewComponent(
       'MyElement',
       (interactions, props) => Observable.combineLatest(
@@ -107,7 +112,7 @@ describe('Template Component', () => {
 
   it('should trigger the componentDidUpdate lifecycle', () => {
     const log = jest.fn();
-    const number$ = Observable.range(1, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
     // Make simple custom element
     const MyElement = viewComponent(
       'MyElement',
@@ -132,7 +137,7 @@ describe('Template Component', () => {
   });
 
   it('should trigger the componentWillUnmount lifecycle', function (done) {
-    const number$ = Observable.range(1, 2).controlled();
+    const number$ = controlled([1, 2]).observable;
     // Make simple custom element
     const MyElement = viewComponent(
       'MyElement',
