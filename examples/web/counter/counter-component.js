@@ -20,7 +20,7 @@ const Counter = component('Counter', (interactions, props) => {
     decrement,
     incrementIfOdd
   } = interactions.bindListeners(CounterInteractions);
-  const viewObservable = props.get('counter').map(counter =>
+  const viewObservable = props.pluck('counter').map(counter =>
     <p>
       Clicked: {counter} times
       {' '}

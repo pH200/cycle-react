@@ -8,7 +8,7 @@ export default function makeView(interactions, model) {
       <Counter counter={counter}
                {...interactions.bindListeners(InteractionTypes)} />
       <hr />
-      <p>Compare with <a href="https://github.com/gaearon/redux/tree/v1.0.0-rc/examples/counter">redux</a></p>
+      <p>Compare with <a href="https://github.com/gaearon/redux/tree/v3.7.2/examples/counter">redux</a></p>
     </div>
   );
 }
