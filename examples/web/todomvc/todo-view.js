@@ -1,17 +1,16 @@
-'use strict';
-const Cycle = require('cycle-react');
-const React = require('react');
-const TodoItem = require('./todo-item');
+import {component} from 'cycle-react/rxjs';
+import React from 'react';
+import TodoItem from './todo-item';
 
-const Header = Cycle.component('Header', function (interactions, props) {
-  let onInputSubmit = interactions.get('onSubmit')
+const Header = component('Header', function (interactions, props) {
+  const onInputSubmit = interactions.get('onSubmit')
     .do(e => e.preventDefault())
     .map(e => e.target.elements.newTodo.value);
-  let onInputKeyUp = interactions.get('onKeyUp');
-  let onInputChange = interactions.get('onChange');
+  const onInputKeyUp = interactions.get('onKeyUp');
+  const onInputChange = interactions.get('onChange');
 
   return {
-    view: props.get('input').map(input =>
+    view: props.pluck('input').map(input =>
       <header>
         <h1>todos</h1>
         <form className="new-todo-form"
@@ -35,16 +34,16 @@ const Header = Cycle.component('Header', function (interactions, props) {
   };
 });
 
-const MainSection = Cycle.component('MainSection', function (interactions, props) {
-  let onItemNewContent = interactions.get('onNewContent');
-  let onItemToggle = interactions.get('onToggle');
-  let onItemDestroy = interactions.get('onDestroy');
-  let onToggleAll = interactions.get('onToggleAll');
+const MainSection = component('MainSection', function (interactions, props) {
+  const onItemNewContent = interactions.get('onNewContent');
+  const onItemToggle = interactions.get('onToggle');
+  const onItemDestroy = interactions.get('onDestroy');
+  const onToggleAll = interactions.get('onToggleAll');
 
   return {
     view: props.distinctUntilChanged().map(({list, filterFn}) => {
-      let allCompleted = list.reduce((x, y) => x && y.completed, true);
-      let style = {display: list.size ? 'inherit' : 'none'};
+      const allCompleted = list.reduce((x, y) => x && y.get('completed'), true);
+      const style = {display: list.size ? 'inherit' : 'none'};
       return <section className="main" style={style}>
         <input className="toggle-all"
                type="checkbox"
@@ -74,11 +73,11 @@ const MainSection = Cycle.component('MainSection', function (interactions, props
   };
 });
 
-const CompleteButton = Cycle.component('CompleteButton', function (interactions, props) {
-  let onClearCompleted = interactions.get('onClick');
+const CompleteButton = component('CompleteButton', function (interactions, props) {
+  const onClearCompleted = interactions.get('onClick');
 
   return {
-    view: props.get('amountCompleted').map(amountCompleted => {
+    view: props.pluck('amountCompleted').map(amountCompleted => {
       if (amountCompleted > 0) {
         return <button className="clear-completed"
                        onClick={interactions.listener('onClick')}>
@@ -93,12 +92,12 @@ const CompleteButton = Cycle.component('CompleteButton', function (interactions,
   };
 });
 
-const Footer = Cycle.component('Footer', function (interactions, props) {
-  let onClearCompleted = interactions.get('onClearCompleted');
-  let view = props.distinctUntilChanged().map(({list, filter}) => {
-    let amountCompleted = list.count(item => item.get('completed'));
-    let amountActive = list.size - amountCompleted;
-    let style = {display: list.size ? 'inherit' : 'none'};
+const Footer = component('Footer', function (interactions, props) {
+  const onClearCompleted = interactions.get('onClearCompleted');
+  const view = props.distinctUntilChanged().map(({list, filter}) => {
+    const amountCompleted = list.count(item => item.get('completed'));
+    const amountActive = list.size - amountCompleted;
+    const style = {display: list.size ? 'inherit' : 'none'};
 
     return <footer className="footer" style={style}>
       <span className="todo-count">
@@ -136,7 +135,7 @@ const Footer = Cycle.component('Footer', function (interactions, props) {
   };
 });
 
-module.exports = function view(todos$, interactions) {
+export default function view(todos$, interactions) {
   return todos$.map(todos =>
     <div>
       <Header input={todos.input}
@@ -154,4 +153,4 @@ module.exports = function view(todos$, interactions) {
               onClearCompleted={interactions.listener('onClearCompleted')} />
     </div>
   );
-};
+}

@@ -1,5 +1,6 @@
 import React from 'react';
-import {component} from 'cycle-react';
+import {component} from 'cycle-react/rxjs';
+import 'rxjs/Rx';
 
 // Use separate interactions-type for the counter component to show
 // every component has a isolated interaction collection.

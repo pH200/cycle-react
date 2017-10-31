@@ -1,9 +1,8 @@
-'use strict';
-let Cycle = require('../../src');
-let React = require('react');
+const {component} = require('../../../src/rx');
+const React = require('react');
 
-let Menu = Cycle.component('Menu', function (_, props) {
-  return props.get('routeClickHandler').map(handler =>
+const Menu = component('Menu', function (_, props) {
+  return props.pluck('routeClickHandler').map(handler =>
     <ul>
       <li><a href="/" onClick={handler}>Home</a></li>
       <li><a href="/about" onClick={handler}>About</a></li>
@@ -11,8 +10,8 @@ let Menu = Cycle.component('Menu', function (_, props) {
   );
 });
 
-let HomePage = Cycle.component('HomePage', function (_, props) {
-  return props.get('routeClickHandler').map(handler =>
+const HomePage = component('HomePage', function (_, props) {
+  return props.pluck('routeClickHandler').map(handler =>
     <section className="home">
       <h1>The homepage</h1>
       <p>Welcome to our spectacular web page with literally nothing special here.</p>
@@ -21,8 +20,8 @@ let HomePage = Cycle.component('HomePage', function (_, props) {
   );
 });
 
-let AboutPage = Cycle.component('AboutPage', function (_, props) {
-  return props.get('routeClickHandler').map(handler =>
+const AboutPage = component('AboutPage', function (_, props) {
+  return props.pluck('routeClickHandler').map(handler =>
     <section className="about">
       <h1>Read more about us</h1>
       <p>This is the page where we describe ourselves.</p>
@@ -32,12 +31,12 @@ let AboutPage = Cycle.component('AboutPage', function (_, props) {
   );
 });
 
-let App = Cycle.component('App', function (interactions, props) {
-  let routeFromClick$ = interactions.get('RouteClick')
+const App = component('App', function (interactions, props) {
+  const routeFromClick$ = interactions.get('RouteClick')
     .doOnNext(ev => ev.preventDefault())
     .map(ev => ev.target.attributes.href.value);
 
-  let ongoingContext$ = props.get('context')
+  const ongoingContext$ = props.pluck('context')
     .merge(routeFromClick$)
     .scan((state, x) => {
       state.route = x;
@@ -48,7 +47,7 @@ let App = Cycle.component('App', function (interactions, props) {
     if (typeof window !== 'undefined') {
       window.history.pushState(null, '', route);
     }
-    let onRouteClick = interactions.listener('RouteClick');
+    const onRouteClick = interactions.listener('RouteClick');
     switch (route) {
       case '/': return <HomePage routeClickHandler={onRouteClick} />;
       case '/about': return <AboutPage routeClickHandler={onRouteClick} />;

@@ -1,9 +1,9 @@
-let Cycle = require('cycle-react');
-let React = require('react');
-let Rx = require('rx');
-let ESC_KEY = 27;
+import {component} from 'cycle-react/rxjs';
+import React from 'react';
+import {Observable} from 'rxjs/Rx';
+const ESC_KEY = 27;
 
-let TodoItem = Cycle.component('TodoItem', function (interactions, props) {
+const TodoItem = component('TodoItem', function (interactions, props) {
   function onSubmitHandler(e) {
     e.preventDefault();
     /*eslint-disable dot-notation */
@@ -11,26 +11,26 @@ let TodoItem = Cycle.component('TodoItem', function (interactions, props) {
     /*eslint-enable dot-notation */
   }
 
-  let id$ = props.get('todoid').shareReplay(1);
-  let onChange$ = interactions.get('onChange');
-  let editContent$ = props.get('content')
+  const id$ = props.pluck('todoid');
+  const onChange$ = interactions.get('onChange');
+  const editContent$ = props.pluck('content')
     .merge(onChange$.map(ev => ev.target.value));
-  let startEdit$ = interactions.get('onDoubleClick');
-  let stopEdit$ = interactions.get('onKeyUp')
+  const startEdit$ = interactions.get('onDoubleClick');
+  const stopEdit$ = interactions.get('onKeyUp')
     .filter(e => e.keyCode === ESC_KEY)
     .merge(interactions.get('onBlur'))
     .map(e => e.target.value)
     .merge(interactions.get('onSubmit'));
-  let editing$ = Rx.Observable.merge(
+  const editing$ = Observable.merge(
     startEdit$.map(() => true),
     stopEdit$.map(() => false)
   ).startWith(false);
 
-  let vtree$ = props.combineLatest(
+  const vtree$ = props.combineLatest(
     editContent$,
     editing$,
     function (todo, editContent, editing) {
-      let className = (todo.completed ? 'completed ' : '') +
+      const className = (todo.completed ? 'completed ' : '') +
         (editing ? 'editing' : '');
       if (editing) {
         return <li className={className}>
@@ -79,4 +79,4 @@ let TodoItem = Cycle.component('TodoItem', function (interactions, props) {
   };
 });
 
-module.exports = TodoItem;
+export default TodoItem;

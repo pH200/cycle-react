@@ -1,6 +1,6 @@
-let Rx = require('rx');
-let cuid = require('cuid');
-let {Map} = require('immutable');
+import {Observable} from 'rxjs/Rx';
+import cuid from 'cuid';
+import {Map} from 'immutable';
 
 function getFilterFn(route) {
   switch (route) {
@@ -18,15 +18,15 @@ function determineFilter(todosData, route) {
 }
 
 function makeModification$(intent) {
-  let changeInputMod$ = intent.changeInput$.map((content) => (todosData) => {
+  const changeInputMod$ = intent.changeInput$.map((content) => (todosData) => {
     return todosData.set('input', content);
   });
 
-  let clearInputMod$ = intent.clearInput$.map(() => (todosData) => {
+  const clearInputMod$ = intent.clearInput$.map(() => (todosData) => {
     return todosData.set('input', '');
   });
 
-  let insertTodoMod$ = intent.insertTodo$.map((todoTitle) => (todosData) => {
+  const insertTodoMod$ = intent.insertTodo$.map((todoTitle) => (todosData) => {
     return todosData.withMutations(m => {
       m.update('list', list => list.push(Map({
         id: cuid(),
@@ -37,22 +37,22 @@ function makeModification$(intent) {
     });
   });
 
-  let editTodoMod$ = intent.editTodo$.map((evdata) => (todosData) => {
+  const editTodoMod$ = intent.editTodo$.map((evdata) => (todosData) => {
     return todosData.update('list', list => {
-      let index = list.findIndex(item => item.get('id') === evdata.id);
+      const index = list.findIndex(item => item.get('id') === evdata.id);
       return list.setIn([index, 'title'], evdata.content);
     });
   });
 
-  let toggleTodoMod$ = intent.toggleTodo$.map((todoid) => (todosData) => {
+  const toggleTodoMod$ = intent.toggleTodo$.map((todoid) => (todosData) => {
     return todosData.update('list', list => {
-      let index = list.findIndex(item => item.get('id') === todoid);
+      const index = list.findIndex(item => item.get('id') === todoid);
       return list.updateIn([index, 'completed'], completed => !completed);
     });
   });
 
-  let toggleAllMod$ = intent.toggleAll$.map(() => (todosData) => {
-    let allAreCompleted = todosData.get('list')
+  const toggleAllMod$ = intent.toggleAll$.map(() => (todosData) => {
+    const allAreCompleted = todosData.get('list')
       .every(item => item.get('completed'));
     return todosData.update(
       'list',
@@ -60,27 +60,27 @@ function makeModification$(intent) {
     );
   });
 
-  let deleteTodoMod$ = intent.deleteTodo$.map((todoid) => (todosData) => {
-    let index = todosData.get('list').findIndex(item => item.get('id') === todoid);
+  const deleteTodoMod$ = intent.deleteTodo$.map((todoid) => (todosData) => {
+    const index = todosData.get('list').findIndex(item => item.get('id') === todoid);
     return todosData.deleteIn(['list', index]);
   });
 
-  let deleteCompletedsMod$ = intent.deleteCompleteds$.map(() => (todosData) => {
+  const deleteCompletedsMod$ = intent.deleteCompleteds$.map(() => (todosData) => {
     return todosData.update(
       'list',
       list => list.filter(item => !item.get('completed')).toList()
     );
   });
 
-  return Rx.Observable.merge(
+  return Observable.merge(
     insertTodoMod$, deleteTodoMod$, toggleTodoMod$, toggleAllMod$,
     changeInputMod$, clearInputMod$, deleteCompletedsMod$, editTodoMod$
   );
 }
 
 function todoModel(intent, source) {
-  let modification$ = makeModification$(intent);
-  let route$ = Rx.Observable.just('/').merge(intent.changeRoute$);
+  const modification$ = makeModification$(intent);
+  const route$ = Observable.of('/').merge(intent.changeRoute$);
 
   return source.concat(modification$)
     .scan((todosData, modFn) => modFn(todosData))
@@ -89,4 +89,4 @@ function todoModel(intent, source) {
     .shareReplay(1);
 }
 
-module.exports = todoModel;
+export default todoModel;

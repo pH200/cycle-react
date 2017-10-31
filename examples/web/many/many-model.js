@@ -1,5 +1,4 @@
-const Cycle = require('cycle-react');
-const Rx = require('rx');
+import {Observable} from 'rxjs/Rx';
 
 function manyModel(intentions) {
   function createRandomItem() {
@@ -47,11 +46,11 @@ function manyModel(intentions) {
     return listItems;
   });
 
-  return Rx.Observable.merge(
+  return Observable.merge(
       addItemMod$, removeItemMod$, colorChangedMod$, widthChangedMod$
     )
     .startWith([{id: 0, color: 'red', width: 300}])
     .scan((listItems, modification) => modification(listItems));
 }
 
-module.exports = manyModel;
+export default manyModel;

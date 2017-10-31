@@ -1,11 +1,11 @@
-const manyIntent = require('./many-intent');
-const manyModel = require('./many-model');
-const manyView = require('./many-view');
-const Cycle = require('cycle-react');
-const React = require('react');
-const ReactDOM = require('react-dom');
+import manyIntent from './many-intent';
+import manyModel from './many-model';
+import manyView from './many-view';
+import {component} from 'cycle-react/rxjs';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const Root = Cycle.component('Root', function computer(interactions) {
+const Root = component('Root', function computer(interactions) {
   return manyView(manyModel(manyIntent(interactions)), interactions);
 });
 

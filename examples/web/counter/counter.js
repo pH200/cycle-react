@@ -2,7 +2,7 @@ import makeModel from './counter-model';
 import makeView from './counter-view';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {component} from 'cycle-react';
+import {component} from 'cycle-react/rxjs';
 
 const Root = component(
   'Root',

@@ -1,13 +1,13 @@
-const Cycle = require('cycle-react');
-const Rx = require('rx');
-const React = require('react');
-const ManyItem = require('./many-component');
+import {component} from 'cycle-react/rxjs';
+import {Observable} from 'rxjs/Rx';
+import React from 'react';
+import ManyItem from './many-component';
 
-const TopButtons = Cycle.component('TopButtons', function (interactions) {
+const TopButtons = component('TopButtons', function (interactions) {
   let onAddOne = interactions.get('onAddOne');
   let onAddMany = interactions.get('onAddMany');
   return {
-    view: Rx.Observable.just(
+    view: Observable.of(
       <div>
         <button className="add-one-btn"
                 onClick={interactions.listener('onAddOne')}>
@@ -47,4 +47,4 @@ function manyView(items$, interactions) {
   });
 }
 
-module.exports = manyView;
+export default manyView;

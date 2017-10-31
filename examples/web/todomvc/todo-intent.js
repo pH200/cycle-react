@@ -1,9 +1,9 @@
-let Rx = require('rx');
-let ESC_KEY = 27;
+import {Observable} from 'rxjs/Rx';
+const ESC_KEY = 27;
 
 function todoIntent(interactions) {
   return {
-    changeRoute$: Rx.Observable.fromEvent(window, 'hashchange')
+    changeRoute$: Observable.fromEvent(window, 'hashchange')
       .map(ev => ev.newURL.match(/#[^#]*$/)[0].replace('#', ''))
       .startWith(window.location.hash.replace('#', '')),
     changeInput$: interactions.get('onInputChange')
@@ -21,4 +21,4 @@ function todoIntent(interactions) {
   };
 }
 
-module.exports = todoIntent;
+export default todoIntent;

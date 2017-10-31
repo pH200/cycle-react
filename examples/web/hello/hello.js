@@ -1,8 +1,9 @@
-const Cycle = require('cycle-react');
-const React = require('react');
-const ReactDOM = require('react-dom');
+import {component} from 'cycle-react/rxjs';
+import 'rxjs/Rx';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const Root = Cycle.component('Root', function computer(interactions) {
+const Root = component('Root', function computer(interactions) {
   return interactions.get('OnInputChange')
     .map((ev) => ev.target.value)
     .startWith('')

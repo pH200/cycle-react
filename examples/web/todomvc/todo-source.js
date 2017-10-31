@@ -1,13 +1,13 @@
-let Rx = require('rx');
-let {Map, fromJS} = require('immutable');
+import {Observable} from 'rxjs/Rx';
+import {Map, fromJS} from 'immutable';
 
-module.exports = function getSource() {
-  let storedTodosList = JSON.parse(localStorage.getItem('todos-cycle-react@2'));
-  let initialTodosData = fromJS({
+export default function getSource() {
+  const storedTodosList = JSON.parse(localStorage.getItem('todos-cycle-react@2'));
+  const initialTodosData = fromJS({
     list: storedTodosList || [],
     input: '',
     filter: '',
     filterFn: () => true // allow anything
   });
-  return Rx.Observable.just(initialTodosData);
-};
+  return Observable.of(initialTodosData);
+}

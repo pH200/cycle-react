@@ -17,17 +17,20 @@ framework called [Cycle.js](https://github.com/cyclejs/cycle-core).
 ## Installing
 
 ```
-npm install cycle-react react rx
+npm install cycle-react react rxjs
 ```
+
+React v16 or later is **required**.
 
 ## Example
 
 ```js
-const Cycle = require('cycle-react');
-const React = require('react');
-const ReactDOM = require('react-dom');
+import {component} from 'cycle-react/rxjs';
+import Rx from 'rxjs/Rx';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const Hello = Cycle.component('Hello', function computer(interactions) {
+const Hello = component('Hello', function computer(interactions) {
   return interactions.get('OnNameChanged')
     .map(ev => ev.target.value)
     .startWith('')
@@ -70,24 +73,24 @@ André's amazing presentation:
 ## React component example
 
 ```js
-const Cycle = require('cycle-react');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Rx = require('rx');
+import {component} from 'cycle-react/rxjs';
+import Rx from 'rxjs/Rx';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 // "component" returns a native React component which can be used normally
 // by "React.createElement".
-const Counter = Cycle.component('Counter', function (interactions, props) {
-  return props.get('counter').map(counter =>
+const Counter = component('Counter', (interactions, props) =>
+  props.pluck('counter').map(counter =>
     <h3>Seconds Elapsed: {counter}</h3>
-  );
-});
+  )
+);
 
-const Timer = Cycle.component('Timer', function () {
-  return Rx.Observable.interval(1000).map(i =>
+const Timer = component('Timer', () =>
+  Rx.Observable.interval(1000).map(i =>
     <Counter counter={i} />
-  );
-});
+  )
+);
 
 ReactDOM.render(
   <Timer />,
@@ -106,15 +109,13 @@ useful examples, too. Stay tuned!
 
 ## React Native
 
-To use Cycle-React with React Native, import Cycle-React with
-`cycle-react/native`.
 Example can be found at [examples/native](/examples/native)
 
 ```js
-var {component} = require('cycle-react/native');
-var Rx = require('rx');
+var {component} = require('cycle-react/rxjs');
+var Rx = require('rxjs');
 var Hello = component('Hello', () =>
-  Rx.Observable.just(<Text>Hello!</Text>)
+  Rx.Observable.of(<Text>Hello!</Text>)
 );
 ```
 

@@ -12,7 +12,8 @@ function add(x, y) {
 }
 
 function compileExample(exampleName, examplePath) {
-  var cyclePath = path.resolve(__dirname, '../../src/rxjs.js');
+  var cyclePath = path.resolve(__dirname, '../../src/index.js');
+  var cycleRxjsPath = path.resolve(__dirname, '../../src/rxjs.js');
 
   // shareReplay(1) to cache compiled js
   return Rx.Observable.defer(function () {
@@ -22,6 +23,7 @@ function compileExample(exampleName, examplePath) {
       .transform(envify({NODE_ENV: 'production'}))
       .transform('babelify', {presets: ["env", "react"]})
       .require(cyclePath, {expose: 'cycle-react'})
+      .require(cycleRxjsPath, {expose: 'cycle-react/rxjs'})
       .add(examplePath)
       .bundle();
 

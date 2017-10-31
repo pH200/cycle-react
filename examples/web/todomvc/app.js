@@ -1,15 +1,15 @@
-let React = require('react');
-let ReactDOM = require('react-dom');
-let Cycle = require('cycle-react');
-let todoIntent = require('./todo-intent');
-let model = require('./todo-model');
-let view = require('./todo-view');
-let localStorageSink = require('./local-storage-sink');
-let source = require('./todo-source');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {component} from 'cycle-react/rxjs';
+import todoIntent from './todo-intent';
+import model from './todo-model';
+import view from './todo-view';
+import localStorageSink from './local-storage-sink';
+import source from './todo-source';
 
-let Root = Cycle.component('Root', function computer(interactions) {
-  let intent = todoIntent(interactions);
-  let todos$ = model(intent, source());
+const Root = component('Root', function computer(interactions) {
+  const intent = todoIntent(interactions);
+  const todos$ = model(intent, source());
   todos$.subscribe(localStorageSink);
   return view(todos$, interactions);
 });

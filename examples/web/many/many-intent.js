@@ -1,10 +1,10 @@
-const Cycle = require('cycle-react');
-const Rx = require('rx');
+import {component} from 'cycle-react/rxjs';
+import {Observable} from 'rxjs/Rx';
 
 function manyIntent(interactions) {
   const addOneBtnClick$ = interactions.get('AddOne');
   const addManyBtnClick$ = interactions.get('AddMany');
-  const addItem$ = Rx.Observable.merge(
+  const addItem$ = Observable.merge(
     addOneBtnClick$.map(() => 1),
     addManyBtnClick$.map(() => 1000)
   );
@@ -20,4 +20,4 @@ function manyIntent(interactions) {
   };
 }
 
-module.exports = manyIntent;
+export default manyIntent;

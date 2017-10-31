@@ -1,12 +1,11 @@
-'use strict';
-let React = require('react');
-let ReactDOMServer = require('react-dom/server');
-let express = require('express');
-let browserify = require('browserify');
-let serialize = require('serialize-javascript');
-let Rx = require('rx');
-let fromStream = require('../lib/rx-fromstream');
-let {App} = require('./app');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const express = require('express');
+const browserify = require('browserify');
+const serialize = require('serialize-javascript');
+const Rx = require('rx');
+const fromStream = require('../lib/rx-fromstream');
+const {App} = require('./app');
 
 function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   return `<!doctype html>
@@ -23,10 +22,10 @@ function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   `;
 }
 
-let clientBundle$ = Rx.Observable.just('./client.js')
+const clientBundle$ = Rx.Observable.just('./client.js')
   .tap(js => console.log('Compiling client bundle ' + js))
   .flatMap(js => {
-    let bundleStream = browserify()
+    const bundleStream = browserify()
       .transform('babelify')
       .transform({global: true}, 'uglifyify')
       .add(js)
@@ -38,7 +37,7 @@ let clientBundle$ = Rx.Observable.just('./client.js')
 // pre-compile bundle
 // clientBundle$.subscribe();
 
-let server = express();
+const server = express();
 
 server.use(function (req, res) {
   // Ignore favicon requests
@@ -50,11 +49,11 @@ server.use(function (req, res) {
 
   console.log(`req: ${req.method} ${req.url}`);
 
-  let context = {route: req.url};
-  let componentHtml = ReactDOMServer.renderToString(
+  const context = {route: req.url};
+  const componentHtml = ReactDOMServer.renderToString(
     React.createElement(App, {context: context})
   );
-  let html$ = Rx.Observable.combineLatest(
+  const html$ = Rx.Observable.combineLatest(
     Rx.Observable.just(componentHtml),
     Rx.Observable.just(context),
     clientBundle$,
@@ -63,6 +62,6 @@ server.use(function (req, res) {
   html$.take(1).subscribe(html => res.send(html));
 });
 
-let port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 server.listen(port);
 console.log(`Listening on port ${port}`);
