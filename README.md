@@ -118,10 +118,10 @@ useful examples, too. Stay tuned!
 Example can be found at [examples/native](/examples/native)
 
 ```js
-var {component} = require('cycle-react/rxjs');
-var Rx = require('rxjs');
-var Hello = component('Hello', () =>
-  Rx.Observable.of(<Text>Hello!</Text>)
+import {component} = require('cycle-react/rxjs');
+import {Observable} = require('rxjs/Rx');
+const Hello = component('Hello', () =>
+  Observable.of(<Text>Hello!</Text>)
 );
 ```
 
