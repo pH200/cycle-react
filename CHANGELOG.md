@@ -1,5 +1,90 @@
 # Changelog
 
+## 6.0.0
+
+### New Features
+
+- Support for [RxJS 5](https://github.com/ReactiveX/rxjs) has been implemented.
+- `cycle-react` now takes the advantage of React v16. Default element for empty
+Observable has been changed from `<div />` to empty fragment.
+
+### Breaking Changes
+
+- React v16 or above is required for `cycle-react` v6.
+- `props.get` and `props.getAll` are removed. Use [pluck](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-pluck)
+instead.
+- `dispose` from `definitionFn` is renamed to `unsubscribe`.
+- `rootTagName` is removed. Default element is now empty fragment `[]`.
+
+### Migration
+
+For migrating RxJS v4 to v5, see https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md
+for details.
+
+#### import
+
+##### OLD
+
+```js
+import {component} from 'cycle-react';
+```
+
+##### NEW
+
+```js
+// RxJS v4
+import {component} from 'cycle-react/rx';
+// RxJS v5
+import {component} from 'cycle-react/rxjs';
+```
+
+#### props.get
+
+##### OLD
+
+```js
+props.get('foo').map(foo => <p>{foo}</p>);
+```
+
+##### NEW
+
+```js
+props.pluck('foo').map(foo => <p>{foo}</p>);
+// or
+props.map(({foo}) => <p>{foo}</p>);
+```
+
+#### dispose
+
+##### OLD
+
+```js
+const foo = component('Foo', () => {
+  // ...
+  const subscription = source.subscribe(signal => console.log(signal));
+  return {
+    view,
+    dispose: subscription
+  };
+});
+```
+
+##### NEW
+
+If you use `cycle-react/rx`, `cycle-react` disposes the object that has either `dispose` or `unsubscribe` implemented.
+On the other hand, `cycle-react/rxjs` only looks the object that has `unsubscribe` ([Subscription](https://github.com/ReactiveX/rxjs/blob/master/doc/subscription.md)).
+
+```js
+const foo = component('Foo', () => {
+  // ...
+  const subscription = source.subscribe(signal => console.log(signal));
+  return {
+    view,
+    unsubscribe: subscription
+  };
+});
+```
+
 ## 5.1.2
 
 Compatibility fix for `create-react-app` and `react-scripts`

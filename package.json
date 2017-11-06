@@ -54,6 +54,6 @@
     "travis-test": "npm run lint && jest --verbose",
     "examples": "node examples/web/server.js",
     "build": "babel src --presets babel-preset-env --out-dir build",
-    "_publish": "npm test && npm run build"
+    "_publish": "npm test && npm run build && node .make-package.js"
   }
 }

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/pH200/cycle-react.svg?branch=master)](https://travis-ci.org/pH200/cycle-react)
 
-An [RxJS](https://github.com/Reactive-Extensions/RxJS) functional interface
+An [RxJS](https://github.com/ReactiveX/rxjs) functional interface
 to [Facebook's React](https://reactjs.org/).
 
 Cycle-React allows users to write [React](https://github.com/facebook/react)
@@ -21,6 +21,8 @@ npm install cycle-react react rxjs
 ```
 
 React v16 or later is **required**.
+
+Both RxJS 5 and RxJS 4 are supported. For migrating RxJS with cycle-react v6, see release note for details.
 
 ## Example
 
@@ -98,6 +100,10 @@ ReactDOM.render(
 );
 ```
 
+## RxJS v4 & v5
+
+For using RxJS v4, import cycle-react with `import {component} from 'cycle-react/rx'`. In other words, use `cycle-react/rx` instead of `cycle-react/rxjs`. We plan to support more Observable implementations in the same way.
+
 ## Learn more
 
 Cycle-React is a React-style implementation of Cycle.js, so we have the same
@@ -120,6 +126,10 @@ var Hello = component('Hello', () =>
 ```
 
 ## FAQ
+
+### How many files from RxJS 5 are being used in Cycle-React?
+
+Cycle-React has only imported `rxjs/Subject` and `rxjs/BehaviorSubject` from RxJS 5. And those two files are only imported if you import `cycle-react/rxjs`.
 
 ### Can I use Cycle-React with Flux (e.g. [redux](https://github.com/gaearon/redux))
 
