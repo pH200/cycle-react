@@ -1,6 +1,6 @@
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
-export default function getSource() {
+export function getSource() {
   const storedTodosList = JSON.parse(localStorage.getItem('todos-cycle-react@2'));
   const initialTodosData = fromJS({
     list: storedTodosList || [],

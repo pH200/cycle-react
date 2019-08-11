@@ -1,38 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { makeModel } from './todo-model';
+import { getSource } from './todo-source';
 import { Main } from './todo-view';
 import { TodoContext } from './todo-context';
-import localStorageSink from './local-storage-sink';
-import source from './todo-source';
+import { routeSource } from './window-location-source';
+import { localStorageSink } from './local-storage-sink';
 import { useInteractions } from 'cycle-react/rxjs';
-import { fromEvent } from 'rxjs';
-import { map, startWith, scan, tap } from 'rxjs/operators'
+import { scan, tap } from 'rxjs/operators'
 
-function getFilterFn(route) {
-  switch (route) {
-    case '/active': return task => task.get('completed') === false;
-    case '/completed': return task => task.get('completed') === true;
-    default: return () => true; // allow anything
-  }
-}
-
-const sinks = [
-  fromEvent(window, 'hashchange')
-    .pipe(
-      map(ev => ev.newURL.match(/#[^#]*$/)[0].replace('#', '')),
-      startWith(window.location.hash.replace('#', '')),
-      map(route => todosData => {
-        return todosData.withMutations(m => {
-          m.set('filter', route.replace('/', '').trim());
-          m.set('filterFn', getFilterFn(route));
-        });
-      })
-    )
-]
-
+const sinks = [routeSource()];
 const [interactions, useCycle] = useInteractions(
-  source(),
+  getSource(),
   makeModel(),
   sinks,
   stateObservable => {
