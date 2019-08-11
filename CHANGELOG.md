@@ -1,5 +1,21 @@
 # Changelog
 
+## 7.0.0
+
+### Breaking Changes
+
+- API is completed changed to support Hooks
+- React v16.8 or above is required
+- Support only RxJS 6 now
+
+### Migration
+
+Almost everything for cycle-react has changed. If you're migrating
+your current cycle-react application to 7.0, probably jsx and model
+are the only parts that can be reused.
+
+Please check examples for migration guide.
+
 ## 6.0.1
 
 ### New Features

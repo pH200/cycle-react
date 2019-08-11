@@ -1,5 +1,4 @@
-import {Observable} from 'rxjs/Rx';
-import {Map, fromJS} from 'immutable';
+import {fromJS} from 'immutable';
 
 export default function getSource() {
   const storedTodosList = JSON.parse(localStorage.getItem('todos-cycle-react@2'));
@@ -9,5 +8,5 @@ export default function getSource() {
     filter: '',
     filterFn: () => true // allow anything
   });
-  return Observable.of(initialTodosData);
+  return initialTodosData;
 }

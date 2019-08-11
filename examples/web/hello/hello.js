@@ -1,24 +1,28 @@
-import {component} from 'cycle-react/rxjs';
-import 'rxjs/Rx';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useInteractions } from 'cycle-react/rxjs';
+import { map } from 'rxjs/operators'
 
-const Root = component('Root', function computer(interactions) {
-  return interactions.get('OnInputChange')
-    .map((ev) => ev.target.value)
-    .startWith('')
-    .map((name) => (
-      <div>
-        <label>Name:</label>
-        <input type="text"
-               onChange={interactions.listener('OnInputChange')} />
-        <hr />
-        <h1>Hello {name}</h1>
-      </div>
-    ));
-});
+const [interactions, useCycle] = useInteractions(
+  '', // initial state
+  {onNameChange: map(ev => currentState => ev.target.value)}
+);
+
+
+function View() {
+  const name = useCycle();
+  return (
+    <div>
+      <label>Name:</label>
+      <input type="text"
+             onChange={interactions('onNameChange')} />
+      <hr />
+      <h1>Hello {name}</h1>
+    </div>
+  );
+}
 
 ReactDOM.render(
-  <Root />,
+  <View />,
   document.querySelector('.js-container')
 );

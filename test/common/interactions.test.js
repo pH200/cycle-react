@@ -49,6 +49,23 @@ describe('interactions', () => {
     expect(mockSubject.onEvent).toBeCalledWith('bar2');
   });
 
+  it('should return the object of all listeners by bindAllListeners', () => {
+    const {mockFn, mockSubject} = mockCreateEventSubject();
+    const interactions = makeInteractions(mockFn);
+    interactions.get('foo');
+    interactions.get('foo2');
+
+    const listeners = interactions.bindAllListeners();
+    expect(listeners.foo).toBeDefined();
+    expect(listeners.foo2).toBeDefined();
+    // test listeners
+    listeners.foo('bar');
+    expect(mockSubject.onEvent).toBeCalledWith('bar');
+    // test listener key
+    interactions.listener('foo2')('bar2');
+    expect(mockSubject.onEvent).toBeCalledWith('bar2');
+  });
+
   it('should throw error when the key is null', () => {
     const interactions = makeInteractions(mockCreateEventSubject);
     expect(() => interactions.get()).toThrowError(/Invalid name/i);

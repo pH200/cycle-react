@@ -1,82 +1,79 @@
-import {component} from 'cycle-react/rxjs';
-import React from 'react';
-import {Observable} from 'rxjs/Rx';
+import React, {Component} from 'react';
+
 const ESC_KEY = 27;
 
-const TodoItem = component('TodoItem', function (interactions, props) {
-  function onSubmitHandler(e) {
+export class TodoItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editContent: '',
+      editing: false
+    };
+  }
+  onSubmitHandler(e) {
     e.preventDefault();
     /*eslint-disable dot-notation */
-    interactions.listener('onSubmit')(e.target.elements['contentedit'].value);
+    this.stopEdit(e.target.elements['contentedit'].value);
     /*eslint-enable dot-notation */
   }
-
-  const id$ = props.pluck('todoid');
-  const onChange$ = interactions.get('onChange');
-  const editContent$ = props.pluck('content')
-    .merge(onChange$.map(ev => ev.target.value));
-  const startEdit$ = interactions.get('onDoubleClick');
-  const stopEdit$ = interactions.get('onKeyUp')
-    .filter(e => e.keyCode === ESC_KEY)
-    .merge(interactions.get('onBlur'))
-    .map(e => e.target.value)
-    .merge(interactions.get('onSubmit'));
-  const editing$ = Observable.merge(
-    startEdit$.map(() => true),
-    stopEdit$.map(() => false)
-  ).startWith(false);
-
-  const vtree$ = props.combineLatest(
-    editContent$,
-    editing$,
-    function (todo, editContent, editing) {
-      const className = (todo.completed ? 'completed ' : '') +
-        (editing ? 'editing' : '');
-      if (editing) {
-        return <li className={className}>
-          <form className="editform"
-                onSubmit={onSubmitHandler}>
-            <input className="edit"
-                   name="contentedit"
-                   autoFocus={true}
-                   value={editContent}
-                   onChange={interactions.listener('onChange')}
-                   onKeyUp={interactions.listener('onKeyUp')}
-                   onBlur={interactions.listener('onBlur')} />
-          </form>
-        </li>;
-      }
+  onChange(ev) {
+    this.setState({
+      editContent: ev.target.value,
+      editing: true
+    });
+  }
+  onKeyUp(ev) {
+    if (ev.keyCode === ESC_KEY) {
+      this.stopEdit(ev.target.value);
+    }
+  }
+  startEdit() {
+    this.setState({
+      editContent: this.props.content,
+      editing: true
+    });
+  }
+  stopEdit(content) {
+    this.setState({
+      editContent: content,
+      editing: false
+    });
+    if (content.trim() !== '') {
+      this.props.onNewContent({
+        id: this.props.todoid,
+        content: content.trim()
+      });
+    }
+  }
+  render() {
+    const className = (this.props.completed ? 'completed ' : '') +
+      (this.state.editing ? 'editing' : '');
+    if (this.state.editing) {
       return <li className={className}>
-        <div className="view">
-          <input className="toggle"
-                 type="checkbox"
-                 checked={!!todo.completed}
-                 onChange={interactions.listener('onToggle')} />
-          <label onDoubleClick={interactions.listener('onDoubleClick')}>
-            {todo.content}
-          </label>
-          <button className="destroy"
-                  onClick={interactions.listener('onDestroy')} />
-        </div>
+        <form className="editform"
+              onSubmit={this.onSubmitHandler.bind(this)}>
+          <input className="edit"
+                name="contentedit"
+                autoFocus={true}
+                value={this.state.editContent}
+                onChange={this.onChange.bind(this)}
+                onKeyUp={this.onKeyUp.bind(this)}
+                onBlur={ev => this.stopEdit(ev.target.value)} />
+        </form>
       </li>;
     }
-  );
-  return {
-    view: vtree$,
-    events: {
-      onToggle: interactions.get('onToggle')
-        .withLatestFrom(id$, (ev, id) => id),
-      onDestroy: interactions.get('onDestroy')
-        .merge(stopEdit$.filter(content => content.trim() === ''))
-        .withLatestFrom(id$, (ev, id) => id),
-      onNewContent: stopEdit$
-        .filter(content => content.trim() !== '')
-        .withLatestFrom(id$, (content, id) => ({
-          id,
-          content: content.trim()
-        }))
-    }
-  };
-});
-
-export default TodoItem;
+    return <li className={className}>
+      <div className="view">
+        <input className="toggle"
+              type="checkbox"
+              checked={!!this.props.completed}
+              onChange={() => this.props.onToggle(this.props.todoid)} />
+        <label onDoubleClick={() => this.startEdit()}>
+          {this.props.content}
+        </label>
+        <button className="destroy"
+                onClick={() => this.props.onDestroy(this.props.todoid)} />
+      </div>
+    </li>;
+  }
+}

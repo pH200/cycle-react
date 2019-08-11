@@ -1,8 +1,10 @@
+const { safeWarn } = require('./util');
+
 function makeInteractions(createEventSubject) {
   const subjects = {};
 
   function get(name) {
-    if (name === null || name === (void 0)) {
+    if (name === null || typeof name !== 'string') {
       throw new Error('Invalid name for the interaction collection.');
     }
     if (!subjects[name]) {
@@ -13,14 +15,11 @@ function makeInteractions(createEventSubject) {
 
   function listener(name) {
     const eventSubject = subjects[name];
-    if (!eventSubject && process.env.NODE_ENV !== 'production') {
-      /* eslint-disable no-console */
-      if (typeof console !== 'undefined') {
-        console.warn(
-          'Listening event "' + name + '" before using interactions.get("' +
-          name + '")'
-        );
-      }
+    if (!eventSubject) {
+      safeWarn(
+        'Listening event "' + name + '" before using interactions.get("' +
+        name + '")'
+      );
     }
     return (eventSubject || get(name)).onEvent;
   }
@@ -35,6 +34,16 @@ function makeInteractions(createEventSubject) {
     return result;
   }
 
+  function bindAllListeners() {
+    const result = {};
+    const names = Object.keys(subjects);
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
+      result[name] = listener(name);
+    }
+    return result;
+  }
+
   function _getCurrentListeners() {
     const result = {};
     const names = Object.keys(subjects);
@@ -45,12 +54,13 @@ function makeInteractions(createEventSubject) {
     return result;
   }
 
-  return {
-    get: get,
-    listener: listener,
-    bindListeners: bindListeners,
-    _getCurrentListeners: _getCurrentListeners
-  };
+  listener.get = get;
+  listener.listener = listener;
+  listener.bindListeners = bindListeners ;
+  listener.bindAllListeners = bindAllListeners;
+  listener._getCurrentListeners = _getCurrentListeners;
+
+  return listener;
 }
 
 module.exports = makeInteractions;

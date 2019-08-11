@@ -1,24 +1,11 @@
 // This example merges the "intent" tier into the "model" tier.
 // See "many" and "todomvc" for MVI examples.
-import {Observable} from 'rxjs/Rx';
-import {
-  onIncrement,
-  onDecrement,
-  onIncrementIfOdd
-} from './interaction-types';
+import {map} from 'rxjs/operators'
 
-export default function makeModel(interactions) {
-  const incrementMod = interactions.get(onIncrement)
-    .map(() => counter => counter + 1);
-  const decrementMod = interactions.get(onDecrement)
-    .map(() => counter => counter - 1);
-  const incrementIfOddMod = interactions.get(onIncrementIfOdd)
-    .map(() => counter => counter % 2 === 0 ? counter : counter + 1);
-
-  return Observable.merge(
-    incrementMod,
-    decrementMod,
-    incrementIfOddMod
-  ).startWith(0) // 0 is the initial state
-  .scan((counterState, mod) => mod(counterState));
+export default function model() {
+  return {
+    // equal to: observable => map(() => counter => counter + 1)(observable)
+    onIncrement: map(() => counter => counter + 1),
+    onDecrement: map(() => counter => counter - 1)
+  };
 }

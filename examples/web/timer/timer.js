@@ -1,20 +1,27 @@
-import {component} from 'cycle-react/rxjs';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Observable} from 'rxjs/Rx';
+import { useInteractions } from 'cycle-react/rxjs';
+import { interval } from 'rxjs'
+import { map } from 'rxjs/operators'
 
-// "component" returns native react class which can be used normally
-// by "React.createElement".
-const Counter = component('Counter', function (interactions, props) {
-  return props.pluck('counter')
-    .map(counter => <h3>Seconds Elapsed: {counter}</h3>);
-});
+const [interactions, useCycle] = useInteractions(
+  0, // initial state
+  {}, // no interactions
+  [interval(1000).pipe(map(() => counter => counter + 1 ))] // sinks
+);
 
-const Timer = component('Timer', function () {
-  return Observable.interval(1000).map(i => <Counter counter={i} />);
-});
+function Counter({counter}) {
+  return <h3>Seconds Elapsed: {counter}</h3>
+}
+
+function Timer() {
+  const i = useCycle();
+  return (
+    <Counter counter={i} />
+  );
+}
 
 ReactDOM.render(
-  React.createElement(Timer),
+  <Timer />,
   document.querySelector('.js-container')
 );

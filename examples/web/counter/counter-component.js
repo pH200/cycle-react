@@ -1,41 +1,37 @@
 import React from 'react';
-import {component} from 'cycle-react/rxjs';
-import 'rxjs/Rx';
 
-// Use separate interactions-type for the counter component to show
-// every component has a isolated interaction collection.
-const CounterInteractions = {
-  increment: 'increment',
-  decrement: 'decrement',
-  incrementIfOdd: 'incrementIfOdd'
-};
+function Counter(props) {
+  function incrementIfOdd() {
+    if (props.value % 2 !== 0) {
+      props.onIncrement()
+    }
+  }
 
-const Counter = component('Counter', (interactions, props) => {
-  const events = {
-    onIncrement: interactions.get(CounterInteractions.increment),
-    onDecrement: interactions.get(CounterInteractions.decrement),
-    onIncrementIfOdd: interactions.get(CounterInteractions.incrementIfOdd)
-  };
-  const {
-    increment,
-    decrement,
-    incrementIfOdd
-  } = interactions.bindListeners(CounterInteractions);
-  const viewObservable = props.pluck('counter').map(counter =>
+  function incrementAsync() {
+    setTimeout(props.onIncrement, 1000)
+  }
+
+  return (
     <p>
-      Clicked: {counter} times
+      Clicked: {props.value} times
       {' '}
-      <button onClick={increment}>+</button>
+      <button onClick={props.onIncrement}>
+        +
+      </button>
       {' '}
-      <button onClick={decrement}>-</button>
+      <button onClick={props.onDecrement}>
+        -
+      </button>
       {' '}
-      <button onClick={incrementIfOdd}>Increment if odd</button>
+      <button onClick={incrementIfOdd}>
+        Increment if odd
+      </button>
+      {' '}
+      <button onClick={incrementAsync}>
+        Increment async
+      </button>
     </p>
   );
-  return {
-    view: viewObservable,
-    events: events
-  };
-});
+}
 
-export default Counter;
+export default Counter

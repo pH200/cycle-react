@@ -21,7 +21,7 @@ function compileExample(exampleName, examplePath) {
 
     var exampleStream = browserify()
       .transform(envify({NODE_ENV: 'production'}))
-      .transform('babelify', {presets: ["env", "react"]})
+      .transform('babelify', {presets: ["@babel/preset-env", "@babel/preset-react"]})
       .require(cyclePath, {expose: 'cycle-react'})
       .require(cycleRxjsPath, {expose: 'cycle-react/rxjs'})
       .add(examplePath)

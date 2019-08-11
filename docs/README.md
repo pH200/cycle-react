@@ -1,8 +1,6 @@
 ### Documentations
 
-- [API](/docs/api.md)
 - [Interactions API](/docs/interactions.md)
-- [Working with React](/docs/working-with-react.md)
 
 ### Where to ask for help?
 
