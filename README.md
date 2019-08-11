@@ -77,7 +77,7 @@ Redux | Cycle-React
 Actions | Interactions name
 Reducers | Interactions operator
 Store | Interactions object and side-effect from useCycle
-Provider | [createContext](https://reactjs.org/docs/context.html) Check example TodoMVC for details.
+Provider | [createContext](https://reactjs.org/docs/context.html) - Check example TodoMVC for details.
 dispatch(action) | interactions(action)
 
 ## Learn more
