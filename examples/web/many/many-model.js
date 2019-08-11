@@ -26,14 +26,14 @@ function manyModel() {
       });
     }),
     removeItemMod: map(id => listItems => {
-      return listItems.filter(item => item.id !== id);
+      return listItems.filter(item => item.get('id') !== id);
     }),
     colorChangedMod: map(x => listItems => {
-      const index = listItems.findIndex(item => item.id === x.id);
+      const index = listItems.findIndex(item => item.get('id') === x.id);
       return listItems.setIn([index, 'color'], x.color);
     }),
     widthChangedMod: map(x => listItems => {
-      const index = listItems.findIndex(item => item.id === x.id);
+      const index = listItems.findIndex(item => item.get('id') === x.id);
       return listItems.setIn([index, 'width'], x.width);
     })
   };
