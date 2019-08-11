@@ -1,6 +1,6 @@
 {
   "name": "cycle-react",
-  "version": "6.0.1",
+  "version": "7.0.0",
   "author": {
     "name": "pH200",
     "email": "ph.minamo@cytisan.com"
@@ -15,7 +15,9 @@
   },
   "keywords": [
     "react",
+    "hooks",
     "Rx",
+    "RxJS",
     "web",
     "mvi",
     "frontend",
