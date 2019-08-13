@@ -5,7 +5,7 @@ const browserify = require('browserify');
 const serialize = require('serialize-javascript');
 const Rx = require('rx');
 const fromStream = require('../lib/rx-fromstream');
-const {App} = require('./app');
+const {createApp} = require('./app');
 
 function wrapVTreeWithHTMLBoilerplate(vtree, context, clientBundle) {
   return `<!doctype html>
@@ -27,7 +27,6 @@ const clientBundle$ = Rx.Observable.just('./client.js')
   .flatMap(js => {
     const bundleStream = browserify()
       .transform('babelify')
-      .transform({global: true}, 'uglifyify')
       .add(js)
       .bundle();
     return fromStream(bundleStream).reduce((acc, x) => acc + x);
@@ -51,7 +50,7 @@ server.use(function (req, res) {
 
   const context = {route: req.url};
   const componentHtml = ReactDOMServer.renderToString(
-    React.createElement(App, {context: context})
+    React.createElement(createApp(context))
   );
   const html$ = Rx.Observable.combineLatest(
     Rx.Observable.just(componentHtml),

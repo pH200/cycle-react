@@ -1,8 +1,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const {App} = require('./app');
+const {createApp} = require('./app');
 
-ReactDOM.render(
-  React.createElement(App, {context: window.appContext}),
+ReactDOM.hydrate(
+  React.createElement(createApp(window.appContext)),
   document.querySelector('.app-container')
 );
