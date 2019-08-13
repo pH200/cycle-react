@@ -24,8 +24,18 @@ function useInteractions(initialState, defineInteractions, sinks, mapStateObserv
   for (let i = 0; i < names.length; i++) {
     const name = names[i];
     const definitionFn = defineInteractions[name];
-    const obs = interactions.get(name);
-    interactionList.push(definitionFn.call(defineInteractions, obs));
+    const interactionObs = interactions.get(name);
+    const mappedInteractionObs = definitionFn.call(
+      defineInteractions,
+      interactionObs
+    );
+    if (!mappedInteractionObs) {
+      throw new Error(`Interaction ${name} is undefined.`);
+    }
+    if (typeof mappedInteractionObs.subscribe !== 'function') {
+      throw new Error(`Interaction ${name} does not return Observable.`);
+    }
+    interactionList.push(mappedInteractionObs);
   }
   
   const cycle = {
